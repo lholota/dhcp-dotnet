@@ -5,21 +5,21 @@ using Xunit;
 namespace LH.Dhcp.UnitTests.Serialization.OptionSerialization.OptionValueSerialization
 {
     // ReSharper disable once InconsistentNaming
-    public class DhcpUnsignedInt16OptionSerializer_DeserializeShould
+    public class DhcpUnsignedInt32OptionSerializer_DeserializeShould
     {
-        private readonly DhcpUnsignedInt16OptionSerializer _serializer;
+        private readonly DhcpUnsignedInt32OptionSerializer _serializer;
 
-        public DhcpUnsignedInt16OptionSerializer_DeserializeShould()
+        public DhcpUnsignedInt32OptionSerializer_DeserializeShould()
         {
-            _serializer = new DhcpUnsignedInt16OptionSerializer();
+            _serializer = new DhcpUnsignedInt32OptionSerializer();
         }
 
         [Fact]
-        public void DeserializeUnsignedInt16()
+        public void DeserializeUnsignedInt32()
         {
-            var reader = new DhcpBinaryReader(new byte[] { 0x00, 0x95 });
+            var reader = new DhcpBinaryReader(new byte[] { 0x00, 0x00, 0x00, 0x95 });
 
-            var actual = (ushort)_serializer.Deserialize(reader, 2);
+            var actual = (uint)_serializer.Deserialize(reader, 4);
 
             Assert.Equal(149U, actual);
         }

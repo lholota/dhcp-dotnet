@@ -17,6 +17,8 @@ namespace LH.Dhcp.Serialization.OptionSerialization
             new DhcpByteOptionSerializer(),
             new DhcpInt32OptionSerializer(),
             new DhcpUnsignedInt16OptionSerializer(),
+            new DhcpUnsignedInt32OptionSerializer(),
+            new DhcpUnsignedInt16ListOptionSerializer(),
             new DhcpStringOptionSerializer(),
             new DhcpBooleanOptionSerializer()
         };

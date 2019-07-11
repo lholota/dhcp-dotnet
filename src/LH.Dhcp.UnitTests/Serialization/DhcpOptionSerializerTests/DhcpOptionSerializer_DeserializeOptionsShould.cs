@@ -387,5 +387,63 @@ namespace LH.Dhcp.UnitTests.Serialization.DhcpOptionSerializerTests
 
             Assert.Equal(120, option.Ttl);
         }
+
+        [Fact]
+        public void DeserializeMtuTimeoutOption()
+        {
+            var optionsBytes = "180400000096ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMtuTimeoutOption>().Single();
+
+            Assert.Equal(150U, option.MtuTimeout);
+        }
+
+        [Fact]
+        public void DeserializeMtuPlateauOption()
+        {
+            var optionsBytes = "1906004500550080ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMtuPlateauOption>().Single();
+
+            Assert.Equal(69U, option.Sizes[0]);
+            Assert.Equal(85U, option.Sizes[1]);
+            Assert.Equal(128U, option.Sizes[2]);
+        }
+
+        [Fact]
+        public void DeserializeMtuInterfaceOption()
+        {
+            var optionsBytes = "1a020079ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMtuInterfaceOption>().Single();
+
+            Assert.Equal(121U, option.Mtu);
+        }
+
+        [Fact]
+        public void DeserializeMtuSubnetOption()
+        {
+            var optionsBytes = "1b0101ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMtuSubnetOption>().Single();
+
+            Assert.True(option.AllSubnetsLocal);
+        }
     }
 }

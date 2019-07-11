@@ -13,11 +13,11 @@ namespace LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization
             }
 
             var ipCount = valueLength / 4;
-            var result = new List<IPAddress>();
+            var result = new IPAddress[ipCount];
 
             for (int i = 0; i < ipCount; i++)
             {
-                result.Add(reader.ReadIpAddress());
+                result[i] = reader.ReadIpAddress();
             }
 
             return result;
