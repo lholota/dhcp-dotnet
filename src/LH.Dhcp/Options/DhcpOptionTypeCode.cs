@@ -32,7 +32,7 @@
         /// <summary>
         /// N/4 DNS Server addresses
         /// </summary>
-        DomainServer = 6,
+        DomainNameServer = 6,
 
         /// <summary>
         /// N/4 Logging Server addresses

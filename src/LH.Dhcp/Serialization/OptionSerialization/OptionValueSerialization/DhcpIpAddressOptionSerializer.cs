@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization
+﻿namespace LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization
 {
     internal class DhcpIpAddressOptionSerializer : IDhcpOptionValueSerializer
     {
@@ -8,7 +6,7 @@ namespace LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization
         {
             if (valueLength != 4) // IPv4 address length
             {
-                throw new ArgumentException("The option length is invalid. IP address must be exactly 4 bytes long.");
+                throw new DhcpSerializationException("The option length is invalid. IP address must be exactly 4 bytes long.");
             }
 
             return reader.ReadIpAddress();

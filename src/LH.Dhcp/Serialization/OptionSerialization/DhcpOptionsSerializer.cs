@@ -58,7 +58,7 @@ namespace LH.Dhcp.Serialization.OptionSerialization
         {
             return (IDhcpOption)Activator.CreateInstance(
                 descriptor.OptionType,
-                BindingFlags.CreateInstance,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null,
                 new[] { value },
                 CultureInfo.InvariantCulture);

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using LH.Dhcp.Serialization.OptionSerialization;
 using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
     [DhcpOption(DhcpOptionTypeCode.SubnetMask, typeof(DhcpIpAddressOptionSerializer))]
-    public class DhcpSubnetMaskOption : DhcpOptionBase<IPAddress>
+    public class DhcpSubnetMaskOption : IDhcpOption
     {
-        public DhcpSubnetMaskOption(IPAddress value) 
-            : base(value)
+        public DhcpSubnetMaskOption(IPAddress value)
         {
             SubnetMask = value;
             CidrPrefix = GetCidrPrefix(value);

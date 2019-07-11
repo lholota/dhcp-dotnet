@@ -11,7 +11,14 @@ namespace LH.Dhcp.Serialization.OptionSerialization
     {
         private static readonly IReadOnlyList<IDhcpOptionValueSerializer> ValueSerializers = new List<IDhcpOptionValueSerializer>
         {
-            new DhcpIpAddressOptionSerializer()
+            new DhcpIpAddressOptionSerializer(),
+            new DhcpIpAddressListOptionSerializer(),
+            new DhcpIpAddressPairOptionSerializer(),
+            new DhcpByteOptionSerializer(),
+            new DhcpInt32OptionSerializer(),
+            new DhcpUnsignedInt16OptionSerializer(),
+            new DhcpStringOptionSerializer(),
+            new DhcpBooleanOptionSerializer()
         };
 
         private readonly IDictionary<DhcpOptionTypeCode, DhcpOptionDescriptor> _enumToTypeMapping;
@@ -59,7 +66,7 @@ namespace LH.Dhcp.Serialization.OptionSerialization
 
             if (serializer == null)
             {
-                throw new NotSupportedException($"DhcpOptions with value type {serializerType} are not supported.");
+                throw new NotSupportedException($"The serializer {serializerType} is not supported.");
             }
 
             return serializer;
