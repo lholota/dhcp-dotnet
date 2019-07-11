@@ -16,11 +16,6 @@ namespace LH.Dhcp.Serialization
             _offset = 0;
         }
 
-        public int Offset
-        {
-            get => _offset;
-        }
-
         public bool CanRead()
         {
             return _offset < _data.Length;
@@ -64,6 +59,15 @@ namespace LH.Dhcp.Serialization
             Seek(4);
 
             return result;
+        }
+
+        public int ReadInt32()
+        {
+            return
+                (Convert.ToInt32(_data[_offset]) << 24) |
+                (Convert.ToInt32(_data[_offset + 1]) << 16) |
+                (Convert.ToInt32(_data[_offset + 2]) << 8) |
+                (Convert.ToInt32(_data[_offset + 3]));
         }
 
         public ushort ReadUnsignedInt16()
