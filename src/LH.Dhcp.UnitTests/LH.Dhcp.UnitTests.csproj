@@ -16,4 +16,8 @@
     <ProjectReference Include="..\LH.Dhcp\LH.Dhcp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Serialization\OptionSerialization\" />
+  </ItemGroup>
+
 </Project>
