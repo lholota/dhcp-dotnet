@@ -621,5 +621,49 @@ namespace LH.Dhcp.UnitTests.Serialization.DhcpOptionSerializerTests
 
             Assert.True(option.KeepAliveGarbage);
         }
+
+        [Fact]
+        public void DeserializeNisServerDomainOption()
+        {
+            var optionsBytes = "280b6578616d706c652e636f6d".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetInformationServerDomainOption>().Single();
+
+            Assert.Equal("example.com", option.NisServerDomain);
+        }
+
+        [Fact]
+        public void DeserializeNisServerAddressesOption()
+        {
+            var optionsBytes = "2908c0a80119c0a8011a".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetInformationServerAddressesOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.25"), option.Addresses[0]);
+            Assert.Equal(IPAddress.Parse("192.168.1.26"), option.Addresses[1]);
+        }
+
+        [Fact]
+        public void DeserializeNtpServerAddressesOption()
+        {
+            var optionsBytes = "2a08c0a80119c0a8011a".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNtpServerAddressesOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.25"), option.Addresses[0]);
+            Assert.Equal(IPAddress.Parse("192.168.1.26"), option.Addresses[1]);
+        }
     }
 }
