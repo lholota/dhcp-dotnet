@@ -144,6 +144,13 @@ namespace LH.Dhcp.Serialization
             return result;
         }
 
+        internal DhcpBinaryReader CreateSubsetReader(int length)
+        {
+            VerifyCanRead(length);
+
+            return new DhcpBinaryReader(_data, _offset, length);
+        }
+
         private void VerifyCanRead(int length)
         {
             if (!CanRead())
