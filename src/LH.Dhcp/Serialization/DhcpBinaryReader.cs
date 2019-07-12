@@ -48,9 +48,21 @@ namespace LH.Dhcp.Serialization
             return _offset < _limit;
         }
 
-        public bool CanRead(int length)
+        public void Seek(int length)
         {
-            return (_offset + length) <= _limit;
+            var newOffset = _offset + length;
+
+            if (newOffset < _initialOffset || newOffset > _limit)
+            {
+                throw new IndexOutOfRangeException("Cannot seek outside of the byte array length.");
+            }
+
+            _offset += length;
+        }
+
+        public bool CanReadByte()
+        {
+            throw new NotImplementedException();
         }
 
         public byte ReadByte()
@@ -64,16 +76,9 @@ namespace LH.Dhcp.Serialization
             return result;
         }
 
-        public void Seek(int length)
+        public bool CanReadBytes(int length)
         {
-            var newOffset = _offset + length;
-
-            if (newOffset < _initialOffset || newOffset > _limit)
-            {
-                throw new IndexOutOfRangeException("Cannot seek outside of the byte array length.");
-            }
-
-            _offset += length;
+            throw new NotImplementedException();
         }
 
         public byte[] ReadBytes(int length)
@@ -87,6 +92,11 @@ namespace LH.Dhcp.Serialization
             Seek(length);
 
             return result;
+        }
+
+        public bool CanReadUnsignedInt32()
+        {
+            throw new NotImplementedException();
         }
 
         public uint ReadUnsignedInt32()
@@ -104,6 +114,11 @@ namespace LH.Dhcp.Serialization
             return result;
         }
 
+        public bool CanReadInt32()
+        {
+            throw new NotImplementedException();
+        }
+
         public int ReadInt32()
         {
             VerifyCanRead(4);
@@ -113,6 +128,11 @@ namespace LH.Dhcp.Serialization
                 (Convert.ToInt32(_data[_offset + 1]) << 16) |
                 (Convert.ToInt32(_data[_offset + 2]) << 8) |
                 (Convert.ToInt32(_data[_offset + 3]));
+        }
+
+        public bool CanReadUnsignedInt16()
+        {
+            throw new NotImplementedException();
         }
 
         public ushort ReadUnsignedInt16()
@@ -126,11 +146,21 @@ namespace LH.Dhcp.Serialization
             return result;
         }
 
+        public bool CanReadIpAddress()
+        {
+            throw new NotImplementedException();
+        }
+
         public IPAddress ReadIpAddress()
         {
             var ipBytes = ReadBytes(4);
 
             return new IPAddress(ipBytes);
+        }
+
+        public bool CanReadString(int length)
+        {
+            throw new NotImplementedException();
         }
 
         public string ReadString(int length)
@@ -144,11 +174,21 @@ namespace LH.Dhcp.Serialization
             return result;
         }
 
-        internal DhcpBinaryReader CreateSubsetReader(int length)
+        public DhcpBinaryReader CreateSubsetReader(int length)
         {
             VerifyCanRead(length);
 
             return new DhcpBinaryReader(_data, _offset, length);
+        }
+
+        public DhcpBinaryReader Clone()
+        {
+            return new DhcpBinaryReader(_data, _offset, _limit - _offset);
+        }
+
+        private bool CanRead(int length)
+        {
+            return (_offset + length) <= _limit;
         }
 
         private void VerifyCanRead(int length)

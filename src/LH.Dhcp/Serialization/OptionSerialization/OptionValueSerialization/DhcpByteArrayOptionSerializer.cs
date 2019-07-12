@@ -4,7 +4,7 @@
     {
         public object Deserialize(DhcpBinaryReader reader, byte valueLength)
         {
-            return reader.ReadBytes(valueLength);
+            return reader.CreateSubsetReader(valueLength);
         }
     }
 }

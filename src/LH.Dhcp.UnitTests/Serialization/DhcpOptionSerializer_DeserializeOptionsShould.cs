@@ -665,5 +665,44 @@ namespace LH.Dhcp.UnitTests.Serialization.DhcpOptionSerializerTests
             Assert.Equal(IPAddress.Parse("192.168.1.25"), option.Addresses[0]);
             Assert.Equal(IPAddress.Parse("192.168.1.26"), option.Addresses[1]);
         }
+
+        [Fact]
+        public void DeserializeVendorSpecificInformationOption_GivenSingleValueOptionStructure()
+        {
+            var optionsBytes = "".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpVendorSpecificInformationOption>().Single();
+
+            var actualValue = option.CreateSingleValueReader().ReadAsAsciiString();
+
+            Assert.Equal("Hello", actualValue);
+        }
+
+        [Fact]
+        public void DeserializeVendorSpecificInformationOption_GivenMultiValueOptionStructure()
+        {
+            var optionsBytes = "".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpVendorSpecificInformationOption>().Single();
+
+            var optionValueReader = option.CreateMultiValueReader();
+
+            var item1 = optionValueReader.NextItem();
+            var item2 = optionValueReader.NextItem();
+
+            Assert.Equal(240, item1.ItemCode);
+            Assert.Equal("", item1.ReadAsAsciiString());
+            
+            Assert.Equal(220, item2.ItemCode);
+            Assert.Equal("", item1.ReadAsAsciiString()); // TODO: Read number
+        }
     }
 }

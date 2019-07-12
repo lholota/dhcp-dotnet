@@ -1,80 +1,35 @@
-﻿using System;
+﻿using LH.Dhcp.Options.VendorSpecificInformation;
 using LH.Dhcp.Serialization;
+using LH.Dhcp.Serialization.OptionSerialization;
+using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
+    [DhcpOption(DhcpOptionTypeCode.VendorSpecific, typeof(DhcpByteArrayOptionSerializer))]
     public class DhcpVendorSpecificInformationOption : IDhcpOption
     {
+        private readonly DhcpBinaryReader _reader;
+
         public DhcpVendorSpecificInformationOption(byte[] bytes)
         {
-            
+            _reader = new DhcpBinaryReader(bytes);
         }
 
-        public SingleValueReader CreateSingleValueReader()
+        internal DhcpVendorSpecificInformationOption(DhcpBinaryReader reader)
         {
-            throw new NotImplementedException();
+            _reader = reader;
+        }
+
+        public UnknownValue CreateSingleValueReader()
+        {
+            return new UnknownValue(_reader.Clone());
         }
 
         public MultiValueReader CreateMultiValueReader()
         {
             // MultiValue reader -> move option by option, pass a delegate
 
-            throw new NotImplementedException();
+            return new MultiValueReader(_reader.Clone());
         }
-    }
-
-    public class MultiValueReader
-    {
-        private readonly DhcpBinaryReader _reader;
-
-        public MultiValueReader(byte[] bytes)
-        {
-            _reader = new DhcpBinaryReader(bytes);
-        }
-
-        public bool HasNextItem()
-        {
-            throw new NotImplementedException();
-        }
-
-        public MultiValueItemReader NextItem()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class MultiValueItemReader : SingleValueReader
-    {
-        public MultiValueItemReader(byte itemCode, byte[] valueBytes) 
-            : base(valueBytes)
-        {
-            ItemCode = itemCode;
-        }
-
-        public byte ItemCode { get; }
-    }
-
-    public class SingleValueReader
-    {
-        private readonly DhcpBinaryReader _reader;
-
-        public SingleValueReader(byte[] bytes)
-        {
-            _reader = new DhcpBinaryReader(bytes);
-        }
-
-        public byte ItemLength { get; }
-
-        public string ReadAsString()
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] ReadAsByteArray()
-        {
-            throw new NotImplementedException();
-        }
-
-        // ....
     }
 }
