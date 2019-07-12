@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using LH.Dhcp.Options;
 using LH.Dhcp.Serialization;
 using LH.Dhcp.Serialization.OptionSerialization;
 using LH.Dhcp.UnitTests.Extensions;
 using Xunit;
+// ReSharper disable StringLiteralTypo
 
 namespace LH.Dhcp.UnitTests.Serialization.DhcpOptionSerializerTests
 {
@@ -444,6 +446,180 @@ namespace LH.Dhcp.UnitTests.Serialization.DhcpOptionSerializerTests
             var option = options.OfType<DhcpMtuSubnetOption>().Single();
 
             Assert.True(option.AllSubnetsLocal);
+        }
+
+        [Fact]
+        public void DeserializeBroadcastAddressOption()
+        {
+            var optionsBytes = "1c04c0a801ffff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpBroadcastAddressOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.255"), option.BroadcastAddress);
+        }
+
+        [Fact]
+        public void DeserializePerformMaskDiscoveryOption()
+        {
+            var optionsBytes = "1d0101ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpPerformMaskDiscoveryOption>().Single();
+
+            Assert.True(option.PerformMaskDiscovery);
+        }
+
+        [Fact]
+        public void DeserializeMaskSupplierOption()
+        {
+            var optionsBytes = "1e0101ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMaskSupplierOption>().Single();
+
+            Assert.True(option.IsMaskSupplier);
+        }
+
+        [Fact]
+        public void DeserializePerformRouterDiscoveryOption()
+        {
+            var optionsBytes = "1f0101ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpPerformRouterDiscovery>().Single();
+
+            Assert.True(option.PerformRouterDiscovery);
+        }
+
+        [Fact]
+        public void DeserializeRouterSolicitationAddressOption()
+        {
+            var optionsBytes = "2004c0a801ffff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpRouterSolicitationAddressOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.255"), option.RouterSolicitationAddress);
+        }
+
+        [Fact]
+        public void DeserializeStaticRoutesOption()
+        {
+            var optionsBytes = "2110c0a80100ffffff00c0a8050cffff0000ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpStaticRoutesOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.0"), option.StaticRoutes[0].Destination);
+            Assert.Equal(IPAddress.Parse("255.255.255.0"), option.StaticRoutes[0].Router);
+
+            Assert.Equal(IPAddress.Parse("192.168.5.12"), option.StaticRoutes[1].Destination);
+            Assert.Equal(IPAddress.Parse("255.255.0.0"), option.StaticRoutes[1].Router);
+        }
+
+        [Fact]
+        public void DeserializeTrailerEncapsulationOption()
+        {
+            var optionsBytes = "220101ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpTrailerEncapsulationOption>().Single();
+
+            Assert.True(option.NegotiateTrailerEncapsulation);
+        }
+
+        [Fact]
+        public void DeserializeArpCacheTimeoutOption()
+        {
+            var optionsBytes = "2304000003d4ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpArpCacheTimeoutOption>().Single();
+
+            Assert.Equal(980, option.Timeout.TotalSeconds);
+        }
+
+        [Theory]
+        [InlineData("240101ff", EthernetEncapsulation.Rfc1042)]
+        [InlineData("240100ff", EthernetEncapsulation.Rfc894)]
+        public void DeserializeEthernetEncapsulationOption(string hexBytes, EthernetEncapsulation expectedEncapsulation)
+        {
+            var optionsBytes = hexBytes.AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpEthernetEncapsulationOption>().Single();
+
+            Assert.Equal(expectedEncapsulation, option.EthernetEncapsulation);
+        }
+
+        [Fact]
+        public void DeserializeDefaultTcpTtlOption()
+        {
+            var optionsBytes = "25017dff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpDefaultTcpTtlOption>().Single();
+
+            Assert.Equal(125, option.Ttl);
+        }
+
+        [Fact]
+        public void DeserializeTcpKeepAliveIntervalOption()
+        {
+            var optionsBytes = "26040000001e".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpTcpKeepAliveIntervalOption>().Single();
+
+            Assert.Equal(30, option.Interval.TotalSeconds);
+        }
+
+        [Fact]
+        public void DeserializeTcpKeepAliveGarbageOption()
+        {
+            var optionsBytes = "270101".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpTcpKeepAliveGarbageOption>().Single();
+
+            Assert.True(option.KeepAliveGarbage);
         }
     }
 }
