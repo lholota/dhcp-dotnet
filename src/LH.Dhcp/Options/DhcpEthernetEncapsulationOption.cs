@@ -1,5 +1,4 @@
 ﻿using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
@@ -9,12 +8,12 @@ namespace LH.Dhcp.Options
         Rfc1042
     }
 
-    [DhcpOption(DhcpOptionTypeCode.Ethernet, typeof(DhcpBooleanOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.Ethernet)]
     public class DhcpEthernetEncapsulationOption : IDhcpOption
     {
         internal DhcpEthernetEncapsulationOption(bool value)
         {
-            EthernetEncapsulation = value 
+            EthernetEncapsulation = value
                 ? EthernetEncapsulation.Rfc1042 
                 : EthernetEncapsulation.Rfc894;
         }

@@ -1,9 +1,8 @@
 ﻿using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MaskSupplier, typeof(DhcpBooleanOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.MaskSupplier)]
     public class DhcpMaskSupplierOption : IDhcpOption
     {
         public DhcpMaskSupplierOption(bool isMaskSupplier)

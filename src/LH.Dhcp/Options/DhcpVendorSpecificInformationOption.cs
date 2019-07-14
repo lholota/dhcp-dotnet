@@ -1,35 +1,50 @@
-﻿using LH.Dhcp.Options.VendorSpecificInformation;
-using LH.Dhcp.Serialization;
+﻿using System;
+using System.Collections.Generic;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.VendorSpecific, typeof(DhcpByteArrayOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.VendorSpecific)]
     public class DhcpVendorSpecificInformationOption : IDhcpOption
     {
-        private readonly DhcpBinaryReader _reader;
-
-        public DhcpVendorSpecificInformationOption(byte[] bytes)
+        public DhcpVendorSpecificInformationOption(object singleValue)
         {
-            _reader = new DhcpBinaryReader(bytes);
+            SingleValue = null;
+            CanBeInterpretedAsMultiValue = true;
+
+            throw new NotImplementedException();
         }
 
-        internal DhcpVendorSpecificInformationOption(DhcpBinaryReader reader)
+        public DhcpVendorSpecificInformationOption(IDictionary<int, object> multiValue)
         {
-            _reader = reader;
+            SingleValue = null;
+            CanBeInterpretedAsMultiValue = true;
+
+            throw new NotImplementedException();
         }
 
-        public UnknownValue CreateSingleValueReader()
+        [CreateOptionConstructor]
+        internal DhcpVendorSpecificInformationOption(DhcpBinaryValueReader valueReader)
         {
-            return new UnknownValue(_reader.Clone());
+            SingleValue = valueReader;
+
+            if (valueReader.IsValidValueCollection())
+            {
+                CanBeInterpretedAsMultiValue = true;
+                MultiValue = valueReader.AsNestedValueCollection();
+            }
+            else
+            {
+                CanBeInterpretedAsMultiValue = false;
+            }
         }
 
-        public MultiValueReader CreateMultiValueReader()
-        {
-            // MultiValue reader -> move option by option, pass a delegate
+        // TODO: Expose as interface
+        public IValueReader SingleValue { get; }
 
-            return new MultiValueReader(_reader.Clone());
-        }
+        public bool CanBeInterpretedAsMultiValue { get; }
+
+        // TODO: Throw if cannot be interpreted
+        public IReadOnlyDictionary<int, IValueReader> MultiValue { get; }
     }
 }

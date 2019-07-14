@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MTUPlateau, typeof(DhcpUnsignedInt16ListOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.MTUPlateau)]
     public class DhcpMtuPlateauOption : IDhcpOption
     {
-        public IReadOnlyList<ushort> Sizes { get; }
-
         public DhcpMtuPlateauOption(IReadOnlyList<ushort> sizes)
         {
             if (sizes.Min() < 68)
@@ -20,5 +17,7 @@ namespace LH.Dhcp.Options
 
             Sizes = sizes;
         }
+
+        public IReadOnlyList<ushort> Sizes { get; }
     }
 }

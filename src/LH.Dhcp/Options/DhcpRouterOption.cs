@@ -5,14 +5,14 @@ using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.Router, typeof(DhcpIpAddressListOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.Router)]
     public class DhcpRouterOption : IDhcpOption
     {
-        public DhcpRouterOption(IEnumerable<IPAddress> routerAddresses)
+        public DhcpRouterOption(IReadOnlyList<IPAddress> routerAddresses)
         {
             RouterAddresses = routerAddresses;
         }
 
-        public IEnumerable<IPAddress> RouterAddresses { get; }
+        public IReadOnlyList<IPAddress> RouterAddresses { get; }
     }
 }

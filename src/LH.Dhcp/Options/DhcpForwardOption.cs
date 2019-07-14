@@ -1,16 +1,21 @@
 ﻿using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.ForwardOnOff, typeof(DhcpBooleanOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.ForwardOnOff)]
     public class DhcpForwardOption : IDhcpOption
     {
-        public bool Forward { get; }
-
         public DhcpForwardOption(bool forward)
         {
             Forward = forward;
         }
+
+        internal DhcpForwardOption(DhcpBinaryValueReader valueReader)
+        {
+            Forward = valueReader.AsBoolean();
+        }
+
+
+        public bool Forward { get; }
     }
 }

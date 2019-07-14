@@ -1,9 +1,8 @@
 ﻿using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.KeepaliveData, typeof(DhcpBooleanOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.KeepaliveData)]
     public class DhcpTcpKeepAliveGarbageOption : IDhcpOption
     {
         public DhcpTcpKeepAliveGarbageOption(bool keepAliveGarbage)

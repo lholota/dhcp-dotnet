@@ -1,9 +1,8 @@
 ﻿using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.NISDomain, typeof(DhcpStringOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.NISDomain)]
     public class DhcpNetInformationServerDomainOption : IDhcpOption
     {
         public DhcpNetInformationServerDomainOption(string nisServerDomain)

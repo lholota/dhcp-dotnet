@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.RouterDiscovery, typeof(DhcpBooleanOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.RouterDiscovery)]
     public class DhcpPerformRouterDiscovery : IDhcpOption
     {
         public DhcpPerformRouterDiscovery(bool performRouterDiscovery)

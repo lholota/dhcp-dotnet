@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.PolicyFilter, typeof(DhcpIpAddressPairOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.PolicyFilter)]
     public class DhcpPolicyFilterOption : IDhcpOption
     {
         public IEnumerable<DhcpPolicyFilter> Filters { get; }

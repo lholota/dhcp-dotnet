@@ -1,10 +1,9 @@
 ﻿using System.Net;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.BroadcastAddress, typeof(DhcpIpAddressOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.BroadcastAddress)]
     public class DhcpBroadcastAddressOption : IDhcpOption
     {
         public DhcpBroadcastAddressOption(IPAddress broadcastAddress)

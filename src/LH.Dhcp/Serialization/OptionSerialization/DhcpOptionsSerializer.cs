@@ -8,20 +8,20 @@ namespace LH.Dhcp.Serialization.OptionSerialization
 {
     internal class DhcpOptionsSerializer
     {
-        private readonly DhcpOptionDescriptorsCollection _optionDescriptorsCollection;
+        private readonly DhcpOptionTypeDescriptorsCollection _optionTypeDescriptors;
 
         public DhcpOptionsSerializer()
         {
-            _optionDescriptorsCollection = new DhcpOptionDescriptorsCollection();
+            _optionTypeDescriptors = new DhcpOptionTypeDescriptorsCollection();
         }
 
-        public IReadOnlyList<IDhcpOption> DeserializeOptions(DhcpBinaryReader reader)
+        public IReadOnlyList<IDhcpOption> DeserializeOptions(DhcpBinaryReader binaryReader)
         {
             var result = new List<IDhcpOption>();
 
-            while (reader.CanRead())
+            while (binaryReader.CanRead())
             {
-                var optionTypeCode = (DhcpOptionTypeCode)reader.ReadByte();
+                var optionTypeCode = (DhcpOptionTypeCode)binaryReader.ReadByte();
 
                 if (optionTypeCode == DhcpOptionTypeCode.End)
                 {
@@ -34,33 +34,44 @@ namespace LH.Dhcp.Serialization.OptionSerialization
                     continue;
                 }
 
-                var descriptor = _optionDescriptorsCollection.GetDescriptor(optionTypeCode);
+                var descriptor = _optionTypeDescriptors.GetDescriptor(optionTypeCode);
 
-                var optionValueLength = reader.ReadByte();
+                var optionValueLength = binaryReader.ReadByte();
 
                 if (descriptor == null)
                 {
                     // Option is not supported, skip the option length
-                    reader.Seek(optionValueLength);
+                    binaryReader.Seek(optionValueLength);
 
                     continue;
                 }
 
-                var optionValue = descriptor.ValueSerializer.Deserialize(reader, optionValueLength);
+                var optionValueReader = binaryReader.CreateValueReader(optionValueLength);
+                var optionValue = GetOptionValue(optionValueReader, descriptor.OptionValueType);
 
-                result.Add(CreateOption(descriptor, optionValue));
+                result.Add(CreateOption(descriptor.OptionType, optionValue));
             }
 
             return result;
         }
 
-        private IDhcpOption CreateOption(DhcpOptionDescriptor descriptor, object value)
+        private static object GetOptionValue(DhcpBinaryValueReader optionValueReader, Type optionType)
+        {
+            if (!optionValueReader.IsValid(optionType))
+            {
+                throw new DhcpSerializationException("");
+            }
+
+            return optionValueReader.As(optionType);
+        }
+
+        private IDhcpOption CreateOption(Type optionType, object optionValue)
         {
             return (IDhcpOption)Activator.CreateInstance(
-                descriptor.OptionType,
+                optionType,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null,
-                new[] { value },
+                new[] { optionValue },
                 CultureInfo.InvariantCulture);
         }
     }

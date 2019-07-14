@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.StaticRoute, typeof(DhcpIpAddressPairOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.StaticRoute)]
     public class DhcpStaticRoutesOption : IDhcpOption
     {
-        internal DhcpStaticRoutesOption(IEnumerable<Tuple<IPAddress, IPAddress>> staticRoutes)
+        [CreateOptionConstructorAttribute]
+        internal DhcpStaticRoutesOption(IReadOnlyList<Tuple<IPAddress, IPAddress>> staticRoutes)
         {
             StaticRoutes = staticRoutes
                 .Select(x => new DhcpStaticRoute(x.Item1, x.Item2))

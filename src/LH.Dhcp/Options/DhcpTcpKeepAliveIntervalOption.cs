@@ -1,10 +1,9 @@
 ﻿using System;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.KeepaliveTime, typeof(DhcpUnsignedInt32OptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.KeepaliveTime)]
     public class DhcpTcpKeepAliveIntervalOption : IDhcpOption
     {
         internal DhcpTcpKeepAliveIntervalOption(uint seconds)

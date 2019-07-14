@@ -8,12 +8,9 @@ namespace LH.Dhcp.Serialization.OptionSerialization
     {
         public DhcpOptionTypeCode OptionTypeCode { get; }
 
-        public Type SerializerType { get; }
-
-        public DhcpOptionAttribute(DhcpOptionTypeCode optionTypeCode, Type serializerType)
+        public DhcpOptionAttribute(DhcpOptionTypeCode optionTypeCode)
         {
             OptionTypeCode = optionTypeCode;
-            SerializerType = serializerType;
         }
     }
 }

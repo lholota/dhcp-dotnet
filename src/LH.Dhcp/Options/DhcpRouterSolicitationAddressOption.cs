@@ -1,10 +1,9 @@
 ﻿using System.Net;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.RouterRequest, typeof(DhcpIpAddressOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.RouterRequest)]
     public class DhcpRouterSolicitationAddressOption : IDhcpOption
     {
         public DhcpRouterSolicitationAddressOption(IPAddress routerSolicitationAddress)

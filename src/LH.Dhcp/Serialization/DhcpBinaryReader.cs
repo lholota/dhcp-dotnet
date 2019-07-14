@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Text;
+using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Serialization
 {
@@ -184,6 +185,11 @@ namespace LH.Dhcp.Serialization
         public DhcpBinaryReader Clone()
         {
             return new DhcpBinaryReader(_data, _offset, _limit - _offset);
+        }
+
+        public DhcpBinaryValueReader CreateValueReader(byte optionValueLength)
+        {
+            return new DhcpBinaryValueReader(_data, _offset, optionValueLength);
         }
 
         private bool CanRead(int length)
