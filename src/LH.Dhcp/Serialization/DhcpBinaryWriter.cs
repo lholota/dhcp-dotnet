@@ -3,11 +3,11 @@ using System.IO;
 
 namespace LH.Dhcp.Serialization
 {
-    internal class BinaryWriter : IDisposable
+    internal class DhcpBinaryWriter : IDisposable
     {
         private readonly MemoryStream _memoryStream;
 
-        public BinaryWriter()
+        public DhcpBinaryWriter()
         {
             _memoryStream = new MemoryStream();
         }

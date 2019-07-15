@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LH.Dhcp.Serialization;
 using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
@@ -31,7 +32,7 @@ namespace LH.Dhcp.Options
             if (valueReader.IsValidValueCollection())
             {
                 CanBeInterpretedAsMultiValue = true;
-                MultiValue = valueReader.AsNestedValueCollection();
+                MultiValue = valueReader.AsValueCollection();
             }
             else
             {
@@ -40,11 +41,11 @@ namespace LH.Dhcp.Options
         }
 
         // TODO: Expose as interface
-        public IValueReader SingleValue { get; }
+        public IBinaryValueReader SingleValue { get; }
 
         public bool CanBeInterpretedAsMultiValue { get; }
 
         // TODO: Throw if cannot be interpreted
-        public IReadOnlyDictionary<int, IValueReader> MultiValue { get; }
+        public IReadOnlyDictionary<int, IBinaryValueReader> MultiValue { get; }
     }
 }

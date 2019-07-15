@@ -17,6 +17,8 @@ namespace LH.Dhcp.Serialization.OptionSerialization
 
         public IReadOnlyList<IDhcpOption> DeserializeOptions(DhcpBinaryReader binaryReader)
         {
+            // TODO: Use value reader to unify the reading of code+length+value bytes
+
             var result = new List<IDhcpOption>();
 
             while (binaryReader.CanRead())

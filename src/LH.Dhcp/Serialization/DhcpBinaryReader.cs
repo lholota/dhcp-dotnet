@@ -189,6 +189,8 @@ namespace LH.Dhcp.Serialization
 
         public DhcpBinaryValueReader CreateValueReader(byte optionValueLength)
         {
+            // TODO: Increase offset
+
             return new DhcpBinaryValueReader(_data, _offset, optionValueLength);
         }
 

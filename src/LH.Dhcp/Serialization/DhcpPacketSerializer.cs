@@ -3,13 +3,6 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Serialization
 {
-    public interface IDhcpPacketSerializer
-    {
-        byte[] Serialize(DhcpPacket packet);
-
-        DhcpPacket Deserialize(byte[] bytes);
-    }
-
     public class DhcpPacketSerializer : IDhcpPacketSerializer
     {
         private const ushort BroadcastFlag = 0x8000;
@@ -24,7 +17,7 @@ namespace LH.Dhcp.Serialization
 
         public byte[] Serialize(DhcpPacket packet)
         {
-            using (var writer = new BinaryWriter())
+            using (var writer = new DhcpBinaryWriter())
             {
                 /*
                  * Bootp fields

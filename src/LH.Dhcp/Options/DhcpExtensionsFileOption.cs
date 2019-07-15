@@ -1,4 +1,5 @@
-﻿using LH.Dhcp.Serialization.OptionSerialization;
+﻿using LH.Dhcp.Serialization;
+using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
