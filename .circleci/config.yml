@@ -9,11 +9,11 @@ jobs:
 
       - run:
           name: Install SonarCloud .NET Core Global tool
-          command: dotnet tool install --global dotnet-sonarscanner && echo 'Done!' && export PATH="$PATH:/root/.dotnet/tools"
+          command: dotnet tool install --global dotnet-sonarscanner && echo 'Done!' && export PATH="$PATH:/root/.dotnet/tools" && echo $PATH
 
       - run:
           name: Start SonarCube
-          command: dotnet sonarscanner begin /k:"lholota_dhcp-dotnet"
+          command: dotnet sonarscanner begin /k:"lholota_dhcp-dotnet" /d:sonar.organization=lholota /d:sonar.host.url=https://sonarcloud.io /d:sonar.login=${SONARCLOUD_KEY}
 
       - run:
           name: Build
