@@ -9,7 +9,7 @@ jobs:
 
       - run:
           name: Install SonarCloud .NET Core Global tool
-          command: dotnet tool install --global dotnet-sonarscanner --version 4.3.1
+          command: dotnet tool install --global dotnet-sonarscanner --version 4.3.1 && export PATH="$PATH:/root/.dotnet/tools"
 
       - run:
           name: Start SonarCube
