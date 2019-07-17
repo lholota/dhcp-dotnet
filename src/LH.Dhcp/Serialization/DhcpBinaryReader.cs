@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Net;
-using System.Text;
-using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Serialization
 {
@@ -21,7 +18,7 @@ namespace LH.Dhcp.Serialization
             _limit = data.Length;
         }
 
-        public DhcpBinaryReader(byte[] data, int offset, int lengthLimit)
+        public DhcpBinaryReader(byte[] data, int offset, int length)
         {
             if (offset < 0)
             {
@@ -33,15 +30,15 @@ namespace LH.Dhcp.Serialization
                 throw new ArgumentOutOfRangeException(nameof(offset), "The offset must be < byte array length");
             }
 
-            if (offset + lengthLimit >= data.Length)
+            if (offset + length > data.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(lengthLimit), "The offset + lengthLimit must be < byte array length");
+                throw new ArgumentOutOfRangeException(nameof(length), "The offset + lengthLimit must be =< byte array length");
             }
 
             _data = data;
             _offset = offset;
             _initialOffset = offset;
-            _limit = offset + lengthLimit;
+            _limit = offset + length;
         }
 
         public bool CanRead()
@@ -61,154 +58,51 @@ namespace LH.Dhcp.Serialization
             _offset += length;
         }
 
-        public bool CanReadByte()
+        public bool CanRead(int length)
         {
-            throw new NotImplementedException();
+            return (_offset + length) <= _limit;
         }
 
-        public byte ReadByte()
+        public byte PeekByte()
         {
             VerifyCanRead(1);
 
-            var result = _data[_offset];
-
-            _offset++;
-
-            return result;
+            return _data[_offset];
         }
 
-        public bool CanReadBytes(int length)
+        public DhcpBinaryValue ReadValue(int length)
         {
-            throw new NotImplementedException();
-        }
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), "The length must be > 0.");
+            }
 
-        public byte[] ReadBytes(int length)
-        {
             VerifyCanRead(length);
 
-            var result = new byte[length];
+            var result = new DhcpBinaryValue(_data, _offset, length);
 
-            Array.Copy(_data, _offset, result, 0, length);
-
-            Seek(length);
+            _offset += length;
 
             return result;
         }
 
-        public bool CanReadUnsignedInt32()
+        public DhcpBinaryValue ReadValueToEnd()
         {
-            throw new NotImplementedException();
-        }
+            VerifyCanRead(1);
 
-        public uint ReadUnsignedInt32()
-        {
-            // Big Endian encoded
-
-            var result =
-                (Convert.ToUInt32(_data[_offset]) << 24) |
-                (Convert.ToUInt32(_data[_offset + 1]) << 16) |
-                (Convert.ToUInt32(_data[_offset + 2]) << 8) |
-                (Convert.ToUInt32(_data[_offset + 3]));
-
-            Seek(4);
-
-            return result;
-        }
-
-        public bool CanReadInt32()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int ReadInt32()
-        {
-            VerifyCanRead(4);
-
-            return
-                (Convert.ToInt32(_data[_offset]) << 24) |
-                (Convert.ToInt32(_data[_offset + 1]) << 16) |
-                (Convert.ToInt32(_data[_offset + 2]) << 8) |
-                (Convert.ToInt32(_data[_offset + 3]));
-        }
-
-        public bool CanReadUnsignedInt16()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ushort ReadUnsignedInt16()
-        {
-            var result = (ushort)(
-                (Convert.ToUInt16(_data[_offset]) << 8) |
-                (Convert.ToUInt16(_data[_offset + 1])));
-
-            Seek(2);
-
-            return result;
-        }
-
-        public bool CanReadIpAddress()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IPAddress ReadIpAddress()
-        {
-            var ipBytes = ReadBytes(4);
-
-            return new IPAddress(ipBytes);
-        }
-
-        public bool CanReadString(int length)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string ReadString(int length)
-        {
-            VerifyCanRead(length);
-
-            var result = Encoding.ASCII.GetString(_data, _offset, length).TrimEnd('\0');
-
-            Seek(length);
-
-            return result;
-        }
-
-        public DhcpBinaryReader CreateSubsetReader(int length)
-        {
-            VerifyCanRead(length);
-
-            return new DhcpBinaryReader(_data, _offset, length);
-        }
-
-        public DhcpBinaryReader Clone()
-        {
-            return new DhcpBinaryReader(_data, _offset, _limit - _offset);
-        }
-
-        public DhcpBinaryValueReader CreateValueReader(byte optionValueLength)
-        {
-            // TODO: Increase offset
-
-            return new DhcpBinaryValueReader(_data, _offset, optionValueLength);
-        }
-
-        private bool CanRead(int length)
-        {
-            return (_offset + length) <= _limit;
+            return ReadValue(_limit - _offset);
         }
 
         private void VerifyCanRead(int length)
         {
             if (!CanRead())
             {
-                throw new IndexOutOfRangeException("The reader is at the end of byte array and cannot read further.");
+                throw new InvalidOperationException("The reader is at the end of byte array and cannot read further.");
             }
 
             if (!CanRead(length))
             {
-                throw new IndexOutOfRangeException($"The reader has left less than {length} bytes before the end of byte array.");
+                throw new InvalidOperationException($"The reader has left less than {length} bytes before the end of byte array.");
             }
         }
     }

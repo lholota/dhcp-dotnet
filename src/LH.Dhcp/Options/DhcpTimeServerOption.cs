@@ -7,7 +7,7 @@ namespace LH.Dhcp.Options
     [DhcpOption(DhcpOptionTypeCode.TimeServer)]
     public class DhcpTimeServerOption : IDhcpOption
     {
-        public DhcpTimeServerOption(IEnumerable<IPAddress> timeServerAddresses)
+        public DhcpTimeServerOption(IReadOnlyList<IPAddress> timeServerAddresses)
         {
             TimeServerAddresses = timeServerAddresses;
         }

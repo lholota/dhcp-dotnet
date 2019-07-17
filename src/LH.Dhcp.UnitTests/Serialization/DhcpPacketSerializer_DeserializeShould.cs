@@ -3,7 +3,7 @@ using LH.Dhcp.Options;
 using LH.Dhcp.Serialization;
 using Xunit;
 
-namespace LH.Dhcp.UnitTests.DhcpPacketSerializerTests
+namespace LH.Dhcp.UnitTests.Serialization
 {
     // ReSharper disable once InconsistentNaming
     public class DhcpPacketSerializer_DeserializeShould
@@ -142,7 +142,7 @@ namespace LH.Dhcp.UnitTests.DhcpPacketSerializerTests
             var ex = Assert.Throws<DhcpSerializationException>(
                 () => _serializer.Deserialize(packetBytes));
 
-            Assert.Contains("short", ex.Message);
+            Assert.DoesNotContain("magic", ex.Message);
         }
 
         [Fact]

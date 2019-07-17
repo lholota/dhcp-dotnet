@@ -1,5 +1,4 @@
-﻿using LH.Dhcp.Serialization;
-using LH.Dhcp.Serialization.OptionSerialization;
+﻿using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
@@ -10,12 +9,6 @@ namespace LH.Dhcp.Options
         {
             Forward = forward;
         }
-
-        internal DhcpForwardOption(DhcpBinaryValueReader valueReader)
-        {
-            Forward = valueReader.AsBoolean();
-        }
-
 
         public bool Forward { get; }
     }

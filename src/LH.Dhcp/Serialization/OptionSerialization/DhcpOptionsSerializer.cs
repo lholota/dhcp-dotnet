@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using LH.Dhcp.Options;
 
 namespace LH.Dhcp.Serialization.OptionSerialization
@@ -17,64 +14,32 @@ namespace LH.Dhcp.Serialization.OptionSerialization
 
         public IReadOnlyList<IDhcpOption> DeserializeOptions(DhcpBinaryReader binaryReader)
         {
-            // TODO: Use value reader to unify the reading of code+length+value bytes
+            var options = new List<IDhcpOption>();
+            var optionsTaggedCollection = binaryReader.ReadValueToEnd().AsTaggedValueCollection();
 
-            var result = new List<IDhcpOption>();
-
-            while (binaryReader.CanRead())
+            foreach (var optionTaggedItem in optionsTaggedCollection)
             {
-                var optionTypeCode = (DhcpOptionTypeCode)binaryReader.ReadByte();
-
-                if (optionTypeCode == DhcpOptionTypeCode.End)
-                {
-                    break;
-                }
-
-                if (optionTypeCode == DhcpOptionTypeCode.Pad)
-                {
-                    // Skip Pad option because it does not have length or value
-                    continue;
-                }
-
-                var descriptor = _optionTypeDescriptors.GetDescriptor(optionTypeCode);
-
-                var optionValueLength = binaryReader.ReadByte();
+                var descriptor = _optionTypeDescriptors.GetDescriptor((DhcpOptionTypeCode) optionTaggedItem.Key);
 
                 if (descriptor == null)
                 {
-                    // Option is not supported, skip the option length
-                    binaryReader.Seek(optionValueLength);
-
+                    // Option not supported
                     continue;
                 }
 
-                var optionValueReader = binaryReader.CreateValueReader(optionValueLength);
-                var optionValue = GetOptionValue(optionValueReader, descriptor.OptionValueType);
+                var optionValue = optionTaggedItem.Value.As(descriptor.OptionValueType);
 
-                result.Add(CreateOption(descriptor.OptionType, optionValue));
+                var option = CreateOption(descriptor, optionValue);
+
+                options.Add(option);
             }
 
-            return result;
+            return options;
         }
 
-        private static object GetOptionValue(DhcpBinaryValueReader optionValueReader, Type optionType)
+        private IDhcpOption CreateOption(DhcpOptionTypeDescriptor descriptor, object optionValue)
         {
-            if (!optionValueReader.IsValid(optionType))
-            {
-                throw new DhcpSerializationException("");
-            }
-
-            return optionValueReader.As(optionType);
-        }
-
-        private IDhcpOption CreateOption(Type optionType, object optionValue)
-        {
-            return (IDhcpOption)Activator.CreateInstance(
-                optionType,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                null,
-                new[] { optionValue },
-                CultureInfo.InvariantCulture);
+            return (IDhcpOption)descriptor.Constructor.Invoke(new[]{ optionValue });
         }
     }
 }

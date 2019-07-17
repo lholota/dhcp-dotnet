@@ -1,5 +1,4 @@
-﻿using LH.Dhcp.Serialization;
-using LH.Dhcp.Serialization.OptionSerialization;
+﻿using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
@@ -9,11 +8,6 @@ namespace LH.Dhcp.Options
         public DhcpExtensionsFileOption(string extensionsFile)
         {
             ExtensionsFile = extensionsFile;
-        }
-
-        internal DhcpExtensionsFileOption(DhcpBinaryValueReader valueReader)
-        {
-            ExtensionsFile = valueReader.AsString();
         }
 
         public string ExtensionsFile { get; }

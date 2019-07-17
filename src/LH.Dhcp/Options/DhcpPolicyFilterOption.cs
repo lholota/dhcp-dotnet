@@ -11,7 +11,8 @@ namespace LH.Dhcp.Options
     {
         public IEnumerable<DhcpPolicyFilter> Filters { get; }
 
-        internal DhcpPolicyFilterOption(IEnumerable<Tuple<IPAddress, IPAddress>> ipAddressPairs)
+        [CreateOptionConstructor]
+        internal DhcpPolicyFilterOption(IReadOnlyList<Tuple<IPAddress, IPAddress>> ipAddressPairs)
         {
             Filters = ipAddressPairs
                 .Select(x => new DhcpPolicyFilter(x.Item1, x.Item2))

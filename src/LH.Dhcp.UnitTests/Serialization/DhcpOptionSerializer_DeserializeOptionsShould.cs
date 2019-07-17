@@ -5,9 +5,10 @@ using LH.Dhcp.Serialization;
 using LH.Dhcp.Serialization.OptionSerialization;
 using LH.Dhcp.UnitTests.Extensions;
 using Xunit;
+
 // ReSharper disable StringLiteralTypo
 
-namespace LH.Dhcp.UnitTests.Serialization.DhcpOptionSerializerTests
+namespace LH.Dhcp.UnitTests.Serialization
 {
     // ReSharper disable once InconsistentNaming
     public class DhcpOptionSerializer_DeserializeOptionsShould
@@ -28,8 +29,12 @@ namespace LH.Dhcp.UnitTests.Serialization.DhcpOptionSerializerTests
                 2, // length
                 1, // If the serializer does not skip this byte, it would try to parse it as a SubnetMask
                 0,
-                0,
-                (byte)DhcpOptionTypeCode.End
+                (byte)DhcpOptionTypeCode.TimeOffset,
+                4,
+                1,
+                1,
+                1,
+                1
             };
 
             var reader = new DhcpBinaryReader(packetBytes);

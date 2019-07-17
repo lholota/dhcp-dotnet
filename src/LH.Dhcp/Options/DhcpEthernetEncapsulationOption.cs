@@ -11,6 +11,7 @@ namespace LH.Dhcp.Options
     [DhcpOption(DhcpOptionTypeCode.Ethernet)]
     public class DhcpEthernetEncapsulationOption : IDhcpOption
     {
+        [CreateOptionConstructor]
         internal DhcpEthernetEncapsulationOption(bool value)
         {
             EthernetEncapsulation = value

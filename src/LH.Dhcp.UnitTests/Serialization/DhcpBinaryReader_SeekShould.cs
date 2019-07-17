@@ -17,7 +17,7 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             reader.Seek(2);
 
-            Assert.Equal(0x44, reader.ReadByte());
+            Assert.Equal(0x44, reader.ReadValue(1).AsByte());
         }
 
         [Fact]
@@ -25,12 +25,11 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var reader = new DhcpBinaryReader(TestBytes, 2, 10);
 
-            reader.ReadByte();
-            reader.ReadByte();
+            reader.ReadValue(2);
 
             reader.Seek(-2);
 
-            Assert.Equal(0x22, reader.ReadByte());
+            Assert.Equal(0x22, reader.ReadValue(1).AsByte());
         }
 
         [Fact]
@@ -38,8 +37,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var reader = new DhcpBinaryReader(TestBytes, 2, 10);
 
-            reader.ReadByte();
-            reader.ReadByte();
+            reader.ReadValue(2);
 
             Assert.Throws<IndexOutOfRangeException>(
                 () => reader.Seek(-5));
@@ -50,8 +48,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var reader = new DhcpBinaryReader(TestBytes, 2, 10);
 
-            reader.ReadByte();
-            reader.ReadByte();
+            reader.ReadValue(2);
 
             Assert.Throws<IndexOutOfRangeException>(
                 () => reader.Seek(-250));

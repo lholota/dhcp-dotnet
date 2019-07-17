@@ -51,7 +51,7 @@ namespace LH.Dhcp.Serialization.OptionSerialization
         private ConstructorInfo GetOptionConstructor(Type optionType)
         {
             var matchingCtors = optionType
-                .GetConstructors(BindingFlags.NonPublic | BindingFlags.Public)
+                .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .Where(x => x.GetParameters().Length == 1)
                 .ToArray();
 

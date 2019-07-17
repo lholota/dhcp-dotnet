@@ -1,5 +1,4 @@
-﻿using LH.Dhcp.Serialization;
-using LH.Dhcp.Serialization.OptionSerialization;
+﻿using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
@@ -9,11 +8,6 @@ namespace LH.Dhcp.Options
         public DhcpHostNameOption(string hostName)
         {
             HostName = hostName;
-        }
-
-        internal DhcpHostNameOption(DhcpBinaryValueReader valueReader)
-        {
-            HostName = valueReader.AsString();
         }
 
         public string HostName { get; }

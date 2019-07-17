@@ -6,6 +6,7 @@ namespace LH.Dhcp.Options
     [DhcpOption(DhcpOptionTypeCode.KeepaliveTime)]
     public class DhcpTcpKeepAliveIntervalOption : IDhcpOption
     {
+        [CreateOptionConstructor]
         internal DhcpTcpKeepAliveIntervalOption(uint seconds)
         {
             Interval = TimeSpan.FromSeconds(seconds);

@@ -34,7 +34,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var ex = Assert.Throws<ArgumentOutOfRangeException>(
                 () => new DhcpBinaryReader(TestBytes, 5, 6));
 
-            Assert.Equal("lengthLimit", ex.ParamName);
+            Assert.Equal("length", ex.ParamName);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace LH.Dhcp.Options
     [DhcpOption(DhcpOptionTypeCode.TimeOffset)]
     public class DhcpTimeOffsetOption : IDhcpOption
     {
+        [CreateOptionConstructor]
         internal DhcpTimeOffsetOption(int seconds)
         {
             Offset = TimeSpan.FromSeconds(seconds);

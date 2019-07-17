@@ -5,7 +5,7 @@ using Xunit;
 namespace LH.Dhcp.UnitTests.Serialization
 {
     // ReSharper disable once InconsistentNaming
-    public class DhcpBinaryReader_CanReadShould
+    public class DhcpBinaryReader_CanReadWithLengthShould
     {
         private static readonly byte[] TestBytes = "00112233445566778899aabbccddeeff".AsHexBytes();
 
@@ -16,7 +16,17 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             reader.ReadValueToEnd();
 
-            Assert.False(reader.CanRead());
+            Assert.False(reader.CanRead(1));
+        }
+
+        [Fact]
+        public void ReturnFalse_GivenLengthBeyondLimit()
+        {
+            var reader = new DhcpBinaryReader(TestBytes);
+
+            reader.ReadValue(10);
+
+            Assert.False(reader.CanRead(20));
         }
 
         [Fact]
@@ -26,7 +36,7 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             reader.ReadValue(4);
 
-            Assert.False(reader.CanRead());
+            Assert.False(reader.CanRead(1));
         }
 
         [Fact]
@@ -36,7 +46,7 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             reader.ReadValue(4);
 
-            Assert.True(reader.CanRead());
+            Assert.True(reader.CanRead(2));
         }
 
         [Fact]
@@ -44,7 +54,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var reader = new DhcpBinaryReader(TestBytes);
 
-            Assert.True(reader.CanRead());
+            Assert.True(reader.CanRead(2));
         }
 
         [Fact]
@@ -52,7 +62,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var reader = new DhcpBinaryReader(TestBytes, 2, 10);
 
-            Assert.True(reader.CanRead());
+            Assert.True(reader.CanRead(2));
         }
     }
 }

@@ -6,6 +6,12 @@ namespace LH.Dhcp.Options
     [DhcpOption(DhcpOptionTypeCode.ARPTimeout)]
     public class DhcpArpCacheTimeoutOption : IDhcpOption
     {
+        [CreateOptionConstructor]
+        internal DhcpArpCacheTimeoutOption(uint timeoutSeconds)
+        {
+            Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+        }
+
         public DhcpArpCacheTimeoutOption(TimeSpan timeout)
         {
             Timeout = timeout;
