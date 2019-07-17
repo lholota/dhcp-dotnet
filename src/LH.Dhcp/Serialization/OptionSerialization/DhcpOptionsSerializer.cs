@@ -27,7 +27,16 @@ namespace LH.Dhcp.Serialization.OptionSerialization
                     continue;
                 }
 
-                var optionValue = optionTaggedItem.Value.As(descriptor.OptionValueType);
+                object optionValue;
+
+                if (descriptor.OptionValueType == typeof(IBinaryValue))
+                {
+                    optionValue = optionTaggedItem.Value;
+                }
+                else
+                {
+                    optionValue = optionTaggedItem.Value.As(descriptor.OptionValueType);
+                }
 
                 var option = CreateOption(descriptor, optionValue);
 
