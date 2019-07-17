@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp", "LH.Dhcp\LH.Dhcp.csproj", "{A8712A1B-2447-4772-95FB-1BFD4C6BB858}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LH.Dhcp.UnitTests", "LH.Dhcp.UnitTests\LH.Dhcp.UnitTests.csproj", "{9EB4D6BB-02C4-420C-91F1-0ACA674016FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp.UnitTests", "LH.Dhcp.UnitTests\LH.Dhcp.UnitTests.csproj", "{9EB4D6BB-02C4-420C-91F1-0ACA674016FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

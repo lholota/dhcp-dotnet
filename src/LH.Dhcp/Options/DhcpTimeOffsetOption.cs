@@ -1,12 +1,12 @@
 ﻿using System;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.TimeOffset, typeof(DhcpInt32OptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.TimeOffset)]
     public class DhcpTimeOffsetOption : IDhcpOption
     {
+        [CreateOptionConstructor]
         internal DhcpTimeOffsetOption(int seconds)
         {
             Offset = TimeSpan.FromSeconds(seconds);

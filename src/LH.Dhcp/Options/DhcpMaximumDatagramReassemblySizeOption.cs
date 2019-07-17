@@ -1,10 +1,9 @@
 ﻿using System;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MaxDGAssembly, typeof(DhcpUnsignedInt16OptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.MaxDGAssembly)]
     public class DhcpMaximumDatagramReassemblySizeOption : IDhcpOption
     {
         public ushort MaximumSize { get; }

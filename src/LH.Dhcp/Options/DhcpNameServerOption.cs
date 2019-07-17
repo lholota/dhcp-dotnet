@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.NameServer, typeof(DhcpIpAddressListOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.NameServer)]
     public class DhcpNameServerOption : IDhcpOption
     {
-        public IEnumerable<IPAddress> NameServerAddresses { get; }
+        public IReadOnlyList<IPAddress> NameServerAddresses { get; }
 
-        public DhcpNameServerOption(IEnumerable<IPAddress> nameServerAddresses)
+        public DhcpNameServerOption(IReadOnlyList<IPAddress> nameServerAddresses)
         {
             NameServerAddresses = nameServerAddresses;
         }

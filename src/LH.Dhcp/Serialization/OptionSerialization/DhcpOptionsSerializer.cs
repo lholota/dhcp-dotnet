@@ -1,67 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using LH.Dhcp.Options;
 
 namespace LH.Dhcp.Serialization.OptionSerialization
 {
     internal class DhcpOptionsSerializer
     {
-        private readonly DhcpOptionDescriptorsCollection _optionDescriptorsCollection;
+        private readonly DhcpOptionTypeDescriptorsCollection _optionTypeDescriptors;
 
         public DhcpOptionsSerializer()
         {
-            _optionDescriptorsCollection = new DhcpOptionDescriptorsCollection();
+            _optionTypeDescriptors = new DhcpOptionTypeDescriptorsCollection();
         }
 
-        public IReadOnlyList<IDhcpOption> DeserializeOptions(DhcpBinaryReader reader)
+        public IReadOnlyList<IDhcpOption> DeserializeOptions(DhcpBinaryReader binaryReader)
         {
-            var result = new List<IDhcpOption>();
+            var options = new List<IDhcpOption>();
+            var optionsTaggedCollection = binaryReader.ReadValueToEnd().AsTaggedValueCollection();
 
-            while (reader.CanRead())
+            foreach (var optionTaggedItem in optionsTaggedCollection)
             {
-                var optionTypeCode = (DhcpOptionTypeCode)reader.ReadByte();
-
-                if (optionTypeCode == DhcpOptionTypeCode.End)
-                {
-                    break;
-                }
-
-                if (optionTypeCode == DhcpOptionTypeCode.Pad)
-                {
-                    // Skip Pad option because it does not have length or value
-                    continue;
-                }
-
-                var descriptor = _optionDescriptorsCollection.GetDescriptor(optionTypeCode);
-
-                var optionValueLength = reader.ReadByte();
+                var descriptor = _optionTypeDescriptors.GetDescriptor((DhcpOptionTypeCode) optionTaggedItem.Key);
 
                 if (descriptor == null)
                 {
-                    // Option is not supported, skip the option length
-                    reader.Seek(optionValueLength);
-
+                    // Option not supported
                     continue;
                 }
 
-                var optionValue = descriptor.ValueSerializer.Deserialize(reader, optionValueLength);
+                object optionValue;
 
-                result.Add(CreateOption(descriptor, optionValue));
+                if (descriptor.OptionValueType == typeof(IBinaryValue))
+                {
+                    optionValue = optionTaggedItem.Value;
+                }
+                else
+                {
+                    optionValue = optionTaggedItem.Value.As(descriptor.OptionValueType);
+                }
+
+                var option = CreateOption(descriptor, optionValue);
+
+                options.Add(option);
             }
 
-            return result;
+            return options;
         }
 
-        private IDhcpOption CreateOption(DhcpOptionDescriptor descriptor, object value)
+        private IDhcpOption CreateOption(DhcpOptionTypeDescriptor descriptor, object optionValue)
         {
-            return (IDhcpOption)Activator.CreateInstance(
-                descriptor.OptionType,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                null,
-                new[] { value },
-                CultureInfo.InvariantCulture);
+            return (IDhcpOption)descriptor.Constructor.Invoke(new[]{ optionValue });
         }
     }
 }

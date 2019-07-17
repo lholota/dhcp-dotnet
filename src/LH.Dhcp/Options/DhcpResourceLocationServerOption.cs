@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.RLPServer, typeof(DhcpIpAddressListOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.RLPServer)]
     public class DhcpResourceLocationServerOption : IDhcpOption
     {
-        public DhcpResourceLocationServerOption(IEnumerable<IPAddress> rlpServerAddresses)
+        public DhcpResourceLocationServerOption(IReadOnlyList<IPAddress> rlpServerAddresses)
         {
             RlpServerAddresses = rlpServerAddresses;
         }
 
-        public IEnumerable<IPAddress> RlpServerAddresses { get; }
+        public IReadOnlyList<IPAddress> RlpServerAddresses { get; }
     }
 }

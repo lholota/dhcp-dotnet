@@ -1,16 +1,8 @@
 ﻿using System;
-using LH.Dhcp.Options;
 using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Serialization
 {
-    public interface IDhcpPacketSerializer
-    {
-        byte[] Serialize(DhcpPacket packet);
-
-        DhcpPacket Deserialize(byte[] bytes);
-    }
-
     public class DhcpPacketSerializer : IDhcpPacketSerializer
     {
         private const ushort BroadcastFlag = 0x8000;
@@ -25,17 +17,7 @@ namespace LH.Dhcp.Serialization
 
         public byte[] Serialize(DhcpPacket packet)
         {
-            using (var writer = new BinaryWriter())
-            {
-                /*
-                 * Bootp fields
-                 * Options
-                 */
-
-                throw new System.NotImplementedException();
-
-                return writer.GetBytes();
-            }
+            throw new System.NotImplementedException();
         }
 
         public DhcpPacket Deserialize(byte[] bytes)
@@ -46,36 +28,43 @@ namespace LH.Dhcp.Serialization
 
             try
             {
-                packetBuilder.WithOperation((DhcpOperation)reader.ReadByte());
+                packetBuilder.WithOperation((DhcpOperation) reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte());
 
-                var clientHardwareAddressType = (ClientHardwareAddressType)reader.ReadByte();
-                var clientHardwareAddressLength = (int)reader.ReadByte();
+                var clientHardwareAddressType =
+                    (ClientHardwareAddressType) reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte();
+                var clientHardwareAddressLength = reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte();
 
-                packetBuilder.WithHops(reader.ReadByte());
-                packetBuilder.WithTransactionId(reader.ReadUnsignedInt32());
-                packetBuilder.WithSecs(reader.ReadUnsignedInt16());
-                packetBuilder.WithBroadcastFlag(reader.ReadUnsignedInt16() == BroadcastFlag);
-                packetBuilder.WithClientIp(reader.ReadIpAddress());
-                packetBuilder.WithYourIp(reader.ReadIpAddress());
-                packetBuilder.WithServerIp(reader.ReadIpAddress());
-                packetBuilder.WithGatewayIp(reader.ReadIpAddress());
+                packetBuilder.WithHops(reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte());
+                packetBuilder.WithTransactionId(reader.ReadValue(DhcpBinaryValue.UnsignedInt32Length)
+                    .AsUnsignedInt32());
+                packetBuilder.WithSecs(reader.ReadValue(DhcpBinaryValue.UnsignedInt16Length).AsUnsignedInt16());
+                packetBuilder.WithBroadcastFlag(
+                    reader.ReadValue(DhcpBinaryValue.UnsignedInt16Length).AsUnsignedInt16() == BroadcastFlag);
+                packetBuilder.WithClientIp(reader.ReadValue(DhcpBinaryValue.IpAddressLength).AsIpAddress());
+                packetBuilder.WithYourIp(reader.ReadValue(DhcpBinaryValue.IpAddressLength).AsIpAddress());
+                packetBuilder.WithServerIp(reader.ReadValue(DhcpBinaryValue.IpAddressLength).AsIpAddress());
+                packetBuilder.WithGatewayIp(reader.ReadValue(DhcpBinaryValue.IpAddressLength).AsIpAddress());
 
                 var clientHardwareAddressBytes = ReadClientHardwareAddress(reader, clientHardwareAddressLength);
 
                 packetBuilder.WithClientHardwareAddress(clientHardwareAddressType, clientHardwareAddressBytes);
 
-                packetBuilder.WithServerName(reader.ReadString(64));
-                packetBuilder.WithBootFile(reader.ReadString(128));
+                packetBuilder.WithServerName(reader.ReadValue(64).AsString());
+                packetBuilder.WithBootFile(reader.ReadValue(128).AsString());
 
-                magicCookie = reader.ReadUnsignedInt32();
+                magicCookie = reader.ReadValue(DhcpBinaryValue.UnsignedInt32Length).AsUnsignedInt32();
 
                 var options = _optionsSerializer.DeserializeOptions(reader);
 
                 packetBuilder.WithOptions(options);
             }
+            catch (InvalidOperationException e)
+            {
+                throw new DhcpSerializationException("The packet is not a valid DHCP packet.", e);
+            }
             catch (IndexOutOfRangeException e)
             {
-                throw new DhcpSerializationException("The packet is too short to be a valid DHCP packet.", e);
+                throw new DhcpSerializationException("The packet is not a valid DHCP packet.", e);
             }
 
             if (magicCookie != MagicCookie)
@@ -86,18 +75,18 @@ namespace LH.Dhcp.Serialization
             return packetBuilder.Build();
         }
 
-        private byte[] ReadClientHardwareAddress(DhcpBinaryReader reader, int addressLength)
+        private byte[] ReadClientHardwareAddress(DhcpBinaryReader reader, byte addressLength)
         {
-            const int addressFixedLength = 16;
+            const byte addressMaxLength = 16;
 
-            var clientHardwareAddressBytes = reader.ReadBytes(Math.Min(addressLength, addressFixedLength));
+            var clientHardwareAddress = reader.ReadValue(Math.Min(addressLength, addressMaxLength));
 
             // Jump over padding bytes of the ClientHardwareAddress
-            var paddingLength = addressFixedLength - Math.Min(addressLength, 16);
+            var paddingLength = addressMaxLength - Math.Min(addressLength, addressMaxLength);
 
             reader.Seek(paddingLength);
 
-            return clientHardwareAddressBytes;
+            return clientHardwareAddress.AsBytes();
         }
     }
 }

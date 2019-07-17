@@ -1,9 +1,8 @@
 ﻿using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.SrcRteOnOff, typeof(DhcpBooleanOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.SrcRteOnOff)]
     public class DhcpLocalSourceRoutingOption : IDhcpOption
     {
         public bool Enabled { get; }

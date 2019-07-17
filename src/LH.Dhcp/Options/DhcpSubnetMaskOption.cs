@@ -1,10 +1,9 @@
 ﻿using System.Net;
 using LH.Dhcp.Serialization.OptionSerialization;
-using LH.Dhcp.Serialization.OptionSerialization.OptionValueSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.SubnetMask, typeof(DhcpIpAddressOptionSerializer))]
+    [DhcpOption(DhcpOptionTypeCode.SubnetMask)]
     public class DhcpSubnetMaskOption : IDhcpOption
     {
         public DhcpSubnetMaskOption(IPAddress value)
