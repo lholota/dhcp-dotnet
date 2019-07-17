@@ -8,8 +8,20 @@ jobs:
       - checkout
 
       - run:
+          name: Install SonarCloud .NET Core Global tool
+          command: dotnet tool install --global dotnet-sonarscanner --version 4.3.1
+
+      - run:
+          name: Start SonarCube
+          command: dotnet sonarscanner begin /k:"lholota_dhcp-dotnet"
+
+      - run:
           name: Build
           command: cd src && dotnet build -c Release -p:Version=1.0.${CIRCLE_BUILD_NUM}
+
+      - run:
+          name: Stop SonarCube
+          command: dotnet sonarscanner end
 
       - run:
           name: Unit tests
