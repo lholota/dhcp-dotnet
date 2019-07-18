@@ -3,6 +3,10 @@ dist: bionic
 language: csharp
 mono: none
 dotnet: 2.2
+jdk: openjdk8
+
+git:
+  depth: false
 
 addons:
   sonarcloud:
@@ -21,6 +25,6 @@ script:
 #     branch: master
 #   script: dotnet nuget push src/LH.Dhcp/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
 
-cache:
-  directories:
-    - '$HOME/.sonar/cache'
+# cache:
+#   directories:
+#     - '$HOME/.sonar/cache'
