@@ -11,7 +11,7 @@ namespace LH.Dhcp
 {
     public class DhcpListener : IDhcpListener
     {
-        private const int DhcpClientPort = 68;
+        private const int DhcpClientPort2 = 68;
 
         private Task _listeningTask;
 
@@ -29,7 +29,7 @@ namespace LH.Dhcp
 
             _cancellationTokenSource = new CancellationTokenSource();
 
-            _udpClientEndpoint = new IPEndPoint(IPAddress.Any, DhcpClientPort);
+            _udpClientEndpoint = new IPEndPoint(IPAddress.Any, DhcpClientPort2);
 
             _udpClient = new UdpClient();
             _udpClient.EnableBroadcast = true;
