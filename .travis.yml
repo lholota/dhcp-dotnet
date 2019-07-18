@@ -5,6 +5,9 @@ mono: none
 dotnet: 2.2
 jdk: openjdk8
 
+git:
+  depth: false
+
 addons:
   sonarcloud:
     organization: "lholota" # the key of the org you chose at step #3
