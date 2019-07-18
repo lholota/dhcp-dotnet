@@ -15,9 +15,10 @@ addons:
       secure: "PZwuBU19Ig/y9R/chw6bz2USlqWI+caGm/HovbeBnLJYmkEv01YQQohFphlxdHjjvvkhs8t7f/x/v3p9Pfd4LcED6R6GT675+UxqaGMKF5776uINNkSVoqZihqvUXSwdAOFQ4iQw64opF8vIgyBQ0YHWf9z1NcTOFaFSU4nghw2VW3q0hgBiEIqG/7idq7/N4WWG+q4l4cHR18PIhve9OCObZwhbFIvD3LtkI4SZaTSDgaFOCzWlmXMX2DtR0yjIPUA1/zWyEe4ET9Jryd30oev5Ruw6hrqUYULefWLOCzyRkzkufanqbVC/3ff7CEYAkSgp+kg4he678pjipMWLIXwcR/h00FovSscUZBOM1/3ckgAm2zDwzW7FnxKwfBKo/0KmmxoFigUTE7H8E0BTgTSCsdmvy1LUlXmi8VSzAkNoJt22G83mCZSlnSKgTyCyfk0sGVj4MgGg6BlfemMEJaxJ1auMmJdnc9z4Bz7UJ7tHp2HOzemKjw5gyLFnOBeznMkh7NgmHDuk71z9ffjw7JQa1S+Pub9FpokcuByATP+V+KUbE6ekEzeQkyyZfEMyAzY6BXZcL+ymNYh0Ps3vHT/He08gEdoJ2bVBHIP8iWmG5/XNmPuNb9I696VDFGRkUrv/Rk7CPIwqVveHAt20l3rP3qfaLRGVta4TsxpjRog="
 
 script: 
-  - cd src && dotnet build -c Release -p:Version=1.0.$TRAVIS_BUILD_NUMBER ./src/LH.Dhcp.sln
-  - cd src && dotnet test -c Release --no-build --no-restore -p:Version=1.0.$TRAVIS_BUILD_NUMBER --logger "trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover ./src/LH.Dhcp.sln
-  - cd src && sonar-scanner -Dproject.settings=./sonar-scanner.properties -Dsonar.login=$SONARCLOUD_TOKEN -Dsonar.scm.revision=$TRAVIS_COMMIT -Dsonar.branch.name=$TRAVIS_BRANCH -Dsonar.branch.target=master
+  - cd src
+  - dotnet build -c Release -p:Version=1.0.$TRAVIS_BUILD_NUMBER ./src/LH.Dhcp.sln
+  - dotnet test -c Release --no-build --no-restore -p:Version=1.0.$TRAVIS_BUILD_NUMBER --logger "trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover ./src/LH.Dhcp.sln
+  - sonar-scanner -Dproject.settings=./sonar-scanner.properties -Dsonar.login=$SONARCLOUD_TOKEN -Dsonar.scm.revision=$TRAVIS_COMMIT -Dsonar.branch.name=$TRAVIS_BRANCH -Dsonar.branch.target=master
 
 # deploy:
 #   provider: script
