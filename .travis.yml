@@ -15,11 +15,11 @@ script:
   - dotnet test -c Release --no-build --no-restore -p:Version=1.0.$TRAVIS_BUILD_NUMBER --logger "trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover ./src/LH.Dhcp.sln
   - sonar-scanner -Dproject.settings=./sonar-scanner.properties -Dsonar.login=$SONARCLOUD_TOKEN
 
-deploy:
-  provider: script
-  on:
-    branch: master
-  script: dotnet nuget push src/LH.Dhcp/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
+# deploy:
+#   provider: script
+#   on:
+#     branch: master
+#   script: dotnet nuget push src/LH.Dhcp/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
 
 cache:
   directories:
