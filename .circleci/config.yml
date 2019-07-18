@@ -2,19 +2,14 @@ version: 2
 jobs:
   build:
     docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:2.2
+      - image: lholota/dotnetcore-sdk-sonarcube:feature-poc
 
     steps:
       - checkout
 
       - run:
-          name: Install SonarCloud .NET Core Global tool
-          command: dotnet tool install --global dotnet-sonarscanner
-
-      - run:
           name: Build
           command: |
-            export PATH="$PATH:/root/.dotnet/tools"
             cd src
             dotnet sonarscanner begin /k:"lholota_dhcp-dotnet" /o:lholota /d:sonar.host.url=https://sonarcloud.io /d:sonar.login=${SONARCLOUD_KEY}
             dotnet build -c Release -p:Version=1.0.${CIRCLE_BUILD_NUM}
@@ -31,7 +26,7 @@ jobs:
   
   deploy:
     docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:2.2
+      - image: lholota/dotnetcore-sdk-sonarcube:feature-poc
 
     steps:
       - attach_workspace:
