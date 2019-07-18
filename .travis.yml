@@ -3,6 +3,7 @@ dist: bionic
 language: csharp
 mono: none
 dotnet: 2.2
+jdk: openjdk8
 
 addons:
   sonarcloud:
