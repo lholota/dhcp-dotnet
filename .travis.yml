@@ -17,7 +17,7 @@ addons:
 script: 
   - dotnet build -c Release -p:Version=1.0.$TRAVIS_BUILD_NUMBER ./src/LH.Dhcp.sln
   - dotnet test -c Release --no-build --no-restore -p:Version=1.0.$TRAVIS_BUILD_NUMBER --logger "trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover ./src/LH.Dhcp.sln
-  - sonar-scanner -Dproject.settings=./sonar-scanner.properties -Dsonar.login=$SONARCLOUD_TOKEN -Dsonar.scm.revision=$TRAVIS_COMMIT -Dsonar.branch.name=$TRAVIS_BRANCH
+  - sonar-scanner -Dproject.settings=./sonar-scanner.properties -Dsonar.login=$SONARCLOUD_TOKEN -Dsonar.scm.revision=$TRAVIS_COMMIT -Dsonar.branch.name=$TRAVIS_BRANCH -Dsonar.branch.target=master
 
 # deploy:
 #   provider: script
