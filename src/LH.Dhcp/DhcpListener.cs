@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LH.Dhcp
 {
-    public class DhcpListener : IDhcpListener
+    public sealed class DhcpListener : IDhcpListener
     {
         private const int DhcpClientPort = 68;
 

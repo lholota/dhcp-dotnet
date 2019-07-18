@@ -2,7 +2,7 @@
 {
     public enum ClientHardwareAddressType
     {
-        Reserved = 0,
+        Unknown = 0,
         Ethernet = 1,
         ExperimentalEthernet = 2,
         AX25 = 3,
