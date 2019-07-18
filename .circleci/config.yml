@@ -11,7 +11,7 @@ jobs:
           name: Start Sonarqube
           command: |
             cd src
-            dotnet sonarscanner begin /k:"lholota_dhcp-dotnet" /o:lholota /d:sonar.host.url=https://sonarcloud.io /d:sonar.login=${SONARCLOUD_KEY} /d:"sonar.cs.vstest.reportsPaths=/src/results/*" /d:"sonar.cs.vscoveragexml.reportsPaths=/src/**/TestResults/*.coverage"
+            dotnet sonarscanner begin /k:"lholota_dhcp-dotnet" /o:lholota /d:sonar.host.url=https://sonarcloud.io /d:sonar.login=${SONARCLOUD_KEY} /d:"sonar.cs.vstest.reportsPaths=${CIRCLE_WORKING_DIRECTORY}/src/results/*" /d:"sonar.cs.vscoveragexml.reportsPaths=${CIRCLE_WORKING_DIRECTORY}/src/**/TestResults/*.coverage" /d:"sonar.scm.revision=${CIRCLE_SHA1}" /d:"sonar.links.scm=${CIRCLE_REPOSITORY_URL}"
 
       - run:
           name: Build
