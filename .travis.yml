@@ -8,17 +8,32 @@ jdk: openjdk8
 git:
   depth: false
 
-addons:
-  sonarcloud:
-    organization: "lholota" # the key of the org you chose at step #3
-    token:
-      secure: "PZwuBU19Ig/y9R/chw6bz2USlqWI+caGm/HovbeBnLJYmkEv01YQQohFphlxdHjjvvkhs8t7f/x/v3p9Pfd4LcED6R6GT675+UxqaGMKF5776uINNkSVoqZihqvUXSwdAOFQ4iQw64opF8vIgyBQ0YHWf9z1NcTOFaFSU4nghw2VW3q0hgBiEIqG/7idq7/N4WWG+q4l4cHR18PIhve9OCObZwhbFIvD3LtkI4SZaTSDgaFOCzWlmXMX2DtR0yjIPUA1/zWyEe4ET9Jryd30oev5Ruw6hrqUYULefWLOCzyRkzkufanqbVC/3ff7CEYAkSgp+kg4he678pjipMWLIXwcR/h00FovSscUZBOM1/3ckgAm2zDwzW7FnxKwfBKo/0KmmxoFigUTE7H8E0BTgTSCsdmvy1LUlXmi8VSzAkNoJt22G83mCZSlnSKgTyCyfk0sGVj4MgGg6BlfemMEJaxJ1auMmJdnc9z4Bz7UJ7tHp2HOzemKjw5gyLFnOBeznMkh7NgmHDuk71z9ffjw7JQa1S+Pub9FpokcuByATP+V+KUbE6ekEzeQkyyZfEMyAzY6BXZcL+ymNYh0Ps3vHT/He08gEdoJ2bVBHIP8iWmG5/XNmPuNb9I696VDFGRkUrv/Rk7CPIwqVveHAt20l3rP3qfaLRGVta4TsxpjRog="
-
 script: 
   - cd src
+  - dotnet tool install --global dotnet-sonarscanner
+  - export PATH="/root/.dotnet/tools:${PATH}"
+  - | 
+      dotnet sonarscanner begin \
+        /k:"lholota_dhcp-dotnet" \
+        /o:lholota \
+        /d:sonar.host.url=https://sonarcloud.io \
+        /d:sonar.login=$SONARCLOUD_TOKEN \
+        /d:"sonar.cs.vstest.reportsPaths=$TRAVIS_BUILD_DIR/src/**/TestResults/*.trx" \
+        /d:"sonar.cs.opencover.reportsPaths=$TRAVIS_BUILD_DIR/src/**/coverage.opencover.xml" \
+        /d:"sonar.scm.revision=$TRAVIS_COMMIT" \
+        /d:"sonar.links.scm=https://github.com/lholota/dhcp-dotnet" \
+        /d:"sonar.branch.name=$TRAVIS_BRANCH"
+
   - dotnet build -c Release -p:Version=1.0.$TRAVIS_BUILD_NUMBER
-  - dotnet test -c Release --no-build --no-restore -p:Version=1.0.$TRAVIS_BUILD_NUMBER --logger "trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-  - sonar-scanner -Dproject.settings=./sonar-scanner.properties -Dsonar.login=$SONARCLOUD_TOKEN
+
+  - |
+      dotnet test -c Release --no-build --no-restore \
+        -p:Version=1.0.$TRAVIS_BUILD_NUMBER \
+        --logger "trx" \
+        /p:CollectCoverage=true \
+        /p:CoverletOutputFormat=opencover
+
+  - dotnet sonarscanner end /d:sonar.login=$SONARCLOUD_TOKEN
 
 # deploy:
 #   provider: script
