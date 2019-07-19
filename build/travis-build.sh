@@ -11,7 +11,8 @@ cd src
 # Start the SonarScanner
 if [ "$TRAVIS_PULL_REQUEST" -eq "false" ]
 then
-    # Ordinary branch build
+    echo "Standard branch build"
+
     dotnet sonarscanner begin \
         /k:"lholota_dhcp-dotnet" \
         /o:lholota \
@@ -24,8 +25,9 @@ then
         /d:"sonar.links.scm=https://github.com/lholota/dhcp-dotnet" \
         /d:"sonar.branch.name=$TRAVIS_BRANCH"
 else
-    # Pull request build
-       dotnet sonarscanner begin \
+    echo "Pull request build"
+    
+    dotnet sonarscanner begin \
         /k:"lholota_dhcp-dotnet" \
         /o:lholota \
         /d:"sonar.host.url=https://sonarcloud.io" \
