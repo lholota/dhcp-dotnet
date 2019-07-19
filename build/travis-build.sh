@@ -39,6 +39,8 @@ else
         /d:"sonar.pullrequest.key=$TRAVIS_PULL_REQUEST" \
         /d:"sonar.pullrequest.branch=$TRAVIS_PULL_REQUEST_BRANCH" \
         /d:"sonar.pullrequest.base=$TRAVIS_BRANCH"
+        /d:"sonar.pullrequest.github.repository=$TRAVIS_PULL_REQUEST_SLUG"
+        /d:"sonar.pullrequest.provider=GitHub"
 fi
 
 dotnet build -c Release -p:Version=$BUILD_VERSION
