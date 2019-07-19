@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 BUILD_VERSION="0.9.$TRAVIS_BUILD_NUMBER"
 
@@ -9,7 +10,7 @@ export PATH="~/.dotnet/tools:$PATH"
 cd src
 
 # Start the SonarScanner
-if [ "$TRAVIS_PULL_REQUEST" -eq "false" ]
+if [ "$TRAVIS_PULL_REQUEST" == "false" ]
 then
     echo "Standard branch build"
 
