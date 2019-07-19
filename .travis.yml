@@ -10,7 +10,10 @@ git:
 
 script: 
   - dotnet tool install --global dotnet-sonarscanner
-  - export PATH="/root/.dotnet/tools:$PATH"
+  #- export PATH="/root/.dotnet/tools:$PATH"
+
+  # To reload PATH variable which was updated by the tool installation
+  - source ~/.bashrc
   - echo $PATH
   - find / -name "sonar"
   - | 
