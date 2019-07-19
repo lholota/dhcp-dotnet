@@ -11,6 +11,7 @@ git:
 script: 
   - dotnet tool install --global dotnet-sonarscanner
   - export PATH="~/.dotnet/tools:$PATH"
+  - cd src
 
   - | 
       dotnet sonarscanner begin \
@@ -24,7 +25,6 @@ script:
         /d:"sonar.links.scm=https://github.com/lholota/dhcp-dotnet" \
         /d:"sonar.branch.name=$TRAVIS_BRANCH"
 
-  - cd src
   - dotnet build -c Release -p:Version=1.0.$TRAVIS_BUILD_NUMBER
 
   - |
