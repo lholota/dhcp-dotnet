@@ -14,7 +14,6 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]
 then
     echo "Standard branch build"
 
-    # /v:"$BUILD_VERSION"
     dotnet sonarscanner begin \
         /k:"lholota_dhcp-dotnet" \
         /o:lholota \
@@ -37,7 +36,6 @@ else
         /d:"sonar.cs.opencover.reportsPaths=$TRAVIS_BUILD_DIR/src/**/coverage.opencover.xml" \
         /d:"sonar.scm.revision=$TRAVIS_COMMIT" \
         /d:"sonar.links.scm=https://github.com/lholota/dhcp-dotnet" \
-        /d:"sonar.branch.name=$TRAVIS_BRANCH" \
         /d:"sonar.pullrequest.key=$TRAVIS_PULL_REQUEST" \
         /d:"sonar.pullrequest.branch=$TRAVIS_PULL_REQUEST_BRANCH" \
         /d:"sonar.pullrequest.base=$TRAVIS_BRANCH"
