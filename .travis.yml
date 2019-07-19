@@ -12,7 +12,7 @@ script:
   - dotnet tool install --global dotnet-sonarscanner
   - export PATH="/root/.dotnet/tools:$PATH"
   - echo $PATH
-  - echo find / -name "sonar"
+  - find / -name "sonar"
   - | 
       dotnet sonarscanner begin \
         /k:"lholota_dhcp-dotnet" \
