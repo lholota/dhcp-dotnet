@@ -14,10 +14,10 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]
 then
     echo "Standard branch build"
 
+    # /v:"$BUILD_VERSION"
     dotnet sonarscanner begin \
         /k:"lholota_dhcp-dotnet" \
         /o:lholota \
-        /v:"$BUILD_VERSION"
         /d:"sonar.host.url=https://sonarcloud.io" \
         /d:"sonar.login=$SONARCLOUD_TOKEN" \
         /d:"sonar.cs.vstest.reportsPaths=$TRAVIS_BUILD_DIR/src/**/TestResults/*.trx" \
