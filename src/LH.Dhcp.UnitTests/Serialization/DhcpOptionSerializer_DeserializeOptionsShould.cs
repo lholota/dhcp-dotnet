@@ -838,5 +838,79 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             Assert.Equal(IPAddress.Parse("192.168.1.2"), option.ServerAddress);
         }
+
+        [Fact]
+        public void DeserializeParameterRequestListOption()
+        {
+            var optionsBytes = "3740fc0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d4342".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpParameterRequestListOption>().Single();
+
+            Assert.Equal(64, option.RequestedOptions.Count);
+
+            Assert.Contains(option.RequestedOptions, o => o == 1);
+            Assert.Contains(option.RequestedOptions, o => o == 252);
+            Assert.Contains(option.RequestedOptions, o => o == 252);
+        }
+
+        [Fact]
+        public void DeserializeMessageOption()
+        {
+            var optionsBytes = "381168656c6c6f2e6578616d706c652e636f6dff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var rootPathOption = options.OfType<DhcpMessageOption>().Single();
+
+            Assert.Equal("hello.example.com", rootPathOption.Message);
+        }
+
+        [Fact]
+        public void DeserializeMaxMessageSizeOption()
+        {
+            var optionsBytes = "390203d4".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMaxMessageSizeOption>().Single();
+
+            Assert.Equal(980, option.MaxSize);
+        }
+
+        [Fact]
+        public void DeserializeRenewalTimeOption()
+        {
+            var optionsBytes = "3a04000003d4ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpRenewalTimeOption>().Single();
+
+            Assert.Equal(980, option.RenewalTime.TotalSeconds);
+        }
+
+        [Fact]
+        public void DeserializeRebindingTimeOption()
+        {
+            var optionsBytes = "3b04000003d4ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpRebindingTimeOption>().Single();
+
+            Assert.Equal(980, option.RebindingTime.TotalSeconds);
+        }
     }
 }
