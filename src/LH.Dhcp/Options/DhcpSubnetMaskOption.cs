@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using LH.Dhcp.Extensions;
 using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
@@ -9,31 +10,11 @@ namespace LH.Dhcp.Options
         public DhcpSubnetMaskOption(IPAddress value)
         {
             SubnetMask = value;
-            CidrPrefix = GetCidrPrefix(value);
+            CidrPrefix = value.ToCidrPrefix();
         }
 
         public IPAddress SubnetMask { get; }
 
         public uint CidrPrefix { get; }
-
-        private uint GetCidrPrefix(IPAddress ipAddress)
-        {
-            var result = 0;
-            var bytes = ipAddress.GetAddressBytes();
-
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                var octetByte = bytes[i];
-
-                while (octetByte != 0)
-                {
-                    result += octetByte & 1;
-
-                    octetByte >>= 1;
-                }
-            }
-
-            return (uint)result;
-        }
     }
 }

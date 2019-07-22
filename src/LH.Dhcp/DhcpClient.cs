@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using LH.Dhcp.Extensions;
@@ -10,18 +11,13 @@ using Microsoft.Extensions.Logging;
 
 namespace LH.Dhcp
 {
-    public interface IDhcpClient
-    {
-        Task<IReadOnlyList<DhcpPacket>> Discover(DhcpDiscoveryParameters parameters, CancellationToken ct);
-    }
-
     public class DhcpClient : IDhcpClient
     {
         private const int DhcpServerPort = 67;
 
         private static readonly IPEndPoint BroadcastEndpoint = new IPEndPoint(IPAddress.Broadcast, DhcpServerPort);
 
-        private readonly Random _random;
+        private readonly RNGCryptoServiceProvider _rngCryptoServiceProvider;
         private readonly IDhcpListener _dhcpListener;
         private readonly IDhcpPacketSerializer _serializer;
         private readonly ILogger<DhcpClient> _logger;
@@ -31,7 +27,7 @@ namespace LH.Dhcp
             _dhcpListener = dhcpListener;
             _serializer = serializer;
             _logger = logger;
-            _random = new Random();
+            _rngCryptoServiceProvider = new RNGCryptoServiceProvider();
         }
 
         public async Task<IReadOnlyList<DhcpPacket>> Discover(DhcpDiscoveryParameters parameters, CancellationToken ct)
@@ -39,9 +35,12 @@ namespace LH.Dhcp
             var results = new List<DhcpPacket>();
             var transactionId = GenerateTransactionId();
 
-            EventHandler<DhcpPacketEventArgs> receptionCallback = (sender, args) => HandleDhcpResponseReceived(results, args, transactionId);
+            void ReceptionCallback(object sender, DhcpPacketEventArgs args)
+            {
+                HandleDhcpResponseReceived(results, args, transactionId);
+            }
 
-            _dhcpListener.PacketReceived += receptionCallback;
+            _dhcpListener.PacketReceived += ReceptionCallback;
             _dhcpListener.StartIfNotRunning();
 
             using (var udpClient = new UdpClient())
@@ -59,7 +58,7 @@ namespace LH.Dhcp
 
             await Task.Delay(parameters.Timeout, ct).ConfigureAwait(false);
 
-            _dhcpListener.PacketReceived -= receptionCallback;
+            _dhcpListener.PacketReceived -= ReceptionCallback;
 
             if (results.Count == 0)
             {
@@ -71,7 +70,11 @@ namespace LH.Dhcp
 
         private uint GenerateTransactionId()
         {
-            return (uint)_random.Next(100000, 100000000);
+            var bytes = new byte[4];
+
+            _rngCryptoServiceProvider.GetBytes(bytes);
+
+            return BitConverter.ToUInt32(bytes, 0);
         }
 
         private void HandleDhcpResponseReceived(IList<DhcpPacket> results, DhcpPacketEventArgs args, uint transactionId)

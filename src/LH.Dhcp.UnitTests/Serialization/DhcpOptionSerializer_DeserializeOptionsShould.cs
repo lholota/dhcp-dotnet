@@ -405,7 +405,7 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             var option = options.OfType<DhcpMtuTimeoutOption>().Single();
 
-            Assert.Equal(150U, option.MtuTimeout);
+            Assert.Equal(150U, option.MtuTimeout.TotalSeconds);
         }
 
         [Fact]

@@ -655,13 +655,9 @@
         /// 
         /// </summary>
         VirtualSubnetSelection_VSS_Option = 221,
-        /// <summary>
-        /// 
-        /// </summary>
-        Reserved_PrivateUse = 224-254,
-        /// <summary>
-        /// None
-        /// </summary>
+       
+        PrivateUse = 224-254,
+        
         End = 255
     }
 }

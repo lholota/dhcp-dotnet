@@ -33,42 +33,42 @@ namespace LH.Dhcp.UnitTests.Serialization
         }
 
         [Fact]
-        public void ThrowIndexOutOfRangeException_WhenWouldMoveBeyondLimit()
+        public void ThrowArgumentOutOfRangeException_WhenWouldMoveBeyondLimit()
         {
             var reader = new DhcpBinaryReader(TestBytes, 2, 10);
 
             reader.ReadValue(2);
 
-            Assert.Throws<IndexOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => reader.Seek(-5));
         }
 
         [Fact]
-        public void ThrowIndexOutOfRangeException_WhenWouldMoveBeyondByteArrayStart()
+        public void ThrowArgumentOutOfRangeException_WhenWouldMoveBeyondByteArrayStart()
         {
             var reader = new DhcpBinaryReader(TestBytes, 2, 10);
 
             reader.ReadValue(2);
 
-            Assert.Throws<IndexOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => reader.Seek(-250));
         }
 
         [Fact]
-        public void ThrowIndexOutOfRangeException_WhenWouldMoveBeyondInitialOffset()
+        public void ThrowArgumentOutOfRangeException_WhenWouldMoveBeyondInitialOffset()
         {
             var reader = new DhcpBinaryReader(TestBytes, 2, 4);
             
-            Assert.Throws<IndexOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => reader.Seek(-1));
         }
 
         [Fact]
-        public void ThrowIndexOutOfRangeException_WhenWouldMoveBeyondByteArrayLength()
+        public void ThrowArgumentOutOfRangeException_WhenWouldMoveBeyondByteArrayLength()
         {
             var reader = new DhcpBinaryReader(TestBytes, 2, 4);
 
-            Assert.Throws<IndexOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => reader.Seek(250));
         }
     }
