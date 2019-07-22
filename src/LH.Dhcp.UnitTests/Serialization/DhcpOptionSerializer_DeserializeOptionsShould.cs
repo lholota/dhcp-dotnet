@@ -802,5 +802,41 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             Assert.Equal(1, option.LeaseTime.TotalSeconds);
         }
+
+        /*
+         *
+         * Option override
+         * -> file or sname
+         * -> If option override is encountered, needs to reparse the file/sname bytes as options and 
+         *
+         */
+
+        [Fact]
+        public void DeserializeMessageTypeOption()
+        {
+            var optionsBytes = "350102".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMessageTypeOption>().Single();
+
+            Assert.Equal(DhcpMessageType.Offer, option.MessageType);
+        }
+
+        [Fact]
+        public void DeserializeServerIdentifierOption()
+        {
+            var optionsBytes = "3604c0a80102".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpServerIdentifierOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.2"), option.ServerAddress);
+        }
     }
 }
