@@ -5,7 +5,7 @@ using Xunit;
 namespace LH.Dhcp.UnitTests.Options
 {
     // ReSharper disable once InconsistentNaming
-    public class DhcpAddressTimeOption_CtorShould
+    public class DhcpRequestedAddressTimeOption_CtorShould
     {
         [Fact]
         public void ThrowArgumentOutOfRangeException_GivenNegativeTimeSpan()
@@ -13,13 +13,13 @@ namespace LH.Dhcp.UnitTests.Options
             var invalidValue = TimeSpan.FromSeconds(-10);
 
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => new DhcpAddressTimeOption(invalidValue));
+                () => new DhcpRequestedAddressTimeOption(invalidValue));
         }
 
         [Fact]
         public void CreateInstance_GivenZeroTimeSpan()
         {
-            var instance = new DhcpAddressTimeOption(TimeSpan.Zero);
+            var instance = new DhcpRequestedAddressTimeOption(TimeSpan.Zero);
 
             Assert.NotNull(instance);
         }

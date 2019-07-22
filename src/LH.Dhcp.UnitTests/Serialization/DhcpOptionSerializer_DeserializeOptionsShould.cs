@@ -776,6 +776,20 @@ namespace LH.Dhcp.UnitTests.Serialization
         }
 
         [Fact]
+        public void DeserializeRequestedAddressOption()
+        {
+            var optionsBytes = "3204c0a80122".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpRequestedAddressOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.34"), option.RequestedAddress);
+        }
+
+        [Fact]
         public void DeserializeAddressTimeOption()
         {
             var optionsBytes = "330400000001".AsHexBytes();
@@ -784,7 +798,7 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             var options = _optionsSerializer.DeserializeOptions(reader);
 
-            var option = options.OfType<DhcpAddressTimeOption>().Single();
+            var option = options.OfType<DhcpRequestedAddressTimeOption>().Single();
 
             Assert.Equal(1, option.LeaseTime.TotalSeconds);
         }

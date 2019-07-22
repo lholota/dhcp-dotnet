@@ -4,9 +4,9 @@ using LH.Dhcp.Serialization.OptionSerialization;
 namespace LH.Dhcp.Options
 {
     [DhcpOption(DhcpOptionTypeCode.AddressTime)]
-    public class DhcpAddressTimeOption : IDhcpOption
+    public class DhcpRequestedAddressTimeOption : IDhcpOption
     {
-        public DhcpAddressTimeOption(TimeSpan leaseTime)
+        public DhcpRequestedAddressTimeOption(TimeSpan leaseTime)
         {
             if (leaseTime.Ticks < 0)
             {
@@ -17,7 +17,7 @@ namespace LH.Dhcp.Options
         }
 
         [CreateOptionConstructor]
-        internal DhcpAddressTimeOption(uint leaseTimeSeconds)
+        internal DhcpRequestedAddressTimeOption(uint leaseTimeSeconds)
         {
             LeaseTime = TimeSpan.FromSeconds(leaseTimeSeconds);
         }
