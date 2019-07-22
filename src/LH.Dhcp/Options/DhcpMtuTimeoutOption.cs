@@ -1,16 +1,23 @@
-﻿using LH.Dhcp.Serialization.OptionSerialization;
+﻿using System;
+using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
     [DhcpOption(DhcpOptionTypeCode.MTUTimeout)]
     public class DhcpMtuTimeoutOption : IDhcpOption
     {
-        public DhcpMtuTimeoutOption(uint mtuTimeout)
+        [CreateOptionConstructor]
+        internal DhcpMtuTimeoutOption(uint mtuTimeout)
+        {
+            MtuTimeout = TimeSpan.FromSeconds(mtuTimeout);
+        }
+
+        public DhcpMtuTimeoutOption(TimeSpan mtuTimeout)
         {
             MtuTimeout = mtuTimeout;
         }
 
         // TODO: Timespan
-        public uint MtuTimeout { get; }
+        public TimeSpan MtuTimeout { get; }
     }
 }

@@ -52,7 +52,7 @@ namespace LH.Dhcp.Serialization
 
             if (newOffset < _initialOffset || newOffset > _limit)
             {
-                throw new ArgumentOutOfRangeException("Cannot seek outside of the byte array length.");
+                throw new ArgumentOutOfRangeException(nameof(length), "Cannot seek outside of the byte array length.");
             }
 
             _offset += length;

@@ -66,6 +66,7 @@ namespace LH.Dhcp.Serialization.OptionSerialization
 
             if (ctorsWithAttribute.Length != 1)
             {
+                // Note: this exception should be never thrown out to user code. It should be only thrown in tests.
                 throw new Exception($"The option type {optionType} does not have a constructor to create option during deserialization.");
             }
 

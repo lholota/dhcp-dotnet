@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using LH.Dhcp.Extensions;
 using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
@@ -31,12 +32,14 @@ namespace LH.Dhcp.Options
 
         public IPAddress SubnetMask { get; }
 
+        public byte CidrPrefix { get; }
+
         public DhcpPolicyFilter(IPAddress destination, IPAddress subnetMask)
         {
             Destination = destination;
             SubnetMask = subnetMask;
 
-            // TODO: Add CIDR prefix
+            CidrPrefix = subnetMask.ToCidrPrefix();
         }
     }
 }

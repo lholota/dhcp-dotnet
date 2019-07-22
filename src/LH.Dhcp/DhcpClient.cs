@@ -35,9 +35,12 @@ namespace LH.Dhcp
             var results = new List<DhcpPacket>();
             var transactionId = GenerateTransactionId();
 
-            EventHandler<DhcpPacketEventArgs> receptionCallback = (sender, args) => HandleDhcpResponseReceived(results, args, transactionId);
+            void ReceptionCallback(object sender, DhcpPacketEventArgs args)
+            {
+                HandleDhcpResponseReceived(results, args, transactionId);
+            }
 
-            _dhcpListener.PacketReceived += receptionCallback;
+            _dhcpListener.PacketReceived += ReceptionCallback;
             _dhcpListener.StartIfNotRunning();
 
             using (var udpClient = new UdpClient())
@@ -55,7 +58,7 @@ namespace LH.Dhcp
 
             await Task.Delay(parameters.Timeout, ct).ConfigureAwait(false);
 
-            _dhcpListener.PacketReceived -= receptionCallback;
+            _dhcpListener.PacketReceived -= ReceptionCallback;
 
             if (results.Count == 0)
             {
