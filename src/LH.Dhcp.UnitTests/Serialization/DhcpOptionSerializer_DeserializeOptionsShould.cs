@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using LH.Dhcp.Options;
+using LH.Dhcp.Options.NetWare;
 using LH.Dhcp.Serialization;
 using LH.Dhcp.Serialization.OptionSerialization;
 using LH.Dhcp.UnitTests.Extensions;
@@ -685,6 +686,291 @@ namespace LH.Dhcp.UnitTests.Serialization
 
             Assert.Equal(IPAddress.Parse("192.168.1.25"), ipAddresses[0]);
             Assert.Equal(IPAddress.Parse("192.168.1.26"), ipAddresses[1]);
+        }
+
+        [Fact]
+        public void DeserializeNetBiosNameServersOption()
+        {
+            var optionsBytes = "2c08c0a8011cc0a8011d".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetBiosNameServersOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.28"), option.NameServers[0]);
+            Assert.Equal(IPAddress.Parse("192.168.1.29"), option.NameServers[1]);
+        }
+
+        [Fact]
+        public void DeserializeNetBiosDistributionServersOption()
+        {
+            var optionsBytes = "2d08c0a8011ec0a8011f".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetBiosDistributionServersOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.30"), option.DistributionServers[0]);
+            Assert.Equal(IPAddress.Parse("192.168.1.31"), option.DistributionServers[1]);
+        }
+
+        [Fact]
+        public void DeserializeNetBiosNodeTypeOption()
+        {
+            var optionsBytes = "2e0104".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetBiosNodeTypeOption>().Single();
+
+            Assert.Equal(NetBiosNodeType.MNode, option.NodeType);
+        }
+
+        [Fact]
+        public void DeserializeNetBiosScopeOption()
+        {
+            var optionsBytes = "2f0968656c6c6f2e636f6d".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetBiosScopeOption>().Single();
+
+            Assert.Equal("hello.com", option.Scope);
+        }
+
+        [Fact]
+        public void DeserializeXWindowFontServersOption()
+        {
+            var optionsBytes = "3008c0a80120c0a80121".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpXWindowFontServersOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.32"), option.FontServers[0]);
+            Assert.Equal(IPAddress.Parse("192.168.1.33"), option.FontServers[1]);
+        }
+
+        [Fact]
+        public void DeserializeXWindowManagerServersOption()
+        {
+            var optionsBytes = "3108c0a80122c0a80123".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpXWindowManagerServersOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.34"), option.ManagerServers[0]);
+            Assert.Equal(IPAddress.Parse("192.168.1.35"), option.ManagerServers[1]);
+        }
+
+        [Fact]
+        public void DeserializeRequestedAddressOption()
+        {
+            var optionsBytes = "3204c0a80122".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpRequestedAddressOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.34"), option.RequestedAddress);
+        }
+
+        [Fact]
+        public void DeserializeAddressTimeOption()
+        {
+            var optionsBytes = "330400000001".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpRequestedAddressTimeOption>().Single();
+
+            Assert.Equal(1, option.LeaseTime.TotalSeconds);
+        }
+
+        /*
+         *
+         * Option override
+         * -> file or sname
+         * -> If option override is encountered, needs to reparse the file/sname bytes as options and 
+         *
+         */
+
+        [Fact]
+        public void DeserializeMessageTypeOption()
+        {
+            var optionsBytes = "350102".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMessageTypeOption>().Single();
+
+            Assert.Equal(DhcpMessageType.Offer, option.MessageType);
+        }
+
+        [Fact]
+        public void DeserializeServerIdentifierOption()
+        {
+            var optionsBytes = "3604c0a80102".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpServerIdentifierOption>().Single();
+
+            Assert.Equal(IPAddress.Parse("192.168.1.2"), option.ServerAddress);
+        }
+
+        [Fact]
+        public void DeserializeParameterRequestListOption()
+        {
+            var optionsBytes = "3740fc0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d4342".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpParameterRequestListOption>().Single();
+
+            Assert.Equal(64, option.RequestedOptions.Count);
+
+            Assert.Contains(option.RequestedOptions, o => o == 1);
+            Assert.Contains(option.RequestedOptions, o => o == 252);
+            Assert.Contains(option.RequestedOptions, o => o == 252);
+        }
+
+        [Fact]
+        public void DeserializeMessageOption()
+        {
+            var optionsBytes = "381168656c6c6f2e6578616d706c652e636f6dff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var rootPathOption = options.OfType<DhcpMessageOption>().Single();
+
+            Assert.Equal("hello.example.com", rootPathOption.Message);
+        }
+
+        [Fact]
+        public void DeserializeMaxMessageSizeOption()
+        {
+            var optionsBytes = "390203d4".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpMaxMessageSizeOption>().Single();
+
+            Assert.Equal(980, option.MaxSize);
+        }
+
+        [Fact]
+        public void DeserializeRenewalTimeOption()
+        {
+            var optionsBytes = "3a04000003d4ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpRenewalTimeOption>().Single();
+
+            Assert.Equal(980, option.RenewalTime.TotalSeconds);
+        }
+
+        [Fact]
+        public void DeserializeRebindingTimeOption()
+        {
+            var optionsBytes = "3b04000003d4ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpRebindingTimeOption>().Single();
+
+            Assert.Equal(980, option.RebindingTime.TotalSeconds);
+        }
+
+        [Fact]
+        public void DeserializeClassIdOption()
+        {
+            var optionsBytes = "3c04000003d4ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpClassIdOption>().Single();
+
+            Assert.Equal(980U, option.ClassId.AsUnsignedInt32());
+        }
+
+        [Fact]
+        public void DeserializeClientIdOption()
+        {
+            var optionsBytes = "3d04000003d4".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpClientIdOption>().Single();
+
+            Assert.Equal(980U, option.ClientId.AsUnsignedInt32());
+        }
+
+        [Fact]
+        public void DeserializeNetWareDomainOption()
+        {
+            var optionsBytes = "3e1168656c6c6f2e6578616d706c652e636f6d".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetWareDomainOption>().Single();
+
+            Assert.Equal("hello.example.com", option.Domain);
+        }
+
+        [Fact]
+        public void DeserializeNetWareSubOptionsOptionOption()
+        {
+            var optionsBytes = "3f07030b04c0a80123".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetWareSubOptionsOption>().Single();
+
+            Assert.Equal(NetWareIpState.NwipExistInSnameFile, option.State);
+
+            var primaryDssSubOption = option.SubOptions.OfType<NetWarePrimaryDssSubOption>().Single();
+            Assert.Equal(IPAddress.Parse("192.168.1.35"), primaryDssSubOption.PrimaryDssServerAddress);
         }
     }
 }

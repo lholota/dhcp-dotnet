@@ -29,7 +29,7 @@ namespace LH.Dhcp.Serialization.OptionSerialization
 
                 object optionValue;
 
-                if (descriptor.OptionValueType == typeof(IBinaryValue))
+                if (descriptor.OptionValueType.IsAssignableFrom(typeof(DhcpBinaryValue)))
                 {
                     optionValue = optionTaggedItem.Value;
                 }

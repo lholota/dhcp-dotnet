@@ -1,14 +1,14 @@
 ﻿namespace LH.Dhcp
 {
-    public enum DhcpMessageType : uint
+    public enum DhcpMessageType : byte
     {
-        DhcpDiscover = 1,
-        DhcpOffer = 2,
-        DhcpRequest = 3,
-        DhcpDecline = 4,
-        DhcpAck = 5,
-        DhcpNak = 6,
-        DhcpRelease = 7,
-        DhcpInform = 8
+        Discover = 1,
+        Offer = 2,
+        Request = 3,
+        Decline = 4,
+        Ack = 5,
+        NAck = 6,
+        Release = 7,
+        Inform = 8
     }
 }

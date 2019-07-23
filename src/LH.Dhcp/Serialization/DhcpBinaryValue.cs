@@ -40,6 +40,11 @@ namespace LH.Dhcp.Serialization
             _length = length;
         }
 
+        public int Length
+        {
+            get => _length;
+        }
+
         public bool AsBoolean()
         {
             if (!IsValidBoolean())
@@ -373,6 +378,21 @@ namespace LH.Dhcp.Serialization
         public bool IsValidIpAddressPairList()
         {
             return _length > 0 && _length % (2 * IpAddressLength) == 0;
+        }
+
+        public IBinaryValue CreateSubsetValue(int offset, int length)
+        {
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(offset), "The offset must be >= 0.");
+            }
+
+            if (offset + length > _length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), "The offset + length < total length of the value.");
+            }
+
+            return new DhcpBinaryValue(_data, _offset + offset, length);
         }
 
         private ushort AsUnsignedInt16(int offset)

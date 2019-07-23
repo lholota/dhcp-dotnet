@@ -26,7 +26,7 @@ namespace LH.Dhcp.UnitTests.Serialization
 
         [Theory]
         [ClassData(typeof(DhcpTestPackets))]
-        public void DeserializeHardwareAddresss(DhcpTestPacket testPacket)
+        public void DeserializeHardwareAddress(DhcpTestPacket testPacket)
         {
             var packet = _serializer.Deserialize(testPacket.Bytes);
 
