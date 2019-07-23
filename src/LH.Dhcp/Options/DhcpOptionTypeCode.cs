@@ -267,15 +267,15 @@
         /// <summary>
         /// NIS+ v3 Client Domain Name
         /// </summary>
-        NISDomainName = 64,
+        NISPlusDomain = 64,
         /// <summary>
         /// NIS+ v3 Server Addresses
         /// </summary>
-        NISServerAddr = 65,
+        NISPlusServerAddr = 65,
         /// <summary>
         /// TFTP Server Name
         /// </summary>
-        ServerName = 66,
+        TftpServerName = 66,
         /// <summary>
         /// Boot File Name
         /// </summary>
