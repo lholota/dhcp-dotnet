@@ -12,11 +12,6 @@ namespace LH.Dhcp.Options
             Value = value;
         }
 
-        public DhcpVendorSpecificInformationOption()
-        {
-
-        }
-
         public IBinaryValue Value { get; }
     }
 }
