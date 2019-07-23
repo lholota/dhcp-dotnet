@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using LH.Dhcp.Options;
+using LH.Dhcp.Options.NetWare;
 using LH.Dhcp.Serialization;
 using LH.Dhcp.Serialization.OptionSerialization;
 using LH.Dhcp.UnitTests.Extensions;
@@ -911,6 +912,65 @@ namespace LH.Dhcp.UnitTests.Serialization
             var option = options.OfType<DhcpRebindingTimeOption>().Single();
 
             Assert.Equal(980, option.RebindingTime.TotalSeconds);
+        }
+
+        [Fact]
+        public void DeserializeClassIdOption()
+        {
+            var optionsBytes = "3c04000003d4ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpClassIdOption>().Single();
+
+            Assert.Equal(980U, option.ClassId.AsUnsignedInt32());
+        }
+
+        [Fact]
+        public void DeserializeClientIdOption()
+        {
+            var optionsBytes = "3d04000003d4".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpClientIdOption>().Single();
+
+            Assert.Equal(980U, option.ClientId.AsUnsignedInt32());
+        }
+
+        [Fact]
+        public void DeserializeNetWareDomainOption()
+        {
+            var optionsBytes = "3e1168656c6c6f2e6578616d706c652e636f6d".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetWareDomainOption>().Single();
+
+            Assert.Equal("hello.example.com", option.Domain);
+        }
+
+        [Fact]
+        public void DeserializeNetWareSubOptionsOptionOption()
+        {
+            var optionsBytes = "3f07030b04c0a80123".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            var option = options.OfType<DhcpNetWareSubOptionsOption>().Single();
+
+            Assert.Equal(NetWareIpState.NwipExistInSnameFile, option.State);
+
+            var primaryDssSubOption = option.SubOptions.OfType<NetWarePrimaryDssSubOption>().Single();
+            Assert.Equal(IPAddress.Parse("192.168.1.35"), primaryDssSubOption.PrimaryDssServerAddress);
         }
     }
 }
