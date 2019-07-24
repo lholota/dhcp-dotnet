@@ -1210,5 +1210,17 @@ namespace LH.Dhcp.UnitTests.Serialization
             Assert.Equal("scope1", option.Scopes[0]);
             Assert.Equal("scope2", option.Scopes[1]);
         }
+
+        [Fact]
+        public void DeserializeRapidCommitOption()
+        {
+            var optionsBytes = "5000ff".AsHexBytes();
+
+            var reader = new DhcpBinaryReader(optionsBytes);
+
+            var options = _optionsSerializer.DeserializeOptions(reader);
+
+            Assert.True(options.OfType<DhcpRapidCommitOption>().Any());
+        }
     }
 }

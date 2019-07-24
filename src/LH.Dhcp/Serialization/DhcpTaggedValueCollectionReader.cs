@@ -38,8 +38,12 @@ namespace LH.Dhcp.Serialization
 
             var tag = _reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte();
             var length = _reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte();
+
+            var itemValue = length > 0
+                ? _reader.ReadValue(length)
+                : null;
             
-            return new DhcpTaggedValue(tag, _reader.ReadValue(length));
+            return new DhcpTaggedValue(tag, itemValue);
         }
 
         private bool IsNextItemEndByte()

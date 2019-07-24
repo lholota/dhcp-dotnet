@@ -5,11 +5,11 @@ namespace LH.Dhcp.Serialization.OptionSerialization
 {
     internal class DhcpOptionsSerializer
     {
-        private readonly DhcpOptionTypeDescriptorsCollection _optionTypeDescriptors;
+        private readonly DhcpOptionTypeCatalog _optionTypeDescriptors;
 
         public DhcpOptionsSerializer()
         {
-            _optionTypeDescriptors = new DhcpOptionTypeDescriptorsCollection();
+            _optionTypeDescriptors = new DhcpOptionTypeCatalog();
         }
 
         public IReadOnlyList<IDhcpOption> DeserializeOptions(DhcpBinaryReader binaryReader)
@@ -19,36 +19,20 @@ namespace LH.Dhcp.Serialization.OptionSerialization
 
             foreach (var optionTaggedItem in optionsTaggedCollection)
             {
-                var descriptor = _optionTypeDescriptors.GetDescriptor((DhcpOptionTypeCode) optionTaggedItem.Key);
+                var optionType = _optionTypeDescriptors.GetOptionType((DhcpOptionTypeCode) optionTaggedItem.Key);
 
-                if (descriptor == null)
+                if (optionType == null)
                 {
                     // Option not supported
                     continue;
                 }
 
-                object optionValue;
-
-                if (descriptor.OptionValueType.IsAssignableFrom(typeof(DhcpBinaryValue)))
-                {
-                    optionValue = optionTaggedItem.Value;
-                }
-                else
-                {
-                    optionValue = optionTaggedItem.Value.As(descriptor.OptionValueType);
-                }
-
-                var option = CreateOption(descriptor, optionValue);
+                var option = optionType.CreateOption(optionTaggedItem.Value);
 
                 options.Add(option);
             }
 
             return options;
-        }
-
-        private IDhcpOption CreateOption(DhcpOptionTypeDescriptor descriptor, object optionValue)
-        {
-            return (IDhcpOption)descriptor.Constructor.Invoke(new[]{ optionValue });
         }
     }
 }
