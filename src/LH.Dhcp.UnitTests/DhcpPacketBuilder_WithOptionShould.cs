@@ -13,7 +13,7 @@ namespace LH.Dhcp.UnitTests
             var option = new DhcpSubnetMaskOption(IPAddress.Broadcast);
 
             var packet = DhcpPacketBuilder.Create()
-                .WithOption(option)
+                .WithRawOption(option)
                 .Build();
 
             Assert.True(ReferenceEquals(option, packet.GetOption<DhcpSubnetMaskOption>()));
@@ -26,8 +26,8 @@ namespace LH.Dhcp.UnitTests
             var option2 = new DhcpSubnetMaskOption(IPAddress.Broadcast);
 
             var packet = DhcpPacketBuilder.Create()
-                .WithOption(option1)
-                .WithOption(option2)
+                .WithRawOption(option1)
+                .WithRawOption(option2)
                 .Build();
 
             Assert.True(ReferenceEquals(option2, packet.GetOption<DhcpSubnetMaskOption>()));

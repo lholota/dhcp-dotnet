@@ -11,7 +11,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[8];
 
-            var binaryValue = new DhcpBinaryValue(bytes, 0, 8);
+            var binaryValue = new BinaryValue(bytes, 0, 8);
 
             Assert.True(binaryValue.IsValidIpAddressPairList());
         }
@@ -25,7 +25,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[length];
 
-            var binaryValue = new DhcpBinaryValue(bytes, 0, length);
+            var binaryValue = new BinaryValue(bytes, 0, length);
 
             Assert.False(binaryValue.IsValidIpAddressPairList());
         }

@@ -21,7 +21,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[10];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, length);
+            var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.AsIpAddressPairList());
@@ -30,7 +30,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnSingleIpPair_GivenBytesForOneIpPair()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, 8);
+            var valueReader = new BinaryValue(TestBytes, 0, 8);
 
             var ipPair = valueReader.AsIpAddressPairList().Single();
 
@@ -41,7 +41,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnTwoIps_GivenBytesForTwoIp()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, 16);
+            var valueReader = new BinaryValue(TestBytes, 0, 16);
 
             var ipAddressPairs = valueReader.AsIpAddressPairList();
 
@@ -55,7 +55,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReadValueFromGivenOffset()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 2, 8);
+            var valueReader = new BinaryValue(TestBytes, 2, 8);
 
             Assert.Equal(IPAddress.Parse("34.51.68.85"), valueReader.AsIpAddressPairList().Single().Item1);
             Assert.Equal(IPAddress.Parse("102.119.136.153"), valueReader.AsIpAddressPairList().Single().Item2);

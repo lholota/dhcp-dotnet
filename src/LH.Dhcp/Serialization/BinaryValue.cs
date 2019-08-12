@@ -5,8 +5,33 @@ using System.Text;
 
 namespace LH.Dhcp.Serialization
 {
-    internal class DhcpBinaryValue : IBinaryValue
+    public class BinaryValue
     {
+        internal static BinaryValue FromByte(byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static uint AsUInt32(byte[] bytes, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ushort AsUInt16(byte[] bytes, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static IPAddress AsIpAddress(byte[] bytes, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static IDictionary<byte, BinaryValue> AsTaggedValueCollection(byte[] bytes, int index, int length)
+        {
+            throw new NotImplementedException();
+        }
+
         public const int BooleanLength = 1;
         public const int ByteLength = 1;
         public const int Int32Length = 4;
@@ -18,7 +43,7 @@ namespace LH.Dhcp.Serialization
         private readonly int _offset;
         private readonly int _length;
 
-        public DhcpBinaryValue(byte[] data, int offset, int length)
+        public BinaryValue(byte[] data, int offset, int length)
         {
             if (data == null)
             {
@@ -62,7 +87,7 @@ namespace LH.Dhcp.Serialization
                 throw new InvalidOperationException("Cannot read binary value as UInt32. The value is not a valid UInt32.");
             }
 
-            return 
+            return
                 (Convert.ToUInt32(_data[_offset]) << 24) |
                 (Convert.ToUInt32(_data[_offset + 1]) << 16) |
                 (Convert.ToUInt32(_data[_offset + 2]) << 8) |
@@ -192,26 +217,28 @@ namespace LH.Dhcp.Serialization
             return result;
         }
 
-        public IReadOnlyDictionary<byte, IBinaryValue> AsTaggedValueCollection()
+        public IReadOnlyDictionary<byte, BinaryValue> AsTaggedValueCollection()
         {
-            var reader = new DhcpBinaryReader(_data, _offset, _length);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            throw new NotImplementedException();
 
-            var result = new Dictionary<byte, IBinaryValue>();
+            //var reader = new DhcpBinaryReader(_data, _offset, _length);
+            //var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
-            while (collectionReader.HasNextItem())
-            {
-                var item = collectionReader.NextItem();
+            //var result = new Dictionary<byte, IBinaryValue>();
 
-                if (result.ContainsKey(item.Tag))
-                {
-                    throw new InvalidOperationException("Cannot read binary value as a TaggedValueCollection. The value is not a valid TaggedValueCollection.");
-                }
+            //while (collectionReader.HasNextItem())
+            //{
+            //    var item = collectionReader.NextItem();
 
-                result.Add(item.Tag, item.Value);
-            }
+            //    if (result.ContainsKey(item.Tag))
+            //    {
+            //        throw new InvalidOperationException("Cannot read binary value as a TaggedValueCollection. The value is not a valid TaggedValueCollection.");
+            //    }
 
-            return result;
+            //    result.Add(item.Tag, item.Value);
+            //}
+
+            //return result;
         }
 
         public byte[] AsBytes()
@@ -313,31 +340,33 @@ namespace LH.Dhcp.Serialization
 
         public bool IsValidTaggedValueCollection()
         {
-            var reader = new DhcpBinaryReader(_data, _offset, _length);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            throw new NotImplementedException();
 
-            var seenTags = new HashSet<byte>();
+            //var reader = new DhcpBinaryReader(_data, _offset, _length);
+            //var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
-            try
-            {
-                while (collectionReader.HasNextItem())
-                {
-                    var item = collectionReader.NextItem();
+            //var seenTags = new HashSet<byte>();
 
-                    if (seenTags.Contains(item.Tag))
-                    {
-                        return false;
-                    }
+            //try
+            //{
+            //    while (collectionReader.HasNextItem())
+            //    {
+            //        var item = collectionReader.NextItem();
 
-                    seenTags.Add(item.Tag);
-                }
+            //        if (seenTags.Contains(item.Tag))
+            //        {
+            //            return false;
+            //        }
 
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
+            //        seenTags.Add(item.Tag);
+            //    }
+
+            //    return true;
+            //}
+            //catch (InvalidOperationException)
+            //{
+            //    return false;
+            //}
         }
 
         public bool IsValidByte()
@@ -380,7 +409,7 @@ namespace LH.Dhcp.Serialization
             return _length > 0 && _length % (2 * IpAddressLength) == 0;
         }
 
-        public IBinaryValue CreateSubsetValue(int offset, int length)
+        public BinaryValue CreateSubsetValue(int offset, byte length)
         {
             if (offset < 0)
             {
@@ -392,7 +421,7 @@ namespace LH.Dhcp.Serialization
                 throw new ArgumentOutOfRangeException(nameof(length), "The offset + length < total length of the value.");
             }
 
-            return new DhcpBinaryValue(_data, _offset + offset, length);
+            return new BinaryValue(_data, _offset + offset, length);
         }
 
         private ushort AsUnsignedInt16(int offset)

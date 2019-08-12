@@ -14,7 +14,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x01, 0x02, 0x00, 0x00, 0x09, 0x02, 0x01, 0x01 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             collectionReader.NextItem();
 
@@ -29,7 +29,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x01, 0x02, 0x00, 0x00, 0x09, 0x03, 0x01, 0x01, 0x01 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             collectionReader.NextItem();
 
@@ -45,7 +45,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x00, 0x01, 0x02, 0x00, 0x00 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             var item = collectionReader.NextItem();
 
@@ -58,7 +58,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x01, 0x02, 0x00, 0x00 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             collectionReader.NextItem();
 
@@ -72,7 +72,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x01, 0x02, 0x00, 0x00, 0xff, 0x01, 0x02, 0x00, 0x00 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             collectionReader.NextItem();
 
@@ -86,7 +86,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x00 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             Assert.Throws<InvalidOperationException>(
                 () => collectionReader.NextItem());

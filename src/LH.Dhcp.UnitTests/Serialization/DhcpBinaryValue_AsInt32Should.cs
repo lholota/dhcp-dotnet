@@ -16,7 +16,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [InlineData(5)]
         public void ThrowInvalidOperationException_GivenInvalidLength(byte length)
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, length);
+            var valueReader = new BinaryValue(TestBytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.AsInt32());
@@ -25,7 +25,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnValue_GivenValidLength()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, 4);
+            var valueReader = new BinaryValue(TestBytes, 0, 4);
 
             Assert.Equal(1122867, valueReader.AsInt32());
         }
@@ -33,7 +33,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReadValueFromGivenOffset()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 2, 4);
+            var valueReader = new BinaryValue(TestBytes, 2, 4);
 
             Assert.Equal(573785173, valueReader.AsInt32());
         }

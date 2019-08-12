@@ -21,7 +21,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[10];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, length);
+            var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.AsUnsignedInt16List());
@@ -30,7 +30,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnSingleNumber_GivenBytesForOneNumber()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, 2);
+            var valueReader = new BinaryValue(TestBytes, 0, 2);
 
             Assert.Equal(17U, valueReader.AsUnsignedInt16List().Single());
         }
@@ -38,7 +38,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnTwoNumbers_GivenBytesForTwoNumbers()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, 8);
+            var valueReader = new BinaryValue(TestBytes, 0, 8);
 
             var numberList = valueReader.AsUnsignedInt16List();
 
@@ -49,7 +49,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReadValueFromGivenOffset()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 2, 2);
+            var valueReader = new BinaryValue(TestBytes, 2, 2);
 
             Assert.Equal(8755U, valueReader.AsUnsignedInt16List().Single());
         }

@@ -15,7 +15,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[20];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, length);
+            var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.False(valueReader.IsValidUnsignedInt16List());
         }
@@ -28,7 +28,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[20];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, length);
+            var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.True(valueReader.IsValidUnsignedInt16List());
         }

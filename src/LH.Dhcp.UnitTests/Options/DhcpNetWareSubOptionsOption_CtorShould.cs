@@ -19,7 +19,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void SetStateFromFirstOption(byte firstByte, NetWareIpState expectedState)
         {
             var bytes = new[] {firstByte};
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 
@@ -33,7 +33,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ThrowFormatException_GivenValueWithInvalidFirstByte(byte firstByte)
         {
             var bytes = new[] { firstByte };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             Assert.Throws<FormatException>(
                 () => new DhcpNetWareSubOptionsOption(binaryValue));
@@ -43,7 +43,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void SetEmptySubOptions_GivenValueWithNoSubOptions()
         {
             var bytes = new byte[] { 0x01 };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 
@@ -56,7 +56,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ThrowFormatException_GivenValueWithFirstByteNotAllowingOtherSubOptionsAndOtherSubOptions(NetWareIpState state)
         {
             var bytes = new byte[] { (byte)state, 0x01, 0xaa, 0xaa };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             Assert.Throws<FormatException>(
                 () => new DhcpNetWareSubOptionsOption(binaryValue));
@@ -68,7 +68,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ReadNsqBroadcastSubOption_GivenFirstByteWhichAllowsSubOptions(NetWareIpState state)
         {
             var bytes = new byte[] { (byte)state, 0x05, 0x01, 0x01 };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 
@@ -83,7 +83,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ReadPreferredDss_GivenFirstByteWhichAllowsSubOptions(NetWareIpState state)
         {
             var bytes = new byte[] { (byte)state, 0x06, 0x08, 0xc0, 0xa8, 0x01, 0x23, 0xc0, 0xa8, 0x01, 0x24 };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 
@@ -99,7 +99,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ReadNearestNwip_GivenFirstByteWhichAllowsSubOptions(NetWareIpState state)
         {
             var bytes = new byte[] { (byte)state, 0x07, 0x08, 0xc0, 0xa8, 0x01, 0x23, 0xc0, 0xa8, 0x01, 0x24 };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 
@@ -115,7 +115,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ReadAutoRetries_GivenFirstByteWhichAllowsSubOptions(NetWareIpState state)
         {
             var bytes = new byte[] { (byte)state, 0x08, 0x01, 0xc0 };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 
@@ -130,7 +130,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ReadAutoRetriesSeconds_GivenFirstByteWhichAllowsSubOptions(NetWareIpState state)
         {
             var bytes = new byte[] { (byte)state, 0x09, 0x01, 0xc0 };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 
@@ -145,7 +145,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ReadSupportVersion11_GivenFirstByteWhichAllowsSubOptions(NetWareIpState state)
         {
             var bytes = new byte[] { (byte)state, 0x0a, 0x01, 0x01 };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 
@@ -160,7 +160,7 @@ namespace LH.Dhcp.UnitTests.Options
         public void ReadPrimaryDss_GivenFirstByteWhichAllowsSubOptions(NetWareIpState state)
         {
             var bytes = new byte[] { (byte)state, 0x0b, 0x04, 0xc0, 0xa8, 0x01, 0x23 };
-            var binaryValue = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var binaryValue = new BinaryValue(bytes, 0, bytes.Length);
 
             var option = new DhcpNetWareSubOptionsOption(binaryValue);
 

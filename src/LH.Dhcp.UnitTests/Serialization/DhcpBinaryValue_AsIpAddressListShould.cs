@@ -20,7 +20,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[10];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, length);
+            var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.AsIpAddressList());
@@ -29,7 +29,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnSingleIp_GivenBytesForOneIp()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, 4);
+            var valueReader = new BinaryValue(TestBytes, 0, 4);
 
             Assert.Equal(IPAddress.Parse("0.17.34.51"), valueReader.AsIpAddressList().Single());
         }
@@ -37,7 +37,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnTwoIps_GivenBytesForTwoIp()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, 8);
+            var valueReader = new BinaryValue(TestBytes, 0, 8);
 
             var ipAddressList = valueReader.AsIpAddressList();
 
@@ -48,7 +48,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReadValueFromGivenOffset()
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 2, 4);
+            var valueReader = new BinaryValue(TestBytes, 2, 4);
 
             Assert.Equal(IPAddress.Parse("34.51.68.85"), valueReader.AsIpAddressList().Single());
         }

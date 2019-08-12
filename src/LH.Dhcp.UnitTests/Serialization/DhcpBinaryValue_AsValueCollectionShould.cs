@@ -19,7 +19,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnResultWithMultipleValues_GivenBytesWithMultipleValues()
         {
-            var valueReader = new DhcpBinaryValue(ValidMultipleOptionsBytes, 0, (byte)ValidMultipleOptionsBytes.Length);
+            var valueReader = new BinaryValue(ValidMultipleOptionsBytes, 0, (byte)ValidMultipleOptionsBytes.Length);
 
             var values = valueReader.AsTaggedValueCollection();
 
@@ -31,7 +31,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnResultWithoutItemsAfterEndByte_GivenBytesWithEndByteInMiddle()
         {
-            var valueReader = new DhcpBinaryValue(ValidEndByteInMiddleBytes, 0, (byte)ValidEndByteInMiddleBytes.Length);
+            var valueReader = new BinaryValue(ValidEndByteInMiddleBytes, 0, (byte)ValidEndByteInMiddleBytes.Length);
 
             var values = valueReader.AsTaggedValueCollection();
 
@@ -42,7 +42,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnResultWithoutPaddingOption_GivenBytesWithPaddingByte()
         {
-            var valueReader = new DhcpBinaryValue(ValidWithPaddingOptionBytes, 0, (byte)ValidWithPaddingOptionBytes.Length);
+            var valueReader = new BinaryValue(ValidWithPaddingOptionBytes, 0, (byte)ValidWithPaddingOptionBytes.Length);
 
             var values = valueReader.AsTaggedValueCollection();
 
@@ -53,7 +53,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnResult_GivenBytesWithoutPaddingByte()
         {
-            var valueReader = new DhcpBinaryValue(ValidNoPaddingOptionBytes, 0, (byte)ValidNoPaddingOptionBytes.Length);
+            var valueReader = new BinaryValue(ValidNoPaddingOptionBytes, 0, (byte)ValidNoPaddingOptionBytes.Length);
 
             var values = valueReader.AsTaggedValueCollection();
 
@@ -64,7 +64,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ThrowInvalidOperationException_GivenBytesWithDuplicateOption()
         {
-            var valueReader = new DhcpBinaryValue(InvalidDuplicateOptionBytes, 0, (byte)InvalidDuplicateOptionBytes.Length);
+            var valueReader = new BinaryValue(InvalidDuplicateOptionBytes, 0, (byte)InvalidDuplicateOptionBytes.Length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.AsTaggedValueCollection());
@@ -73,7 +73,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ThrowInvalidOperationException_GivenBytesWithInvalidLengthOfLastValue()
         {
-            var valueReader = new DhcpBinaryValue(InvalidOptionLengthBytes, 0, (byte)InvalidOptionLengthBytes.Length);
+            var valueReader = new BinaryValue(InvalidOptionLengthBytes, 0, (byte)InvalidOptionLengthBytes.Length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.AsTaggedValueCollection());
@@ -82,7 +82,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ThrowInvalidOperationException_GivenBytesWithPaddingOptionInMiddle()
         {
-            var valueReader = new DhcpBinaryValue(PaddingOptionInMiddleBytes, 0, (byte)PaddingOptionInMiddleBytes.Length);
+            var valueReader = new BinaryValue(PaddingOptionInMiddleBytes, 0, (byte)PaddingOptionInMiddleBytes.Length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.AsTaggedValueCollection());

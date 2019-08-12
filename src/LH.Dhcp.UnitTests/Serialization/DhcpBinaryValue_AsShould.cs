@@ -38,7 +38,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [InlineData(typeof(IReadOnlyList<Tuple<IPAddress, IPAddress>>), 17)]
         public void ThrowInvalidOperationException_GivenInvalidTypeAndLengthCombination(Type outputType, byte length)
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, length);
+            var valueReader = new BinaryValue(TestBytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.As(outputType));
@@ -78,7 +78,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [MemberData(nameof(ValidLengthAndTypeCombinations))]
         public void ReturnValue_GivenValidTypeAndLengthCombination(Type outputType, byte length, object expectedValue)
         {
-            var valueReader = new DhcpBinaryValue(TestBytes, 0, length);
+            var valueReader = new BinaryValue(TestBytes, 0, length);
 
             Assert.Equal(expectedValue, valueReader.As(outputType));
         }
@@ -89,7 +89,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[10];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, 10);
+            var valueReader = new BinaryValue(bytes, 0, 10);
 
             var ex = Assert.Throws<NotSupportedException>(
                 () => valueReader.As(type));

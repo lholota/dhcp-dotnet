@@ -17,7 +17,7 @@ namespace LH.Dhcp.UnitTests
             };
 
             var packet = DhcpPacketBuilder.Create()
-                .WithOptions(options)
+                .WithRawOptions(options)
                 .Build();
 
             Assert.Equal(options[0], packet.GetOption<DhcpTimeOffsetOption>());
@@ -34,8 +34,8 @@ namespace LH.Dhcp.UnitTests
             };
             
             var packet = DhcpPacketBuilder.Create()
-                .WithOption(new DhcpTimeOffsetOption(0))
-                .WithOptions(updatedOptions)
+                .WithRawOption(new DhcpTimeOffsetOption(0))
+                .WithRawOptions(updatedOptions)
                 .Build();
 
             Assert.Equal(updatedOptions[0], packet.GetOption<DhcpTimeOffsetOption>());

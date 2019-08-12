@@ -13,7 +13,7 @@ namespace LH.Dhcp.UnitTests.DhcpPacketTests
             var option = new DhcpTimeOffsetOption(0);
 
             var packet = DhcpPacketBuilder.Create()
-                .WithOption(option)
+                .WithRawOption(option)
                 .Build();
 
             Assert.Equal(option, packet.GetOption<DhcpTimeOffsetOption>());
@@ -23,7 +23,7 @@ namespace LH.Dhcp.UnitTests.DhcpPacketTests
         public void ThrowInvalidOperationException_GivenOptionTypePacketDoesNotContain()
         {
             var packet = DhcpPacketBuilder.Create()
-                .WithOption(new DhcpTimeOffsetOption(0))
+                .WithRawOption(new DhcpTimeOffsetOption(0))
                 .Build();
 
             Assert.Throws<InvalidOperationException>(

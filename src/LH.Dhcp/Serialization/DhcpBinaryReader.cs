@@ -63,14 +63,7 @@ namespace LH.Dhcp.Serialization
             return (_offset + length) <= _limit;
         }
 
-        public byte PeekByte()
-        {
-            VerifyCanRead(1);
-
-            return _data[_offset];
-        }
-
-        public DhcpBinaryValue ReadValue(int length)
+        public BinaryValue ReadValue(int length)
         {
             if (length <= 0)
             {
@@ -79,14 +72,14 @@ namespace LH.Dhcp.Serialization
 
             VerifyCanRead(length);
 
-            var result = new DhcpBinaryValue(_data, _offset, length);
+            var result = new BinaryValue(_data, _offset, length);
 
             _offset += length;
 
             return result;
         }
 
-        public DhcpBinaryValue ReadValueToEnd()
+        public BinaryValue ReadValueToEnd()
         {
             VerifyCanRead(1);
 

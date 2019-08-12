@@ -10,7 +10,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         public void ReturnAsciiRepresentationOfBytes()
         {
             var bytes = new byte[] { 0x48, 0x65, 0x6c, 0x6c, 0x6f };
-            var valueReader = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var valueReader = new BinaryValue(bytes, 0, bytes.Length);
 
             Assert.Equal("Hello", valueReader.AsString());
         }
@@ -19,7 +19,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         public void ReadValueFromGivenOffset()
         {
             var bytes = new byte[] { 0x00, 0x00, 0x00, 0x48, 0x65, 0x6c, 0x6c, 0x6f };
-            var valueReader = new DhcpBinaryValue(bytes, 3, 5);
+            var valueReader = new BinaryValue(bytes, 3, 5);
 
             Assert.Equal("Hello", valueReader.AsString());
         }
@@ -28,7 +28,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         public void TrimZeroTerminationCharacters()
         {
             var bytes = new byte[] { 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x00, 0x00, 0x00 };
-            var valueReader = new DhcpBinaryValue(bytes, 0, bytes.Length);
+            var valueReader = new BinaryValue(bytes, 0, bytes.Length);
 
             Assert.Equal("Hello", valueReader.AsString());
         }

@@ -1,8 +1,17 @@
 ﻿using System;
-using LH.Dhcp.Serialization.OptionSerialization;
+using System.Collections.Generic;
+using LH.Dhcp.Options;
 
 namespace LH.Dhcp.Serialization
 {
+    internal class DhcpPacketOverloadResolver
+    {
+        public void ResolveOverloadedFields(DhcpPacketBuilder builder, )
+        {
+
+        }
+    }
+
     public class DhcpPacketSerializer : IDhcpPacketSerializer
     {
         private const ushort BroadcastFlag = 0x8000;
@@ -17,46 +26,54 @@ namespace LH.Dhcp.Serialization
 
         public byte[] Serialize(DhcpPacket packet)
         {
-            throw new System.NotImplementedException();
+            using (var writer = new DhcpBinaryWriter())
+            {
+                writer.Write(BinaryValue.FromByte((byte)packet.Operation));
+
+                // Other BOOTP fields
+
+                foreach (var option in packet.RawOptions)
+                {
+                    writer.WriteByte(option.Key);
+                    writer.WriteByte((byte)option.Value.Length); // TODO: Split the value if it's longer than 255 !!!
+
+                    writer.Write(option.Value);
+                }
+
+                writer.Write(BinaryValue.FromByte(255)); // End option
+
+                return writer.ToByteArray();
+            }
         }
 
         public DhcpPacket Deserialize(byte[] bytes)
         {
             var reader = new DhcpBinaryReader(bytes);
             var packetBuilder = DhcpPacketBuilder.Create();
-            uint magicCookie;
 
             try
             {
-                packetBuilder.WithOperation((DhcpOperation) reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte());
+                // TODO: Validate length of the packet (< 240 is not a valid packet)
 
-                var clientHardwareAddressType =
-                    (ClientHardwareAddressType) reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte();
-                var clientHardwareAddressLength = reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte();
+                if (BinaryValue.AsUInt32(bytes, 236) != MagicCookie)
+                {
+                    throw new DhcpSerializationException("The packet does not contain the Magic cookie. It can be a valid BOOTP packet, but it is not a DHCP packet.");
+                }
 
-                packetBuilder.WithHops(reader.ReadValue(DhcpBinaryValue.ByteLength).AsByte());
-                packetBuilder.WithTransactionId(reader.ReadValue(DhcpBinaryValue.UnsignedInt32Length)
-                    .AsUnsignedInt32());
-                packetBuilder.WithSecs(reader.ReadValue(DhcpBinaryValue.UnsignedInt16Length).AsUnsignedInt16());
-                packetBuilder.WithBroadcastFlag(
-                    reader.ReadValue(DhcpBinaryValue.UnsignedInt16Length).AsUnsignedInt16() == BroadcastFlag);
-                packetBuilder.WithClientIp(reader.ReadValue(DhcpBinaryValue.IpAddressLength).AsIpAddress());
-                packetBuilder.WithYourIp(reader.ReadValue(DhcpBinaryValue.IpAddressLength).AsIpAddress());
-                packetBuilder.WithServerIp(reader.ReadValue(DhcpBinaryValue.IpAddressLength).AsIpAddress());
-                packetBuilder.WithGatewayIp(reader.ReadValue(DhcpBinaryValue.IpAddressLength).AsIpAddress());
+                DeserializeBootpFields(bytes, packetBuilder);
 
-                var clientHardwareAddressBytes = ReadClientHardwareAddress(reader, clientHardwareAddressLength);
+                var options = BinaryValue.AsTaggedValueCollection(bytes, 240, bytes.Length - 240); // This MUST return IEnumerable !!!
 
-                packetBuilder.WithClientHardwareAddress(clientHardwareAddressType, clientHardwareAddressBytes);
+                var overloadMode = GetOverloadMode(options);
 
-                packetBuilder.WithServerName(reader.ReadValue(64).AsString());
-                packetBuilder.WithBootFile(reader.ReadValue(128).AsString());
+                if (overloadMode != OptionOverloadMode.None)
+                {
+                    var optionsInOverloadedFields = DeserializeOptionsInOverloadedFields(bytes, overloadMode);
 
-                magicCookie = reader.ReadValue(DhcpBinaryValue.UnsignedInt32Length).AsUnsignedInt32();
+                    // TODO: Merge options
+                }
 
-                var options = _optionsSerializer.DeserializeOptions(reader);
-
-                packetBuilder.WithOptions(options);
+                NormalizeLongOptions(options);
             }
             catch (InvalidOperationException e)
             {
@@ -67,26 +84,71 @@ namespace LH.Dhcp.Serialization
                 throw new DhcpSerializationException("The packet is not a valid DHCP packet.", e);
             }
 
-            if (magicCookie != MagicCookie)
-            {
-                throw new DhcpSerializationException("The packet does not contain the Magic cookie. It can be a valid BOOTP packet, but it is not a DHCP packet.");
-            }
-
             return packetBuilder.Build();
         }
 
-        private byte[] ReadClientHardwareAddress(DhcpBinaryReader reader, byte addressLength)
+        private void NormalizeLongOptions(IDictionary<byte, BinaryValue> options)
+        {
+            throw new NotImplementedException();
+        }
+
+        private IDictionary<byte, BinaryValue> DeserializeOptionsInOverloadedFields(byte[] bytes, OptionOverloadMode overloadMode)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DeserializeBootpFields(byte[] bytes, DhcpPacketBuilder builder)
+        {
+            builder.WithOperation((DhcpOperation)bytes[0]);
+
+            var clientHardwareAddressType = (ClientHardwareAddressType)bytes[1];
+            var clientHardwareAddressLength = bytes[2];
+
+            builder.WithHops(bytes[3]);
+            builder.WithTransactionId(BinaryValue.AsUInt32(bytes, 4)); // 8
+            builder.WithSecs(BinaryValue.AsUInt16(bytes, 8));
+            builder.WithBroadcastFlag(BinaryValue.AsUInt16(bytes, 10) == BroadcastFlag);
+            builder.WithClientIp(BinaryValue.AsIpAddress(bytes, 14));
+            builder.WithYourIp(BinaryValue.AsIpAddress(bytes, 18));
+            builder.WithServerIp(BinaryValue.AsIpAddress(bytes, 22));
+            builder.WithGatewayIp(BinaryValue.AsIpAddress(bytes, 26));
+
+            var clientHardwareAddressBytes = ReadClientHardwareAddress(bytes, clientHardwareAddressLength);
+
+            builder.WithClientHardwareAddress(clientHardwareAddressType, clientHardwareAddressBytes);
+
+            var possiblyOverloadedFields = reader.ReadValue(64 + 128);
+
+            magicCookie = reader.ReadValue(BinaryValue.UnsignedInt32Length).AsUnsignedInt32();
+        }
+
+        private byte[] ReadClientHardwareAddress(byte[] packetBytes, byte addressLength)
         {
             const byte addressMaxLength = 16;
 
-            var clientHardwareAddress = reader.ReadValue(Math.Min(addressLength, addressMaxLength));
+            var result = new byte[addressMaxLength];
 
-            // Jump over padding bytes of the ClientHardwareAddress
-            var paddingLength = addressMaxLength - Math.Min(addressLength, addressMaxLength);
+            Array.Copy(packetBytes, 30, result, 0, addressLength);
 
-            reader.Seek(paddingLength);
-
-            return clientHardwareAddress.AsBytes();
+            return result;
         }
+
+        private OptionOverloadMode GetOverloadMode(IDictionary<byte, BinaryValue> options)
+        {
+            if (options.TryGetValue((byte)DhcpOptionTypeCode.Overload, out var overloadMode))
+            {
+                return (OptionOverloadMode)overloadMode.AsByte();
+            }
+
+            return OptionOverloadMode.None;
+        }
+    }
+
+    internal enum OptionOverloadMode
+    {
+        None = 0,
+        FileName = 1,
+        ServerName = 2,
+        Both = 3
     }
 }

@@ -12,7 +12,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x01, 0x02, 0x00, 0x00, 0x02, 0x02, 0x01, 0x01 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             collectionReader.NextItem();
 
@@ -25,7 +25,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x01, 0x02, 0x00, 0x00 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             collectionReader.NextItem();
 
@@ -38,7 +38,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x01, 0x02, 0x00, 0x00, 0xff, 0x01, 0x02, 0x00, 0x00 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             collectionReader.NextItem();
 
@@ -51,7 +51,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x00 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             Assert.False(collectionReader.HasNextItem());
         }
@@ -62,7 +62,7 @@ namespace LH.Dhcp.UnitTests.Serialization
             var bytes = new byte[] { 0x00, 0x01, 0x02, 0x00, 0x00 };
 
             var reader = new DhcpBinaryReader(bytes);
-            var collectionReader = new DhcpTaggedValueCollectionReader(reader);
+            var collectionReader = new TaggedKeyValueCollectionSerializer(reader);
 
             collectionReader.NextItem();
 

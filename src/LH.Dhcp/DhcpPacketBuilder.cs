@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using LH.Dhcp.Options;
+using LH.Dhcp.Serialization;
 
 namespace LH.Dhcp
 {
@@ -25,11 +24,11 @@ namespace LH.Dhcp
         private string _serverName;
         private string _bootFile;
 
-        private readonly List<IDhcpOption> _options;
+        private readonly Dictionary<byte, BinaryValue> _options;
 
         private DhcpPacketBuilder()
         {
-            _options = new List<IDhcpOption>();
+            _options = new Dictionary<byte, BinaryValue>();
         }
 
         internal DhcpPacketBuilder WithOperation(DhcpOperation operation)
@@ -116,29 +115,29 @@ namespace LH.Dhcp
             return this;
         }
 
-        public DhcpPacketBuilder WithOption(IDhcpOption optionToAdd)
+        public DhcpPacketBuilder WithRawOption(byte key, BinaryValue value)
         {
-            var existing = _options.SingleOrDefault(x => x.GetType() == optionToAdd.GetType());
-
-            if (existing != null)
+            if (_options.ContainsKey(key))
             {
-                _options.Remove(existing);
+                _options.Remove(key);
             }
 
-            _options.Add(optionToAdd);
+            _options.Add(key, value);
 
             return this;
         }
 
-        public DhcpPacketBuilder WithOptions(IEnumerable<IDhcpOption> optionsToAdd)
+        public DhcpPacketBuilder WithRawOptions(IEnumerable<KeyValuePair<byte, BinaryValue>> optionsToAdd)
         {
             foreach (var optionToAdd in optionsToAdd)
             {
-                WithOption(optionToAdd);
+                WithRawOption(optionToAdd.Key, optionToAdd.Value);
             }
 
             return this;
         }
+
+        // TODO: Add methods for Semantic Options
 
         public DhcpPacket Build()
         {

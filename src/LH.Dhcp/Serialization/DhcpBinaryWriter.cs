@@ -12,7 +12,22 @@ namespace LH.Dhcp.Serialization
             _memoryStream = new MemoryStream();
         }
 
-        public byte[] GetBytes()
+        public void WriteByte(byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(BinaryValue value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(BinaryValue value, int fixedLength)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] ToByteArray()
         {
             return _memoryStream.ToArray();
         }

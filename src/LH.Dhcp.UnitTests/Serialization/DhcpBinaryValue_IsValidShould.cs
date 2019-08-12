@@ -37,7 +37,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[30];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, length);
+            var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.False(valueReader.IsValid(outputType));
         }
@@ -60,7 +60,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[30];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, length);
+            var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.True(valueReader.IsValid(outputType));
         }
@@ -71,7 +71,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[10];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, 10);
+            var valueReader = new BinaryValue(bytes, 0, 10);
 
             var ex = Assert.Throws<NotSupportedException>(
                 () => valueReader.IsValid(type));

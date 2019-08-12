@@ -9,7 +9,7 @@ namespace LH.Dhcp.Options
     [DhcpOption(DhcpOptionTypeCode.NetWareIPOption)]
     public class DhcpNetWareSubOptionsOption : IDhcpOption
     {
-        internal DhcpNetWareSubOptionsOption(DhcpBinaryValue binaryValue)
+        internal DhcpNetWareSubOptionsOption(BinaryValue binaryValue)
         {
             var firstByteBinaryValue = binaryValue.CreateSubsetValue(0, 1);
 

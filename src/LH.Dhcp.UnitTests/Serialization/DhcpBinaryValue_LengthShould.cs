@@ -11,7 +11,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnLengthOfValue()
         {
-            var binaryValue = new DhcpBinaryValue(Bytes, 0, Bytes.Length);
+            var binaryValue = new BinaryValue(Bytes, 0, Bytes.Length);
 
             Assert.Equal(5, binaryValue.Length);
         }
@@ -19,7 +19,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         [Fact]
         public void ReturnLengthOfValueBetweenOffsetAndLength()
         {
-            var binaryValue = new DhcpBinaryValue(Bytes, 2, 3);
+            var binaryValue = new BinaryValue(Bytes, 2, 3);
 
             Assert.Equal(3, binaryValue.Length);
         }

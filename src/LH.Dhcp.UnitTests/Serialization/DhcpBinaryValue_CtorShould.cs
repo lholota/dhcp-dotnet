@@ -14,7 +14,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         public void ThrowArgumentOutOfRangeException_GivenOffsetLowerThanZero()
         {
             var ex = Assert.Throws<ArgumentOutOfRangeException>(
-                () => new DhcpBinaryValue(TestBytes, -1, 10));
+                () => new BinaryValue(TestBytes, -1, 10));
 
             Assert.Equal("offset", ex.ParamName);
         }
@@ -23,7 +23,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         public void ThrowArgumentOutOfRangeException_GivenLengthBeyondBytesLength()
         {
             var ex =Assert.Throws<ArgumentOutOfRangeException>(
-                () => new DhcpBinaryValue(TestBytes, 10, 255));
+                () => new BinaryValue(TestBytes, 10, 255));
 
             Assert.Equal("length", ex.ParamName);
         }
@@ -32,7 +32,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         public void ThrowArgumentNullException_GivenNullBytes()
         {
             var ex = Assert.Throws<ArgumentNullException>(
-                () => new DhcpBinaryValue(null, 10, 2));
+                () => new BinaryValue(null, 10, 2));
 
             Assert.Equal("data", ex.ParamName);
         }

@@ -15,7 +15,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new byte[10];
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, length);
+            var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
                 () => valueReader.AsBoolean());
@@ -28,7 +28,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var bytes = new[] { binaryValue };
 
-            var valueReader = new DhcpBinaryValue(bytes, 0, 1);
+            var valueReader = new BinaryValue(bytes, 0, 1);
 
             Assert.Equal(expectedValue, valueReader.AsBoolean());
         }
@@ -37,7 +37,7 @@ namespace LH.Dhcp.UnitTests.Serialization
         public void ReadValueFromGivenOffset()
         {
             var bytes = new byte[] { 0x00, 0x00, 0x01, 0x00 };
-            var valueReader = new DhcpBinaryValue(bytes, 2, 1);
+            var valueReader = new BinaryValue(bytes, 2, 1);
 
             Assert.True(valueReader.AsBoolean());
         }

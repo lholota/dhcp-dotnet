@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using LH.Dhcp.Options;
+using LH.Dhcp.Serialization;
 
 namespace LH.Dhcp
 {
     public class DhcpPacket
     {
-        private readonly IReadOnlyList<IDhcpOption> _options;
-
         internal DhcpPacket(
             uint transactionId, 
             DhcpOperation operation, 
@@ -23,9 +21,9 @@ namespace LH.Dhcp
             IPAddress gatewayIp,
             string serverName,
             string bootFile,
-            IReadOnlyList<IDhcpOption> options)
+            IReadOnlyDictionary<byte, BinaryValue> options)
         {
-            _options = options;
+            RawOptions = options;
             Secs = secs;
             IsBroadcast = isBroadcast;
             ClientIp = clientIp;
@@ -64,21 +62,23 @@ namespace LH.Dhcp
 
         public string BootFile { get; }
 
-        public bool HasOption<TOption>() where TOption : IDhcpOption
-        {
-            return _options.Any(x => x is TOption);
-        }
+        //public bool HasOption<TOption>() where TOption : IDhcpOption
+        //{
+        //    return _options.Any(x => x is TOption);
+        //}
 
-        public TOption GetOption<TOption>() where TOption : IDhcpOption
-        {
-            var result = _options.OfType<TOption>().SingleOrDefault();
+        //public TOption GetOption<TOption>() where TOption : IDhcpOption
+        //{
+        //    var result = _options.OfType<TOption>().SingleOrDefault();
 
-            if (result == null)
-            {
-                throw new InvalidOperationException($"The DHCP Packet does not contain the option of type {typeof(TOption)}.");
-            }
+        //    if (result == null)
+        //    {
+        //        throw new InvalidOperationException($"The DHCP Packet does not contain the option of type {typeof(TOption)}.");
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
+
+        public IReadOnlyDictionary<byte, BinaryValue> RawOptions { get; }
     }
 }
