@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.DHCPMaxMsgSize)]
+    [DhcpOption(DhcpOptionCode.DHCPMaxMsgSize)]
     public class DhcpMaxMessageSizeOption : IDhcpOption
     {
         public DhcpMaxMessageSizeOption(ushort maxSize)

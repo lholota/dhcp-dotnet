@@ -5,7 +5,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MTUPlateau)]
+    [DhcpOption(DhcpOptionCode.MTUPlateau)]
     public class DhcpMtuPlateauOption : IDhcpOption
     {
         public DhcpMtuPlateauOption(IReadOnlyList<ushort> sizes)

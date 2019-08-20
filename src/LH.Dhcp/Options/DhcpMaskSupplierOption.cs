@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MaskSupplier)]
+    [DhcpOption(DhcpOptionCode.MaskSupplier)]
     public class DhcpMaskSupplierOption : IDhcpOption
     {
         public DhcpMaskSupplierOption(bool isMaskSupplier)

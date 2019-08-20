@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.ParameterList)]
+    [DhcpOption(DhcpOptionCode.ParameterList)]
     public class DhcpParameterRequestListOption : IDhcpOption
     {
         public DhcpParameterRequestListOption(byte[] requestedOptions)

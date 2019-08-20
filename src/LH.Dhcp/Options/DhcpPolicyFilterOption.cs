@@ -7,7 +7,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.PolicyFilter)]
+    [DhcpOption(DhcpOptionCode.PolicyFilter)]
     public class DhcpPolicyFilterOption : IDhcpOption
     {
         public IEnumerable<DhcpPolicyFilter> Filters { get; }

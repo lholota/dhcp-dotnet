@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.AddressRequest)]
+    [DhcpOption(DhcpOptionCode.AddressRequest)]
     public class DhcpRequestedAddressOption : IDhcpOption
     {
         public DhcpRequestedAddressOption(IPAddress requestedAddress)

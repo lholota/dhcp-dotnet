@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.XWindowFont)]
+    [DhcpOption(DhcpOptionCode.XWindowFont)]
     public class DhcpXWindowFontServersOption : IDhcpOption
     {
         public DhcpXWindowFontServersOption(IReadOnlyList<IPAddress> fontServers)

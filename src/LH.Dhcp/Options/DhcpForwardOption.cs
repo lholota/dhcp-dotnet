@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.ForwardOnOff)]
+    [DhcpOption(DhcpOptionCode.ForwardOnOff)]
     public class DhcpForwardOption : IDhcpOption
     {
         public DhcpForwardOption(bool forward)

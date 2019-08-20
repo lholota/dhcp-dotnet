@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.ClientId)]
+    [DhcpOption(DhcpOptionCode.ClientId)]
     public class DhcpClientIdOption : IDhcpOption
     {
         public DhcpClientIdOption(IBinaryValue clientId)

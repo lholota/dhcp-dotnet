@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.NetWareIPDomain)]
+    [DhcpOption(DhcpOptionCode.NetWareIPDomain)]
     public class DhcpNetWareDomainOption : IDhcpOption
     {
         public DhcpNetWareDomainOption(string domain)

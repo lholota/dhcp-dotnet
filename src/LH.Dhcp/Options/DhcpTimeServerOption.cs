@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.TimeServer)]
+    [DhcpOption(DhcpOptionCode.TimeServer)]
     public class DhcpTimeServerOption : IDhcpOption
     {
         public DhcpTimeServerOption(IReadOnlyList<IPAddress> timeServerAddresses)

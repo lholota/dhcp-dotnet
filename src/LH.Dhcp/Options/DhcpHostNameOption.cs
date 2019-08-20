@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.Hostname)]
+    [DhcpOption(DhcpOptionCode.Hostname)]
     public class DhcpHostNameOption : IDhcpOption
     {
         public DhcpHostNameOption(string hostName)

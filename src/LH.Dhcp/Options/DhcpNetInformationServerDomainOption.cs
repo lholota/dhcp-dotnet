@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.NISDomain)]
+    [DhcpOption(DhcpOptionCode.NISDomain)]
     public class DhcpNetInformationServerDomainOption : IDhcpOption
     {
         public DhcpNetInformationServerDomainOption(string nisServerDomain)

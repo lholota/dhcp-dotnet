@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.DHCPServerId)]
+    [DhcpOption(DhcpOptionCode.DHCPServerId)]
     public class DhcpServerIdentifierOption : IDhcpOption
     {
         public DhcpServerIdentifierOption(IPAddress serverAddress)

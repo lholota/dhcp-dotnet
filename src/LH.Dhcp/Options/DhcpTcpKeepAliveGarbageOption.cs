@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.KeepaliveData)]
+    [DhcpOption(DhcpOptionCode.KeepaliveData)]
     public class DhcpTcpKeepAliveGarbageOption : IDhcpOption
     {
         public DhcpTcpKeepAliveGarbageOption(bool keepAliveGarbage)

@@ -6,83 +6,83 @@ using LH.Dhcp.Options;
 
 namespace LH.Dhcp.Serialization.OptionSerialization
 {
-    internal class DhcpOptionTypeDescriptorsCollection
-    {
-        private readonly IDictionary<DhcpOptionTypeCode, DhcpOptionTypeDescriptor> _enumToTypeMapping;
+    //    internal class DhcpOptionTypeDescriptorsCollection
+    //    {
+    //        private readonly IDictionary<DhcpOptionCode, DhcpOptionTypeDescriptor> _enumToTypeMapping;
 
-        public DhcpOptionTypeDescriptorsCollection()
-        {
-            var optionTypes = GetType().Assembly
-                .GetTypes()
-                .Where(IsDhcpOptionType);
+    //        public DhcpOptionTypeDescriptorsCollection()
+    //        {
+    //            var optionTypes = GetType().Assembly
+    //                .GetTypes()
+    //                .Where(IsDhcpOptionType);
 
-            _enumToTypeMapping = GetEnumToDescriptorMapping(optionTypes);
-        }
+    //            _enumToTypeMapping = GetEnumToDescriptorMapping(optionTypes);
+    //        }
 
-        public DhcpOptionTypeDescriptor GetDescriptor(DhcpOptionTypeCode optionTypeCode)
-        {
-            if (_enumToTypeMapping.TryGetValue(optionTypeCode, out var descriptor))
-            {
-                return descriptor;
-            }
+    //        public DhcpOptionTypeDescriptor GetDescriptor(DhcpOptionCode optionCode)
+    //        {
+    //            if (_enumToTypeMapping.TryGetValue(optionCode, out var descriptor))
+    //            {
+    //                return descriptor;
+    //            }
 
-            return null;
-        }
+    //            return null;
+    //        }
 
-        private Dictionary<DhcpOptionTypeCode, DhcpOptionTypeDescriptor> GetEnumToDescriptorMapping(IEnumerable<Type> optionTypes)
-        {
-            var mapping = new Dictionary<DhcpOptionTypeCode, DhcpOptionTypeDescriptor>();
+    //        private Dictionary<DhcpOptionCode, DhcpOptionTypeDescriptor> GetEnumToDescriptorMapping(IEnumerable<Type> optionTypes)
+    //        {
+    //            var mapping = new Dictionary<DhcpOptionCode, DhcpOptionTypeDescriptor>();
 
-            foreach (var optionType in optionTypes)
-            {
-                var dhcpOptionAttribute = optionType.GetCustomAttribute<DhcpOptionAttribute>();
+    //            foreach (var optionType in optionTypes)
+    //            {
+    //                var dhcpOptionAttribute = optionType.GetCustomAttribute<DhcpOptionAttribute>();
 
-                var optionTypeCtor = GetOptionConstructor(optionType);
-                var optionValueType = optionTypeCtor.GetParameters()[0].ParameterType;
+    //                var optionTypeCtor = GetOptionConstructor(optionType);
+    //                var optionValueType = optionTypeCtor.GetParameters()[0].ParameterType;
 
-                var descriptor = new DhcpOptionTypeDescriptor(optionType, optionValueType, optionTypeCtor);
+    //                var descriptor = new DhcpOptionTypeDescriptor(optionType, optionValueType, optionTypeCtor);
 
-                mapping.Add(dhcpOptionAttribute.OptionTypeCode, descriptor);
-            }
+    //                mapping.Add(dhcpOptionAttribute.OptionCode, descriptor);
+    //            }
 
-            return mapping;
-        }
+    //            return mapping;
+    //        }
 
-        private ConstructorInfo GetOptionConstructor(Type optionType)
-        {
-            var matchingCtors = optionType
-                .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                .Where(x => x.GetParameters().Length == 1)
-                .ToArray();
+    //        private ConstructorInfo GetOptionConstructor(Type optionType)
+    //        {
+    //            var matchingCtors = optionType
+    //                .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+    //                .Where(x => x.GetParameters().Length == 1)
+    //                .ToArray();
 
-            if (matchingCtors.Length == 1)
-            {
-                return matchingCtors[0];
-            }
+    //            if (matchingCtors.Length == 1)
+    //            {
+    //                return matchingCtors[0];
+    //            }
 
-            var ctorsWithAttribute = matchingCtors
-                .Where(x => x.GetCustomAttribute<CreateOptionConstructorAttribute>() != null)
-                .ToArray();
+    //            var ctorsWithAttribute = matchingCtors
+    //                .Where(x => x.GetCustomAttribute<CreateOptionConstructorAttribute>() != null)
+    //                .ToArray();
 
-            if (ctorsWithAttribute.Length != 1)
-            {
-                // Note: this exception should be never thrown out to user code. It should be only thrown in tests.
-                throw new Exception($"The option type {optionType} does not have a constructor to create option during deserialization.");
-            }
+    //            if (ctorsWithAttribute.Length != 1)
+    //            {
+    //                // Note: this exception should be never thrown out to user code. It should be only thrown in tests.
+    //                throw new Exception($"The option type {optionType} does not have a constructor to create option during deserialization.");
+    //            }
 
-            return ctorsWithAttribute[0];
-        }
+    //            return ctorsWithAttribute[0];
+    //        }
 
-        private bool IsDhcpOptionType(Type type)
-        {
-            return typeof(IDhcpOption).IsAssignableFrom(type)
-                   && type.GetCustomAttribute<DhcpOptionAttribute>() != null;
-        }
-    }
+    //        private bool IsDhcpOptionType(Type type)
+    //        {
+    //            return typeof(IDhcpOption).IsAssignableFrom(type)
+    //                   && type.GetCustomAttribute<DhcpOptionAttribute>() != null;
+    //        }
+    //    }
 
     [AttributeUsage(AttributeTargets.Constructor)]
     internal class CreateOptionConstructorAttribute : Attribute
     {
-        
+
     }
 }

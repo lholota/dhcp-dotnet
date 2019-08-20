@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MeritDumpFile)]
+    [DhcpOption(DhcpOptionCode.MeritDumpFile)]
     public class DhcpMeritDumpFileOption : IDhcpOption
     {
         public DhcpMeritDumpFileOption(string dumpFilePath)

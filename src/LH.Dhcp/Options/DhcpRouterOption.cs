@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.Router)]
+    [DhcpOption(DhcpOptionCode.Router)]
     public class DhcpRouterOption : IDhcpOption
     {
         public DhcpRouterOption(IReadOnlyList<IPAddress> routerAddresses)

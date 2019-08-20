@@ -6,7 +6,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.StaticRoute)]
+    [DhcpOption(DhcpOptionCode.StaticRoute)]
     public class DhcpStaticRoutesOption : IDhcpOption
     {
         [CreateOptionConstructorAttribute]

@@ -25,7 +25,7 @@ namespace LH.Dhcp.Options
         HNode = 0x8
     }
 
-    [DhcpOption(DhcpOptionTypeCode.NETBIOSNodeType)]
+    [DhcpOption(DhcpOptionCode.NETBIOSNodeType)]
     public class DhcpNetBiosNodeTypeOption : IDhcpOption
     {
         public DhcpNetBiosNodeTypeOption(NetBiosNodeType nodeType)

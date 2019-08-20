@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MTUSubnet)]
+    [DhcpOption(DhcpOptionCode.MTUSubnet)]
     public class DhcpMtuSubnetOption : IDhcpOption
     {
         public DhcpMtuSubnetOption(bool allSubnetsLocal)

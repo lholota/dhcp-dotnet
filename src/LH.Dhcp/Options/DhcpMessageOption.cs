@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.DHCPMessage)]
+    [DhcpOption(DhcpOptionCode.DHCPMessage)]
     public class DhcpMessageOption : IDhcpOption
     {
         public DhcpMessageOption(string message)

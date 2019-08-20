@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.LogServer)]
+    [DhcpOption(DhcpOptionCode.LogServer)]
     public class DhcpLogServerOption : IDhcpOption
     {
         public IReadOnlyList<IPAddress> LogServerAddresses { get; }

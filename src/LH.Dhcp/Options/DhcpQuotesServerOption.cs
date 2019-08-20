@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.QuotesServer)]
+    [DhcpOption(DhcpOptionCode.QuotesServer)]
     public class DhcpQuotesServerOption : IDhcpOption
     {
         public IReadOnlyList<IPAddress> QuotesServerAddresses { get; }

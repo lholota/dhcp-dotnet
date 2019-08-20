@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.RouterDiscovery)]
+    [DhcpOption(DhcpOptionCode.RouterDiscovery)]
     public class DhcpPerformRouterDiscovery : IDhcpOption
     {
         public DhcpPerformRouterDiscovery(bool performRouterDiscovery)

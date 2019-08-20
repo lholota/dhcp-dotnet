@@ -26,11 +26,11 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var packetBytes = new byte[]
             {
-                (byte)DhcpOptionTypeCode.Etherboot,
+                (byte)DhcpOptionCode.Etherboot,
                 2, // length
                 1, // If the serializer does not skip this byte, it would try to parse it as a SubnetMask
                 0,
-                (byte)DhcpOptionTypeCode.TimeOffset,
+                (byte)DhcpOptionCode.TimeOffset,
                 4,
                 1,
                 1,
@@ -50,14 +50,14 @@ namespace LH.Dhcp.UnitTests.Serialization
         {
             var packetBytes = new byte[]
             {
-                (byte)DhcpOptionTypeCode.Pad,
-                (byte)DhcpOptionTypeCode.SubnetMask,
+                (byte)DhcpOptionCode.Pad,
+                (byte)DhcpOptionCode.SubnetMask,
                 4, // length
                 255, // If the serializer does not skip this byte, it would try to parse it as a SubnetMask
                 255,
                 255,
                 0,
-                (byte)DhcpOptionTypeCode.End
+                (byte)DhcpOptionCode.End
             };
 
             var reader = new DhcpBinaryReader(packetBytes);

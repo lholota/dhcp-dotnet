@@ -6,11 +6,11 @@ namespace LH.Dhcp.Serialization.OptionSerialization
     [AttributeUsage(AttributeTargets.Class)]
     internal class DhcpOptionAttribute : Attribute
     {
-        public DhcpOptionTypeCode OptionTypeCode { get; }
+        public DhcpOptionCode OptionCode { get; }
 
-        public DhcpOptionAttribute(DhcpOptionTypeCode optionTypeCode)
+        public DhcpOptionAttribute(DhcpOptionCode optionCode)
         {
-            OptionTypeCode = optionTypeCode;
+            OptionCode = optionCode;
         }
     }
 }

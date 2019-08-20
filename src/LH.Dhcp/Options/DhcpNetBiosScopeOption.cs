@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.NETBIOSScope)]
+    [DhcpOption(DhcpOptionCode.NETBIOSScope)]
     public class DhcpNetBiosScopeOption : IDhcpOption
     {
         public DhcpNetBiosScopeOption(string scope)

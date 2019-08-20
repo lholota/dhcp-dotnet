@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using LH.Dhcp.Options;
+using LH.Dhcp.Serialization;
 
 namespace LH.Dhcp
 {
     public class DhcpPacket
     {
-        private readonly IReadOnlyList<IDhcpOption> _options;
+        private readonly IReadOnlyDictionary<byte, IBinaryValue> _options;
 
         internal DhcpPacket(
             uint transactionId, 
@@ -23,7 +23,7 @@ namespace LH.Dhcp
             IPAddress gatewayIp,
             string serverName,
             string bootFile,
-            IReadOnlyList<IDhcpOption> options)
+            IReadOnlyDictionary<byte, IBinaryValue> options)
         {
             _options = options;
             Secs = secs;
@@ -66,19 +66,45 @@ namespace LH.Dhcp
 
         public bool HasOption<TOption>() where TOption : IDhcpOption
         {
-            return _options.Any(x => x is TOption);
+            var optionCode = SemanticOptionsMapper.GetOptionCodeByType(typeof(TOption));
+
+            return HasOption(optionCode);
+        }
+
+        public bool HasOption(byte optionCode)
+        {
+            return _options.ContainsKey(optionCode);
+        }
+
+        public bool HasOption(DhcpOptionCode optionCode)
+        {
+            var byteOptionCode = (byte) optionCode;
+
+            return HasOption(byteOptionCode);
         }
 
         public TOption GetOption<TOption>() where TOption : IDhcpOption
         {
-            var result = _options.OfType<TOption>().SingleOrDefault();
+            throw new NotImplementedException();
 
-            if (result == null)
-            {
-                throw new InvalidOperationException($"The DHCP Packet does not contain the option of type {typeof(TOption)}.");
-            }
+            //var result = _options.OfType<TOption>().SingleOrDefault();
 
-            return result;
+            //if (result == null)
+            //{
+            //    throw new InvalidOperationException($"The DHCP Packet does not contain the option of type {typeof(TOption)}.");
+            //}
+
+            //return result;
+        }
+
+        public IBinaryValue GetOption(byte optionCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IBinaryValue GetOption(DhcpOptionCode optionCode)
+        {
+            throw new NotImplementedException();
         }
     }
 }

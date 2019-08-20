@@ -4,7 +4,7 @@ using Xunit;
 namespace LH.Dhcp.UnitTests.DhcpPacketTests
 {
     // ReSharper disable once InconsistentNaming
-    public class DhcpPacket_HasOptionShould
+    public class DhcpPacket_HasOption_ByEnumCodeShould
     {
         [Fact]
         public void ReturnTrue_GivenPacketWhichContainsTheOption()
@@ -13,7 +13,7 @@ namespace LH.Dhcp.UnitTests.DhcpPacketTests
                 .WithOption(new DhcpTimeOffsetOption(0))
                 .Build();
 
-            Assert.True(packet.HasOption<DhcpTimeOffsetOption>());
+            Assert.True(packet.HasOption(DhcpOptionCode.TimeOffset));
         }
 
         [Fact]
@@ -23,7 +23,7 @@ namespace LH.Dhcp.UnitTests.DhcpPacketTests
                 .WithOption(new DhcpTimeOffsetOption(0))
                 .Build();
 
-            Assert.False(packet.HasOption<DhcpSubnetMaskOption>());
+            Assert.False(packet.HasOption(DhcpOptionCode.SubnetMask));
         }
     }
 }

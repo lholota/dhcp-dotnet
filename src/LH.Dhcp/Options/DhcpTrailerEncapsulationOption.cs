@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.Trailers)]
+    [DhcpOption(DhcpOptionCode.Trailers)]
     public class DhcpTrailerEncapsulationOption : IDhcpOption
     {
         public DhcpTrailerEncapsulationOption(bool negotiateTrailerEncapsulation)

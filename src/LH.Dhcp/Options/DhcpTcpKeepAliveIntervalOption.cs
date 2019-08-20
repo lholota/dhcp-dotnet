@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.KeepaliveTime)]
+    [DhcpOption(DhcpOptionCode.KeepaliveTime)]
     public class DhcpTcpKeepAliveIntervalOption : IDhcpOption
     {
         [CreateOptionConstructor]

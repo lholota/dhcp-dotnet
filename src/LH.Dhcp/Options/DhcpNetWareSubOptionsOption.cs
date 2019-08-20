@@ -6,7 +6,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.NetWareIPOption)]
+    [DhcpOption(DhcpOptionCode.NetWareIPOption)]
     public class DhcpNetWareSubOptionsOption : IDhcpOption
     {
         internal DhcpNetWareSubOptionsOption(DhcpBinaryValue binaryValue)

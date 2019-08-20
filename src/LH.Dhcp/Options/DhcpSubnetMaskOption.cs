@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.SubnetMask)]
+    [DhcpOption(DhcpOptionCode.SubnetMask)]
     public class DhcpSubnetMaskOption : IDhcpOption
     {
         public DhcpSubnetMaskOption(IPAddress value)

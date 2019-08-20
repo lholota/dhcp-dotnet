@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MaxDGAssembly)]
+    [DhcpOption(DhcpOptionCode.MaxDGAssembly)]
     public class DhcpMaximumDatagramReassemblySizeOption : IDhcpOption
     {
         public ushort MaximumSize { get; }

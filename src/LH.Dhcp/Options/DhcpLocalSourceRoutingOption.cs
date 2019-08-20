@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.SrcRteOnOff)]
+    [DhcpOption(DhcpOptionCode.SrcRteOnOff)]
     public class DhcpLocalSourceRoutingOption : IDhcpOption
     {
         public bool Enabled { get; }

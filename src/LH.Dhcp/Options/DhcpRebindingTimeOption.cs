@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.RebindingTime)]
+    [DhcpOption(DhcpOptionCode.RebindingTime)]
     public class DhcpRebindingTimeOption : IDhcpOption
     {
         public DhcpRebindingTimeOption(TimeSpan rebindingTime)

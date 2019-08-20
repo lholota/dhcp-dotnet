@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.XWindowManager)]
+    [DhcpOption(DhcpOptionCode.XWindowManager)]
     public class DhcpXWindowManagerServersOption : IDhcpOption
     {
         public DhcpXWindowManagerServersOption(IReadOnlyList<IPAddress> managerServers)

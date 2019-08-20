@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.AddressTime)]
+    [DhcpOption(DhcpOptionCode.AddressTime)]
     public class DhcpRequestedAddressTimeOption : IDhcpOption
     {
         public DhcpRequestedAddressTimeOption(TimeSpan leaseTime)

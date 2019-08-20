@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.BroadcastAddress)]
+    [DhcpOption(DhcpOptionCode.BroadcastAddress)]
     public class DhcpBroadcastAddressOption : IDhcpOption
     {
         public DhcpBroadcastAddressOption(IPAddress broadcastAddress)

@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.BootFileSize)]
+    [DhcpOption(DhcpOptionCode.BootFileSize)]
     public class DhcpBootFileSizeOption : IDhcpOption
     {
         public DhcpBootFileSizeOption(ushort bootFileSize)

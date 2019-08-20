@@ -1,6 +1,6 @@
 ﻿namespace LH.Dhcp.Options
 {
-    internal enum DhcpOptionTypeCode
+    public enum DhcpOptionCode
     {
         Pad = 0,
 

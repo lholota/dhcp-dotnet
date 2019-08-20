@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.ARPTimeout)]
+    [DhcpOption(DhcpOptionCode.ARPTimeout)]
     public class DhcpArpCacheTimeoutOption : IDhcpOption
     {
         [CreateOptionConstructor]

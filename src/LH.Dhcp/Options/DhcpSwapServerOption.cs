@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.SwapServer)]
+    [DhcpOption(DhcpOptionCode.SwapServer)]
     public class DhcpSwapServerOption : IDhcpOption
     {
         public DhcpSwapServerOption(IPAddress swapServerAddress)

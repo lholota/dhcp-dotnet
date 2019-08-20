@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MaskDiscovery)]
+    [DhcpOption(DhcpOptionCode.MaskDiscovery)]
     public class DhcpPerformMaskDiscoveryOption : IDhcpOption
     {
         public DhcpPerformMaskDiscoveryOption(bool performMaskDiscovery)

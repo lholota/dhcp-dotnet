@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.RenewalTime)]
+    [DhcpOption(DhcpOptionCode.RenewalTime)]
     public class DhcpRenewalTimeOption : IDhcpOption
     { 
         public DhcpRenewalTimeOption(TimeSpan renewalTime)

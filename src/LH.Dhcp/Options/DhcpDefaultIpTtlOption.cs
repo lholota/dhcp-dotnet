@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.DefaultIPTTL)]
+    [DhcpOption(DhcpOptionCode.DefaultIPTTL)]
     public class DhcpDefaultIpTtlOption : IDhcpOption
     {
         public DhcpDefaultIpTtlOption(byte ttl)

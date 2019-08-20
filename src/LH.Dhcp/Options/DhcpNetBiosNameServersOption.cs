@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.NETBIOSNameSrv)]
+    [DhcpOption(DhcpOptionCode.NETBIOSNameSrv)]
     public class DhcpNetBiosNameServersOption : IDhcpOption
     {
         public DhcpNetBiosNameServersOption(IReadOnlyList<IPAddress> nameServers)

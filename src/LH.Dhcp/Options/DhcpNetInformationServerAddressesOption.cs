@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.NISServers)]
+    [DhcpOption(DhcpOptionCode.NISServers)]
     public class DhcpNetInformationServerAddressesOption : IDhcpOption
     {
         public DhcpNetInformationServerAddressesOption(IReadOnlyList<IPAddress> addresses)

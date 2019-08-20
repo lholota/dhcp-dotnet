@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using LH.Dhcp.Options;
+using LH.Dhcp.Serialization;
 
 namespace LH.Dhcp
 {
@@ -25,11 +26,11 @@ namespace LH.Dhcp
         private string _serverName;
         private string _bootFile;
 
-        private readonly List<IDhcpOption> _options;
+        private readonly Dictionary<byte, IBinaryValue> _options;
 
         private DhcpPacketBuilder()
         {
-            _options = new List<IDhcpOption>();
+            _options = new Dictionary<byte, IBinaryValue>();
         }
 
         internal DhcpPacketBuilder WithOperation(DhcpOperation operation)
@@ -109,43 +110,51 @@ namespace LH.Dhcp
             return this;
         }
 
-        public DhcpPacketBuilder WithBootFile(string bootfile)
+        public DhcpPacketBuilder WithBootFile(string bootFile)
         { 
-            _bootFile = bootfile;
+            _bootFile = bootFile;
 
             return this;
         }
 
-        public DhcpPacketBuilder WithOption(IDhcpOption optionToAdd)
+        public DhcpPacketBuilder WithOption(byte optionCode, IBinaryValue value)
         {
-            var existing = _options.SingleOrDefault(x => x.GetType() == optionToAdd.GetType());
-
-            if (existing != null)
+            if (_options.ContainsKey(optionCode))
             {
-                _options.Remove(existing);
+                _options.Remove(optionCode);
             }
 
-            _options.Add(optionToAdd);
+            _options.Add(optionCode, value);
+
+            return this;
+        }
+
+        public DhcpPacketBuilder WithOption(IDhcpOption semanticOption)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DhcpPacketBuilder WithOptions(IEnumerable<KeyValuePair<byte, IBinaryValue>> optionsToAdd)
+        {
+            foreach (var optionToAdd in optionsToAdd)
+            {
+                WithOption(optionToAdd.Key, optionToAdd.Value);
+            }
 
             return this;
         }
 
         public DhcpPacketBuilder WithOptions(IEnumerable<IDhcpOption> optionsToAdd)
         {
-            foreach (var optionToAdd in optionsToAdd)
-            {
-                WithOption(optionToAdd);
-            }
-
-            return this;
+            throw new NotImplementedException();
         }
 
         public DhcpPacket Build()
         {
             return new DhcpPacket(
-                _transactionId, 
-                _operation, 
-                _clientHardwareAddress, 
+                _transactionId,
+                _operation,
+                _clientHardwareAddress,
                 _hops,
                 _secs,
                 _isBroadcast,

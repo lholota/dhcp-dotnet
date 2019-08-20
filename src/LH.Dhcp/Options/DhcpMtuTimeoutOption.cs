@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MTUTimeout)]
+    [DhcpOption(DhcpOptionCode.MTUTimeout)]
     public class DhcpMtuTimeoutOption : IDhcpOption
     {
         [CreateOptionConstructor]

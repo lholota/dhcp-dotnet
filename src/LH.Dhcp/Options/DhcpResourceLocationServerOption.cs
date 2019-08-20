@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.RLPServer)]
+    [DhcpOption(DhcpOptionCode.RLPServer)]
     public class DhcpResourceLocationServerOption : IDhcpOption
     {
         public DhcpResourceLocationServerOption(IReadOnlyList<IPAddress> rlpServerAddresses)

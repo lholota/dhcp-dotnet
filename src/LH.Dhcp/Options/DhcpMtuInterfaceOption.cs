@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.MTUInterface)]
+    [DhcpOption(DhcpOptionCode.MTUInterface)]
     public class DhcpMtuInterfaceOption : IDhcpOption
     {
         public DhcpMtuInterfaceOption(ushort mtu)

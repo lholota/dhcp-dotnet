@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.RootPath)]
+    [DhcpOption(DhcpOptionCode.RootPath)]
     public class DhcpRootPathOption : IDhcpOption
     {
         public DhcpRootPathOption(string rootPath)

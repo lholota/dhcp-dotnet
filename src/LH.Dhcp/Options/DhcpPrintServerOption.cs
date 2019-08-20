@@ -4,7 +4,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.LPRServer)]
+    [DhcpOption(DhcpOptionCode.LPRServer)]
     public class DhcpPrintServerOption : IDhcpOption
     {
         public DhcpPrintServerOption(IReadOnlyList<IPAddress> printServerAddresses)

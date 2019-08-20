@@ -3,7 +3,7 @@ using LH.Dhcp.Serialization.OptionSerialization;
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.VendorSpecific)]
+    [DhcpOption(DhcpOptionCode.VendorSpecific)]
     public class DhcpVendorSpecificInformationOption : IDhcpOption
     {
         [CreateOptionConstructor]

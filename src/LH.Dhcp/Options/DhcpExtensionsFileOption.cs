@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.Options
 {
-    [DhcpOption(DhcpOptionTypeCode.ExtensionFile)]
+    [DhcpOption(DhcpOptionCode.ExtensionFile)]
     public class DhcpExtensionsFileOption : IDhcpOption
     {
         public DhcpExtensionsFileOption(string extensionsFile)

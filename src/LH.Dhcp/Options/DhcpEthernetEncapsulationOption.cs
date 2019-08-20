@@ -8,7 +8,7 @@ namespace LH.Dhcp.Options
         Rfc1042
     }
 
-    [DhcpOption(DhcpOptionTypeCode.Ethernet)]
+    [DhcpOption(DhcpOptionCode.Ethernet)]
     public class DhcpEthernetEncapsulationOption : IDhcpOption
     {
         [CreateOptionConstructor]
