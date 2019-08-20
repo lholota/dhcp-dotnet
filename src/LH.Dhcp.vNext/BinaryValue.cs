@@ -1,11 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using LH.Dhcp.vNext.Internals;
 
 namespace LH.Dhcp.vNext
 {
     public class BinaryValue
     {
+        public static BinaryValue Concat(IReadOnlyList<BinaryValue> values)
+        {
+            if (values == null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            if (values.Count == 0)
+            {
+                throw new ArgumentException("The values cannot be empty.", nameof(values));
+            }
+
+            if (values.Count == 1)
+            {
+                return values[0];
+            }
+
+            var length = values.Sum(x => x._length);
+            var combinedBytes = new byte[length];
+
+            var offset = 0;
+
+            foreach (var binaryValue in values)
+            {
+                Array.Copy(binaryValue._bytes, binaryValue._offset, combinedBytes, offset, binaryValue._length);
+
+                offset += binaryValue._length;
+            }
+
+            return new BinaryValue(combinedBytes, 0, combinedBytes.Length);
+        }
+
         private readonly byte[] _bytes;
         private readonly int _offset;
         private readonly int _length;
@@ -37,11 +71,19 @@ namespace LH.Dhcp.vNext
             _length = length;
         }
 
-        public int Length { get; }
+        public int Length
+        {
+            get => _length;
+        }
 
         public byte AsByte()
         {
-            throw new NotImplementedException();
+            if (_length != 1)
+            {
+                throw new InvalidOperationException($"The value has length {_length}. Single byte must have length of 1.");
+            }
+
+            return _bytes[_offset];
         }
 
         public byte[] AsBytes()
@@ -80,7 +122,7 @@ namespace LH.Dhcp.vNext
 
         public string AsString()
         {
-            throw new NotImplementedException();
+            return BinaryConvert.ToString(_bytes, _offset, _length);
         }
 
         public object As(Type outputType)

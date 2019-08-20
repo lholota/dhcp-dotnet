@@ -16,8 +16,9 @@ namespace LH.Dhcp.vNext.UnitTests.Internals
             var reader = new KeyLengthValueReader(_bytes, 0, _bytes.Length);
 
             reader.Next();
+            reader.Next();
 
-            Assert.Equal(0x01, reader.CurrentItemKey);
+            Assert.Equal(0x02, reader.CurrentItemKey);
         }
 
         [Fact]

@@ -221,7 +221,7 @@
         /// <summary>
         /// DHCP Message Type
         /// </summary>
-        DHCPMsgType = 53,
+        DHCPMessageType = 53,
         /// <summary>
         /// DHCP Server Identification
         /// </summary>

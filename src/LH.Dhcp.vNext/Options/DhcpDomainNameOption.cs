@@ -1,6 +1,4 @@
-﻿using LH.Dhcp.Serialization.OptionSerialization;
-
-namespace LH.Dhcp.Options
+﻿namespace LH.Dhcp.vNext.Options
 {
     [DhcpOption(DhcpOptionCode.DomainName)]
     public class DhcpDomainNameOption : IDhcpOption

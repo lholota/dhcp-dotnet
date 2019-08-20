@@ -3,7 +3,7 @@
     internal enum DhcpOptionOverloadMode
     {
         None = 0,
-        BootFile = 1,
+        FileName = 1,
         ServerName = 2,
         Both = 3
     }

@@ -10,7 +10,6 @@ namespace LH.Dhcp.vNext.UnitTests
         private static readonly byte[] TestBytes = "112233445566778899aabbccddeeff".AsHexBytes();
 
         [Theory]
-        [InlineData(0)]
         [InlineData(2)]
         [InlineData(5)]
         public void ThrowInvalidOperationException_GivenInvalidLength(byte length)

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using LH.Dhcp.vNext.Internals;
+using LH.Dhcp.vNext.Options;
 
 namespace LH.Dhcp.vNext
 {
@@ -15,6 +17,8 @@ namespace LH.Dhcp.vNext
 
         private readonly byte[] _packetBytes;
         private readonly Lazy<ClientHardwareAddress> _clientHardwareAddress;
+        private readonly Lazy<string> _bootFileName;
+        private readonly Lazy<string> _serverName;
         private readonly DhcpOptionOverloadMode _overloadMode;
 
         public DhcpPacket(byte[] packetBytes)
@@ -32,6 +36,8 @@ namespace LH.Dhcp.vNext
             _packetBytes = packetBytes;
 
             _clientHardwareAddress = new Lazy<ClientHardwareAddress>(GetClientHardwareAddress);
+            _bootFileName = new Lazy<string>(GetBootFileName);
+            _serverName = new Lazy<string>(GetServerName);
 
             ValidateMagicCookie();
 
@@ -88,13 +94,22 @@ namespace LH.Dhcp.vNext
             get => BinaryConvert.ToIpAddress(_packetBytes, 24);
         }
 
-        public string ServerName { get; } // TODO: Handle overloading
+        public string ServerName
+        {
+            get => _serverName.Value;
+        }
 
-        public string BootFile { get; } // TODO: Handle overloading
+        public string BootFileName
+        {
+            get => _bootFileName.Value;
+        } 
 
         public bool HasOption(byte optionCode)
         {
-            // TODO: If control code => throw argument exception
+            if (IsReservedOptionCode(optionCode))
+            {
+                throw new ArgumentException(nameof(optionCode), $"The option code {optionCode} is reserved and cannot be accessed directly.");
+            }
 
             var optionsReader = new KeyLengthValueReader(_packetBytes, OptionsIndex, _packetBytes.Length - OptionsIndex);
 
@@ -115,7 +130,7 @@ namespace LH.Dhcp.vNext
 
                 while (overloadedOptionsReader.Next())
                 {
-                    if (optionsReader.CurrentItemKey == optionCode)
+                    if (overloadedOptionsReader.CurrentItemKey == optionCode)
                     {
                         return true;
                     }
@@ -130,19 +145,54 @@ namespace LH.Dhcp.vNext
             return HasOption((byte) optionCode);
         }
 
-        public bool HasOption<T>() // where T : IDhcpOption
+        public bool HasOption<T>() where T : IDhcpOption
         {
-            // TODO: Find option code
+            var optionCode = SemanticOptionsMapper.GetOptionCodeByType(typeof(T));
 
-            throw new NotImplementedException();
+            return HasOption(optionCode);
         }
 
         public BinaryValue GetOption(byte optionCode)
         {
-            // TODO: Join long options
-            // TODO: If control code => throw argument exception
+            if (IsReservedOptionCode(optionCode))
+            {
+                throw new ArgumentException(nameof(optionCode), $"The option code {optionCode} is reserved and cannot be accessed directly.");
+            }
 
-            throw new NotImplementedException();
+            var optionsReader = new KeyLengthValueReader(_packetBytes, OptionsIndex, _packetBytes.Length - OptionsIndex);
+
+            var results = new List<BinaryValue>(1);
+
+            while (optionsReader.Next())
+            {
+                if (optionsReader.CurrentItemKey == optionCode)
+                {
+                    results.Add(optionsReader.GetCurrentItemValue());
+                }
+            }
+
+            if (_overloadMode != DhcpOptionOverloadMode.None)
+            {
+                var overloadedOptionsReader = new KeyLengthValueReader(
+                    _packetBytes,
+                    GetOverloadedOptionsStartIndex(),
+                    GetOverloadedOptionsLength());
+
+                while (overloadedOptionsReader.Next())
+                {
+                    if (overloadedOptionsReader.CurrentItemKey == optionCode)
+                    {
+                        results.Add(overloadedOptionsReader.GetCurrentItemValue());
+                    }
+                }
+            }
+
+            if (results.Count == 0)
+            {
+                throw new KeyNotFoundException($"The packet does not contain an option with code {optionCode}.");
+            }
+
+            return BinaryValue.Concat(results);
         }
 
         public BinaryValue GetOption(DhcpOptionCode optionCode)
@@ -196,14 +246,12 @@ namespace LH.Dhcp.vNext
                 case DhcpOptionOverloadMode.None:
                     throw new InvalidOperationException();
 
-                case DhcpOptionOverloadMode.BootFile:
-                    return 128;
+                case DhcpOptionOverloadMode.FileName:
+                    return 108;
 
                 case DhcpOptionOverloadMode.ServerName:
-                    return 256;
-
                 case DhcpOptionOverloadMode.Both:
-                    return 128;
+                    return 44;
             }
 
             throw new NotSupportedException($"Overload value {_overloadMode} is not supported.");
@@ -216,17 +264,43 @@ namespace LH.Dhcp.vNext
                 case DhcpOptionOverloadMode.None:
                     throw new InvalidOperationException();
 
-                case DhcpOptionOverloadMode.BootFile:
+                case DhcpOptionOverloadMode.FileName:
                     return 128;
 
                 case DhcpOptionOverloadMode.ServerName:
-                    return 256;
+                    return 64;
 
                 case DhcpOptionOverloadMode.Both:
-                    return 128;
+                    return 128 + 64;
             }
 
             throw new NotSupportedException($"Overload value {_overloadMode} is not supported.");
+        }
+
+        private string GetBootFileName()
+        {
+            switch (_overloadMode)
+            {
+                case DhcpOptionOverloadMode.None:
+                    return BinaryConvert.ToString(_packetBytes, 108, 128);
+
+                case DhcpOptionOverloadMode.FileName:
+                    // TODO: Find option which may be long
+                    throw new NotImplementedException();
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private string GetServerName()
+        {
+            switch (_overloadMode)
+            {
+                case DhcpOptionOverloadMode.None:
+                    return BinaryConvert.ToString(_packetBytes, 44, 64);
+            }
+
+            throw new NotImplementedException();
         }
 
         private void ValidateMagicCookie()
@@ -236,6 +310,11 @@ namespace LH.Dhcp.vNext
                 throw new FormatException(
                     "The packet does not contain the DHCP Magic cookie. It may be a BOOTP packet, but it's not a DHCP packet.");
             }
+        }
+
+        private bool IsReservedOptionCode(byte optionCode)
+        {
+            return optionCode == 0 || optionCode == 255;
         }
     }
 }

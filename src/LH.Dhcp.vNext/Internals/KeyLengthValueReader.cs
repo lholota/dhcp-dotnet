@@ -87,7 +87,7 @@ namespace LH.Dhcp.vNext.Internals
                     throw new InvalidOperationException($"The {nameof(Next)} method must be called before using {nameof(CurrentItemKey)}");
                 }
 
-                return _bytes[_offset];
+                return _bytes[_currentIndex];
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text;
 
 namespace LH.Dhcp.vNext.Internals
 {
@@ -19,9 +20,19 @@ namespace LH.Dhcp.vNext.Internals
             throw new NotImplementedException();
         }
 
-        public static string ToString(byte[] bytes, int startIndex, int length)
+        public static string ToString(byte[] bytes, int offset, int length)
         {
-            throw new NotImplementedException();
+            ValidateInputs(bytes, offset, length);
+
+            for (; length > 0; length--)
+            {
+                if (bytes[offset + length - 1] != 0x00)
+                {
+                    break;
+                }
+            }
+
+            return Encoding.ASCII.GetString(bytes, offset, length);
         }
 
         public static bool ToBoolean(byte[] bytes, int startIndex)
@@ -72,7 +83,12 @@ namespace LH.Dhcp.vNext.Internals
                 throw new ArgumentOutOfRangeException(nameof(offset), "The offset must be >= 0 and < byte array length.");
             }
 
-            if (offset + valueLength >= bytes.Length)
+            if (valueLength <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(offset), "The length must be > 0.");
+            }
+
+            if (offset + valueLength > bytes.Length)
             {
                 throw new ArgumentException("The offset is too far in the array, the remaining bytes in the array are shorter than the expected value.", nameof(offset));
             }

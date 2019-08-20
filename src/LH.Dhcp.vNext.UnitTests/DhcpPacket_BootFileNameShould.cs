@@ -1,0 +1,56 @@
+using LH.Dhcp.vNext.UnitTests.Extensions;
+using Xunit;
+
+namespace LH.Dhcp.vNext.UnitTests
+{
+    // ReSharper disable once InconsistentNaming
+    public class DhcpPacket_BootFileNameShould
+    {
+        private static readonly byte[] PacketWithFileNameInBootpField = "020106006900d7730000800000000000c0a801670000000000000000deadc0decafe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000736f6d652d626f6f742d66696c652d6e616d6500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000638253633501023604c0a8010233040000012c0104ffffff000c0e3139322e3136382e312e31303300ff00000000000000000000000000000000000000000000".AsHexBytes();
+        private static readonly byte[] PacketWithFileNameOverloadedAndFileNameOption = "020106009a40101f0000800000000000c0a80167c0a8013f00000000deadc0decafe00000000000000000000736f6d652d7365727665722d6e616d650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000638253633501023604c0a8010233040000012c0104ffffff000c0e3139322e3136382e312e31303300340101431d736f6d652d626f6f742d66696c652d6e616d652d696e2d6f7074696f6eff".AsHexBytes();
+
+        [Fact]
+        public void ReturnBootpField_WhenNotOverloaded()
+        {
+            var packet = new DhcpPacket(PacketWithFileNameInBootpField);
+
+            Assert.Equal("some-boot-file-name", packet.BootFileName);
+        }
+
+        [Fact]
+        public void ReturnOption_WhenFileNameFieldOverloaded()
+        {
+            var packet = new DhcpPacket(PacketWithFileNameOverloadedAndFileNameOption);
+
+            Assert.Equal("some-boot-file-name-in-option", packet.BootFileName);
+        }
+
+        /*
+         * Return option when filename overloaded
+         * Return option when both fields overloaded
+         * Return null when filename overloaded and no option defined
+         * Return null when both fields overloaded and no option defined
+         */
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public class DhcpPacket_BootServerNameShould
+    {
+        private static readonly byte[] PacketWithServerNameInBootpField = "02010600775f54610000800000000000c0a80167c0a8013f00000000deadc0decafe00000000000000000000736f6d652d7365727665722d6e616d65000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000736f6d652d626f6f742d66696c652d6e616d6500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000638253633501023604c0a8010233040000012c0104ffffff000c0e3139322e3136382e312e31303300ff00000000000000000000000000000000000000000000".AsHexBytes();
+
+        [Fact]
+        public void ReturnBootpFieldWhenNotOverloaded()
+        {
+            var packet = new DhcpPacket(PacketWithServerNameInBootpField);
+
+            Assert.Equal("some-server-name", packet.ServerName);
+        }
+
+        /*
+         * Return option when sname overloaded
+         * Return option when both fields overloaded
+         * Return null when sname overloaded and no option defined
+         * Return null when both fields overloaded and no option defined
+         */
+    }
+}

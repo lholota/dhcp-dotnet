@@ -175,7 +175,7 @@ Dynamic Host Configuration Protocol (Offer)
             //    new DhcpSubnetMaskOption(IPAddress.Parse("255.255.255.0"))
             //});
 
-        public IEnumerator<object[]> GetEnumerator()
+            public IEnumerator<object[]> GetEnumerator()
         {
             yield return new object[] { Discover };
             yield return new object[] { Offer };

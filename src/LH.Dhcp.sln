@@ -7,11 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp", "LH.Dhcp\LH.Dhcp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp.UnitTests", "LH.Dhcp.UnitTests\LH.Dhcp.UnitTests.csproj", "{9EB4D6BB-02C4-420C-91F1-0ACA674016FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LH.Dhcp.vNext", "LH.Dhcp.vNext\LH.Dhcp.vNext.csproj", "{B693B7F7-F032-467B-B6C6-943390AD5B47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp.vNext", "LH.Dhcp.vNext\LH.Dhcp.vNext.csproj", "{B693B7F7-F032-467B-B6C6-943390AD5B47}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{A37019B5-AA6D-42AD-B46E-10B51044D70D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LH.Dhcp.vNext.UnitTests", "LH.Dhcp.vNext.UnitTests\LH.Dhcp.vNext.UnitTests.csproj", "{B61E6FDC-9649-4B3C-935E-4D3454EAA78C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp.vNext.UnitTests", "LH.Dhcp.vNext.UnitTests\LH.Dhcp.vNext.UnitTests.csproj", "{B61E6FDC-9649-4B3C-935E-4D3454EAA78C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C493BAFA-3D6D-46DB-9A4D-327BBAF599B3}"
+	ProjectSection(SolutionItems) = preProject
+		Notes.txt = Notes.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
