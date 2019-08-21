@@ -6,8 +6,6 @@ using LH.Dhcp.vNext.Options;
 
 namespace LH.Dhcp.vNext
 {
-    // Consider adding options cache -> HasOption -> GetOption will do the search twice
-
     public class DhcpPacket
     {
         private const int OptionsIndex = 240;
@@ -64,7 +62,7 @@ namespace LH.Dhcp.vNext
             get => _packetBytes[3];
         }
 
-        public ushort Secs
+        public ushort SecondsElapsed
         {
             get => BinaryConvert.ToUInt16(_packetBytes, 8);
         }

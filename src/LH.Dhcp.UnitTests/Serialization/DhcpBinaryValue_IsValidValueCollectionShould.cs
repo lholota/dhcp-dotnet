@@ -3,7 +3,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.Serialization
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpBinaryValue_IsValidValueCollectionShould
     {
         public static readonly byte[] PaddingOptionInMiddleBytes = { 0x01, 0x02, 0x00, 0x00, 0x00, 0x01 };

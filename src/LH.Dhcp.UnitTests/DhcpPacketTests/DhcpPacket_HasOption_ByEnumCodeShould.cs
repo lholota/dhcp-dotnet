@@ -3,7 +3,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.DhcpPacketTests
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpPacket_HasOption_ByEnumCodeShould
     {
         [Fact]

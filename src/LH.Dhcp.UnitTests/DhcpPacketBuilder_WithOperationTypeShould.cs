@@ -2,7 +2,7 @@
 
 namespace LH.Dhcp.UnitTests
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpPacketBuilder_WithOperationTypeShould
     {
         [Fact]

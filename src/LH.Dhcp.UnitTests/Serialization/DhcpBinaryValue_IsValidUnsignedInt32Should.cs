@@ -3,7 +3,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.Serialization
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpBinaryValue_IsValidUnsignedInt32Should
     {
         [Theory]

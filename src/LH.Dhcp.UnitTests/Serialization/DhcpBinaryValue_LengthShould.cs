@@ -3,7 +3,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.Serialization
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpBinaryValue_LengthShould
     {
         private static readonly byte[] Bytes = { 0x01, 0x02, 0x03, 0x04, 0x05 };

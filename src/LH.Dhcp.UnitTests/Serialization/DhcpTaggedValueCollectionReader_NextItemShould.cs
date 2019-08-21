@@ -5,7 +5,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.Serialization
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpTaggedValueCollectionReader_NextItemShould
     {
         [Fact]

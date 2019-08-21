@@ -1,11 +1,12 @@
-﻿namespace LH.Dhcp.vNext
+﻿// ReSharper disable UnusedMember.Global
+namespace LH.Dhcp.vNext
 {
     public enum ClientHardwareAddressType
     {
         Unknown = 0,
         Ethernet = 1,
         ExperimentalEthernet = 2,
-        AX25 = 3,
+        Ax25 = 3,
         ProteonProNETTokenRing = 4,
         Chaos = 5,
         IEEE802Networks = 6,

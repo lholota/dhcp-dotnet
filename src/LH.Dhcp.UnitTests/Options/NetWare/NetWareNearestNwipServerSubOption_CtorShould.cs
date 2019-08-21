@@ -5,7 +5,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.Options.NetWare
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class NetWareNearestNwipServerSubOption_CtorShould
     {
         [Fact]

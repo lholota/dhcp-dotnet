@@ -5,7 +5,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.Serialization
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpBinaryReader_CtorShould
     {
         private static readonly byte[] TestBytes = "0123456789abcd".AsHexBytes();

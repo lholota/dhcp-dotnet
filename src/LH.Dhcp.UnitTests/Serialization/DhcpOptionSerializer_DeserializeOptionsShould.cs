@@ -11,7 +11,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.Serialization
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpOptionSerializer_DeserializeOptionsShould
     {
         private readonly DhcpOptionsSerializer _optionsSerializer;

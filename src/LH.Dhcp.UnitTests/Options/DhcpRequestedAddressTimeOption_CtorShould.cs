@@ -4,7 +4,7 @@ using Xunit;
 
 namespace LH.Dhcp.UnitTests.Options
 {
-    // ReSharper disable once InconsistentNaming
+    
     public class DhcpRequestedAddressTimeOption_CtorShould
     {
         [Fact]
