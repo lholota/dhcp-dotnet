@@ -189,7 +189,7 @@ namespace LH.Dhcp.vNext
 
             if (results.Count == 0)
             {
-                throw new KeyNotFoundException($"The packet does not contain an option with code {optionCode}.");
+                return null;
             }
 
             return BinaryValue.Concat(results);
@@ -208,6 +208,11 @@ namespace LH.Dhcp.vNext
             var optionCode = SemanticOptionsMapper.Instance.GetOptionCodeByType(optionType);
 
             var optionValue = GetOption(optionCode);
+
+            if (optionValue == null)
+            {
+                return default;
+            }
 
             return (T) SemanticOptionsFactory.Instance.CreateOption(optionType, optionValue);
         }
@@ -283,14 +288,16 @@ namespace LH.Dhcp.vNext
             switch (_overloadMode)
             {
                 case DhcpOptionOverloadMode.None:
+                case DhcpOptionOverloadMode.ServerName:
                     return BinaryConvert.ToString(_packetBytes, 108, 128);
 
+                case DhcpOptionOverloadMode.Both:
                 case DhcpOptionOverloadMode.FileName:
-                    // TODO: Find option which may be long
-                    throw new NotImplementedException();
-            }
+                    return GetOption(67)?.AsString();
 
-            throw new NotImplementedException();
+                default:
+                    throw new NotSupportedException($"The overload mode {_overloadMode} is not supported (because it is not defined by the RFC).");
+            }
         }
 
         private string GetServerName()
@@ -298,10 +305,16 @@ namespace LH.Dhcp.vNext
             switch (_overloadMode)
             {
                 case DhcpOptionOverloadMode.None:
+                case DhcpOptionOverloadMode.FileName:
                     return BinaryConvert.ToString(_packetBytes, 44, 64);
-            }
 
-            throw new NotImplementedException();
+                case DhcpOptionOverloadMode.Both:
+                case DhcpOptionOverloadMode.ServerName:
+                    return GetOption(66)?.AsString();
+
+                default:
+                    throw new NotSupportedException($"The overload mode {_overloadMode} is not supported (because it is not defined by the RFC).");
+            }
         }
 
         private void ValidateMagicCookie()

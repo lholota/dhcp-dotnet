@@ -21,7 +21,7 @@ namespace LH.Dhcp.vNext.UnitTests
             IPAddress serverIp,
             IPAddress gatewayIp,
             string serverName,
-            string bootFile,
+            string bootFileName,
             IReadOnlyList<IDhcpOption> options)
         {
             Bytes = hexBytes.AsHexBytes();
@@ -38,7 +38,7 @@ namespace LH.Dhcp.vNext.UnitTests
             ServerIp = serverIp;
             GatewayIp = gatewayIp;
             ServerName = serverName;
-            BootFile = bootFile;
+            BootFileName = bootFileName;
             Options = options;
         }
 
@@ -68,7 +68,7 @@ namespace LH.Dhcp.vNext.UnitTests
 
         public string ServerName { get; }
 
-        public string BootFile { get; }
+        public string BootFileName { get; }
 
         public IReadOnlyList<IDhcpOption> Options { get; }
     }

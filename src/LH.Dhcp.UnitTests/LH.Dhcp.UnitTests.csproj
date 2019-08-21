@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="DhcpTestPackets.Discover.cs">
+      <DependentUpon>DhcpTestPackets</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="2.6.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,6 +24,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LH.Dhcp\LH.Dhcp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestPackets\Discover.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

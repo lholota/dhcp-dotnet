@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using LH.Dhcp.vNext.Options;
 using LH.Dhcp.vNext.UnitTests.Extensions;
+using LH.Dhcp.vNext.UnitTests.TestData;
 using Xunit;
 
 namespace LH.Dhcp.vNext.UnitTests
@@ -43,12 +43,11 @@ namespace LH.Dhcp.vNext.UnitTests
         }
 
         [Fact]
-        public void ThrowKeyNotFoundException_WhenOptionNotPresentInPacket()
+        public void ReturnNull_WhenOptionNotPresentInPacket()
         {
             var packet = new DhcpPacket(DhcpTestPackets.Discover.Bytes);
 
-            Assert.Throws<KeyNotFoundException>(
-                () => packet.GetOption(140));
+            Assert.Null(packet.GetOption(140));
         }
 
         [Theory]

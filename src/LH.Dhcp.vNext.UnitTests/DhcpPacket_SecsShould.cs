@@ -1,3 +1,4 @@
+using LH.Dhcp.vNext.UnitTests.TestData;
 using Xunit;
 
 namespace LH.Dhcp.vNext.UnitTests
