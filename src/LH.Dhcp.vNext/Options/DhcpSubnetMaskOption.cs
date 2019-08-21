@@ -1,8 +1,9 @@
 ﻿using System.Net;
+using LH.Dhcp.vNext.Internals;
 
 namespace LH.Dhcp.vNext.Options
 {
-    [DhcpOption(DhcpOptionCode.SubnetMask)]
+    [DhcpOptionCode(DhcpOptionCode.SubnetMask)]
     public class DhcpSubnetMaskOption : IDhcpOption
     {
         public DhcpSubnetMaskOption(IPAddress value)

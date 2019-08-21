@@ -1,4 +1,6 @@
-﻿namespace LH.Dhcp.vNext.Options
+﻿using LH.Dhcp.vNext.Internals;
+
+namespace LH.Dhcp.vNext.Options
 {
     public enum DhcpMessageType : byte
     {
@@ -12,7 +14,7 @@
         Inform = 8
     }
 
-    [DhcpOption(DhcpOptionCode.DHCPMessageType)]
+    [DhcpOptionCode(DhcpOptionCode.DHCPMessageType)]
     public class DhcpMessageTypeOption : IDhcpOption
     {
         public DhcpMessageTypeOption(DhcpMessageType messageType)
@@ -20,10 +22,10 @@
             MessageType = messageType;
         }
 
-        // [CreateOptionConstructor]
-        internal DhcpMessageTypeOption(byte value)
+        [SemanticOptionFactoryConstructor]
+        internal DhcpMessageTypeOption(BinaryValue binaryValue)
         {
-            MessageType = (DhcpMessageType) value;
+            MessageType = (DhcpMessageType) binaryValue.AsByte();
         }
 
         public DhcpMessageType MessageType { get; }

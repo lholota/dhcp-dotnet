@@ -147,7 +147,7 @@ namespace LH.Dhcp.vNext
 
         public bool HasOption<T>() where T : IDhcpOption
         {
-            var optionCode = SemanticOptionsMapper.GetOptionCodeByType(typeof(T));
+            var optionCode = SemanticOptionsMapper.Instance.GetOptionCodeByType(typeof(T));
 
             return HasOption(optionCode);
         }
@@ -197,18 +197,19 @@ namespace LH.Dhcp.vNext
 
         public BinaryValue GetOption(DhcpOptionCode optionCode)
         {
-            // TODO: Join long options
-            // TODO: If control code => throw argument exception
+            var byteOptionCode = (byte) optionCode;
 
-            throw new NotImplementedException();
+            return GetOption(byteOptionCode);
         }
 
-        public T GetOption<T>() // where T : IDhcpOption
+        public T GetOption<T>() where T : IDhcpOption
         {
-            // TODO: Join long options
-            // TODO: If control code => throw argument exception
+            var optionType = typeof(T);
+            var optionCode = SemanticOptionsMapper.Instance.GetOptionCodeByType(optionType);
 
-            throw new NotImplementedException();
+            var optionValue = GetOption(optionCode);
+
+            return (T) SemanticOptionsFactory.Instance.CreateOption(optionType, optionValue);
         }
 
         private DhcpOptionOverloadMode DetermineOverloadMode()
