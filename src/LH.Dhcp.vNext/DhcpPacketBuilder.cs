@@ -89,7 +89,7 @@ namespace LH.Dhcp.vNext
          * TODO: Options
          * - Split long options (only applicable to variable length options)
          * - Resizable buffer (1,5 resize?)
-         * - 
+         * - Do not allow setting reserved options
          */
 
         public DhcpPacketBuilder WithOption(byte optionCode, string value)

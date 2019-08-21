@@ -4,7 +4,6 @@ using Xunit;
 
 namespace LH.Dhcp.vNext.UnitTests._DhcpPacket
 {
-    
     public class HasOptionBySemanticOptionTypeShould
     {
         [Fact]

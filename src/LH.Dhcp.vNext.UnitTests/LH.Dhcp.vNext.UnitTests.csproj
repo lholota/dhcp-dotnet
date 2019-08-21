@@ -20,4 +20,8 @@
     <ProjectReference Include="..\LH.Dhcp.vNext\LH.Dhcp.vNext.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="_DhcpPacketBuilder\" />
+  </ItemGroup>
+
 </Project>

@@ -33,6 +33,8 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacket
 
         [Theory]
         [InlineData((DhcpOptionCode)0)]
+        [InlineData((DhcpOptionCode)66)]
+        [InlineData((DhcpOptionCode)67)]
         [InlineData((DhcpOptionCode)255)]
         public void ThrowArgumentException_GivenReservedOptionCode(DhcpOptionCode optionCode)
         {

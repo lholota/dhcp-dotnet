@@ -51,6 +51,8 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacket
 
         [Theory]
         [InlineData(0)]
+        [InlineData(66)]
+        [InlineData(67)]
         [InlineData(255)]
         public void ThrowArgumentException_GivenReservedOptionCode(byte optionCode)
         {

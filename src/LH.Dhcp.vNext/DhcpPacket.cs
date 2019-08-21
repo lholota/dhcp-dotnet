@@ -326,7 +326,10 @@ namespace LH.Dhcp.vNext
 
         private bool IsReservedOptionCode(byte optionCode)
         {
-            return optionCode == 0 || optionCode == 255;
+            return optionCode == 0 
+                   || optionCode == 66
+                   || optionCode == 67
+                   || optionCode == 255;
         }
     }
 }
