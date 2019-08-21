@@ -157,40 +157,7 @@ namespace LH.Dhcp.vNext
                 throw new ArgumentException(nameof(optionCode), $"The option code {optionCode} is reserved and cannot be accessed directly.");
             }
 
-            var optionsReader = new KeyLengthValueReader(_packetBytes, OptionsIndex, _packetBytes.Length - OptionsIndex);
-
-            var results = new List<BinaryValue>(1);
-
-            while (optionsReader.Next())
-            {
-                if (optionsReader.CurrentItemKey == optionCode)
-                {
-                    results.Add(optionsReader.GetCurrentItemValue());
-                }
-            }
-
-            if (_overloadMode != DhcpOptionOverloadMode.None)
-            {
-                var overloadedOptionsReader = new KeyLengthValueReader(
-                    _packetBytes,
-                    GetOverloadedOptionsStartIndex(),
-                    GetOverloadedOptionsLength());
-
-                while (overloadedOptionsReader.Next())
-                {
-                    if (overloadedOptionsReader.CurrentItemKey == optionCode)
-                    {
-                        results.Add(overloadedOptionsReader.GetCurrentItemValue());
-                    }
-                }
-            }
-
-            if (results.Count == 0)
-            {
-                return null;
-            }
-
-            return BinaryValue.Concat(results);
+            return GetOptionInternal(optionCode);
         }
 
         public BinaryValue GetOption(DhcpOptionCode optionCode)
@@ -291,7 +258,7 @@ namespace LH.Dhcp.vNext
 
                 case DhcpOptionOverloadMode.Both:
                 case DhcpOptionOverloadMode.FileName:
-                    return GetOption(67)?.AsString();
+                    return GetOptionInternal(67)?.AsString();
 
                 default:
                     throw new NotSupportedException($"The overload mode {_overloadMode} is not supported (because it is not defined by the RFC).");
@@ -308,7 +275,7 @@ namespace LH.Dhcp.vNext
 
                 case DhcpOptionOverloadMode.Both:
                 case DhcpOptionOverloadMode.ServerName:
-                    return GetOption(66)?.AsString();
+                    return GetOptionInternal(66)?.AsString();
 
                 default:
                     throw new NotSupportedException($"The overload mode {_overloadMode} is not supported (because it is not defined by the RFC).");
@@ -330,6 +297,44 @@ namespace LH.Dhcp.vNext
                    || optionCode == 66
                    || optionCode == 67
                    || optionCode == 255;
+        }
+
+        private BinaryValue GetOptionInternal(byte optionCode)
+        {
+            var optionsReader = new KeyLengthValueReader(_packetBytes, OptionsIndex, _packetBytes.Length - OptionsIndex);
+
+            var results = new List<BinaryValue>(1);
+
+            while (optionsReader.Next())
+            {
+                if (optionsReader.CurrentItemKey == optionCode)
+                {
+                    results.Add(optionsReader.GetCurrentItemValue());
+                }
+            }
+
+            if (_overloadMode != DhcpOptionOverloadMode.None)
+            {
+                var overloadedOptionsReader = new KeyLengthValueReader(
+                    _packetBytes,
+                    GetOverloadedOptionsStartIndex(),
+                    GetOverloadedOptionsLength());
+
+                while (overloadedOptionsReader.Next())
+                {
+                    if (overloadedOptionsReader.CurrentItemKey == optionCode)
+                    {
+                        results.Add(overloadedOptionsReader.GetCurrentItemValue());
+                    }
+                }
+            }
+
+            if (results.Count == 0)
+            {
+                return null;
+            }
+
+            return BinaryValue.Concat(results);
         }
     }
 }
