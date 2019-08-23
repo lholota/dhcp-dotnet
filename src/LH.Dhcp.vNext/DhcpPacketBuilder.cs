@@ -295,6 +295,33 @@ namespace LH.Dhcp.vNext
 
         #endregion
 
+        #region Int32
+
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, int value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, int value)
+        {
+            VerifyReservedOptionCode(optionCode);
+
+            const int optionLength = 2 + BinaryConvert.Int32Length;
+
+            EnsureBufferSpace(optionLength);
+
+            _buffer[_nextOptionIndex] = optionCode;
+            _buffer[_nextOptionIndex + 1] = BinaryConvert.Int32Length;
+
+            BinaryConvert.FromInt32(_buffer, _nextOptionIndex + 2, value);
+
+            _nextOptionIndex += optionLength;
+
+            return this;
+        }
+
+        #endregion
+
         #region IpAddress
 
         public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, IPAddress value)

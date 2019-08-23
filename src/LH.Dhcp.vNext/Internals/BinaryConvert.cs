@@ -11,6 +11,7 @@ namespace LH.Dhcp.vNext.Internals
         public const int UInt16Length = 2;
         public const int IpAddressLength = 4;
         public const int Int16Length = 2;
+        public const int Int32Length = 4;
 
         public static void FromString(byte[] bytes, int offset, string value)
         {
@@ -166,6 +167,27 @@ namespace LH.Dhcp.vNext.Internals
             {
                 throw new ArgumentException("The offset is too far in the array, the remaining bytes in the array are shorter than the expected value.", nameof(offset));
             }
+        }
+
+        public static void FromInt32(byte[] buffer, int offset, int value)
+        {
+            ValidateInputs(buffer, offset, Int32Length);
+
+            buffer[offset] = (byte)((value >> 24) & 0xff);
+            buffer[offset + 1] = (byte)((value >> 16) & 0xff);
+            buffer[offset + 2] = (byte)((value >> 8) & 0xff);
+            buffer[offset + 3] = (byte)(value & 0xff);
+        }
+
+        public static int ToInt32(byte[] bytes, int offset)
+        {
+            ValidateInputs(bytes, offset, Int32Length);
+
+            return
+                (Convert.ToInt32(bytes[offset]) << 24) |
+                (Convert.ToInt32(bytes[offset + 1]) << 16) |
+                (Convert.ToInt32(bytes[offset + 2]) << 8) |
+                (Convert.ToInt32(bytes[offset + 3]));
         }
     }
 }

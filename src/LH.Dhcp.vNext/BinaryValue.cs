@@ -126,7 +126,13 @@ namespace LH.Dhcp.vNext
 
         public int AsInt32()
         {
-            throw new NotImplementedException();
+            if (!IsValidInt32())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as Int32. The value has length of {Length} bytes, Int16 value must have a length of {BinaryConvert.Int32Length}.");
+            }
+
+            return BinaryConvert.ToInt32(_bytes, _offset);
         }
 
         public IReadOnlyList<IPAddress> AsIpAddressList()
@@ -193,7 +199,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidInt32()
         {
-            throw new NotImplementedException();
+            return Length == BinaryConvert.Int32Length;
         }
 
         public bool IsValidIpAddressList()

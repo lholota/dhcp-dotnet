@@ -6,7 +6,7 @@ using Xunit;
 namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
 {
     // ReSharper disable once InconsistentNaming
-    public class WithOption_UInt32ValueShould
+    public class WithOption_Int32ValueShould
     {
         public static IEnumerable<object[]> GetOverloads()
         {
@@ -14,12 +14,12 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
 
             testCases.Add(new object[]
             {
-                new AddOptionDelegate<uint>((builder, optionCode, value) => builder.WithOption(optionCode, value))
+                new AddOptionDelegate<int>((builder, optionCode, value) => builder.WithOption(optionCode, value))
             });
 
             testCases.Add(new object[]
             {
-                new AddOptionDelegate<uint>((builder, optionCode, value) => builder.WithOption((DhcpOptionCode)optionCode, value))
+                new AddOptionDelegate<int>((builder, optionCode, value) => builder.WithOption((DhcpOptionCode)optionCode, value))
             });
 
             return testCases;
@@ -39,9 +39,9 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
 
         [Theory]
         [MemberData(nameof(GetOverloads))]
-        public void AddOption(AddOptionDelegate<uint> addOptionDelegate)
+        public void AddOption(AddOptionDelegate<int> addOptionDelegate)
         {
-            const uint expectedValue = 895;
+            const int expectedValue = -895;
 
             var builder = DhcpPacketBuilder.Create(DhcpMessageType.Ack);
             addOptionDelegate.Invoke(builder, 10, expectedValue);
@@ -49,15 +49,15 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
             var packet = builder.Build();
             
 
-            Assert.Equal(expectedValue, packet.GetOption(10).AsUInt32());
+            Assert.Equal(expectedValue, packet.GetOption(10).AsInt32());
         }
 
         [Theory]
         [MemberData(nameof(GetOverloads))]
-        public void BeAbleToWriteMultipleOptions(AddOptionDelegate<uint> addOptionDelegate)
+        public void BeAbleToWriteMultipleOptions(AddOptionDelegate<int> addOptionDelegate)
         {
-            const uint value1 = 100895;
-            const uint value2 = 100896;
+            const int value1 = -100895;
+            const int value2 = -100896;
 
             var builder = DhcpPacketBuilder.Create(DhcpMessageType.Ack);
 
@@ -66,13 +66,13 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
 
             var packet = builder.Build();
 
-            Assert.Equal(value1, packet.GetOption(10).AsUInt32());
-            Assert.Equal(value2, packet.GetOption(20).AsUInt32());
+            Assert.Equal(value1, packet.GetOption(10).AsInt32());
+            Assert.Equal(value2, packet.GetOption(20).AsInt32());
         }
 
         [Theory]
         [MemberData(nameof(GetOverloads))]
-        public void BeAbleToWriteOptionsBeyondInitialBuffer(AddOptionDelegate<uint> addOptionDelegate)
+        public void BeAbleToWriteOptionsBeyondInitialBuffer(AddOptionDelegate<int> addOptionDelegate)
         {
             var builder = DhcpPacketBuilder.Create(DhcpMessageType.Ack);
 
@@ -94,7 +94,7 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
         [MemberData(nameof(GetReservedCodesTestCases), 66)]
         [MemberData(nameof(GetReservedCodesTestCases), 67)]
         [MemberData(nameof(GetReservedCodesTestCases), 255)]
-        public void ThrowArgumentOutOfRangeException_GivenReservedCode(AddOptionDelegate<uint> addOptionDelegate, byte optionCode)
+        public void ThrowArgumentOutOfRangeException_GivenReservedCode(AddOptionDelegate<int> addOptionDelegate, byte optionCode)
         {
             var builder = DhcpPacketBuilder.Create(DhcpMessageType.Ack);
 
