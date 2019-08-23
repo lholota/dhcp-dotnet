@@ -187,7 +187,7 @@ namespace LH.Dhcp.vNext
 
         #endregion
 
-        #region UShort
+        #region UInt16
 
         public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, ushort value)
         {
@@ -206,6 +206,60 @@ namespace LH.Dhcp.vNext
             _buffer[_nextOptionIndex + 1] = BinaryConvert.UInt16Length;
 
             BinaryConvert.FromUInt16(_buffer, _nextOptionIndex + 2, value);
+
+            _nextOptionIndex += optionLength;
+
+            return this;
+        }
+
+        #endregion
+
+        #region UInt32
+
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, uint value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, uint value)
+        {
+            VerifyReservedOptionCode(optionCode);
+
+            const int optionLength = 2 + BinaryConvert.UInt32Length;
+
+            EnsureBufferSpace(optionLength);
+
+            _buffer[_nextOptionIndex] = optionCode;
+            _buffer[_nextOptionIndex + 1] = BinaryConvert.UInt32Length;
+
+            BinaryConvert.FromUInt32(_buffer, _nextOptionIndex + 2, value);
+
+            _nextOptionIndex += optionLength;
+
+            return this;
+        }
+
+        #endregion
+
+        #region IpAddress
+
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, IPAddress value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, IPAddress value)
+        {
+            VerifyReservedOptionCode(optionCode);
+
+            const int optionLength = 2 + BinaryConvert.IpAddressLength;
+
+            EnsureBufferSpace(optionLength);
+
+            _buffer[_nextOptionIndex] = optionCode;
+            _buffer[_nextOptionIndex + 1] = BinaryConvert.IpAddressLength;
+
+            BinaryConvert.FromIpAddress(_buffer, _nextOptionIndex + 2, value);
 
             _nextOptionIndex += optionLength;
 

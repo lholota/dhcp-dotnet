@@ -6,7 +6,7 @@ using Xunit;
 namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
 {
     // ReSharper disable once InconsistentNaming
-    public class WithOption_UShortValueShould
+    public class WithOption_UInt16ValueShould
     {
         public static IEnumerable<object[]> GetOverloads()
         {
@@ -57,7 +57,7 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
         public void BeAbleToWriteMultipleOptions(AddOptionDelegate<ushort> addOptionDelegate)
         {
             const ushort value1 = 895;
-            const ushort value2 = 895;
+            const ushort value2 = 896;
 
             var builder = DhcpPacketBuilder.Create(DhcpMessageType.Ack);
 

@@ -112,7 +112,13 @@ namespace LH.Dhcp.vNext
 
         public IPAddress AsIpAddress()
         {
-            throw new NotImplementedException();
+            if (!IsValidIpAddress())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as an IP Address. The value has length of {_length} bytes IP Address value must have a length of {BinaryConvert.IpAddressLength}.");
+            }
+
+            return BinaryConvert.ToIpAddress(_bytes, _offset);
         }
 
         public string AsString()
@@ -143,7 +149,13 @@ namespace LH.Dhcp.vNext
 
         public uint AsUInt32()
         {
-            throw new NotImplementedException();
+            if (!IsValidUInt32())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as UInt32. The value has length of {_length} bytes UInt16 value must have a length of {BinaryConvert.UInt32Length}.");
+            }
+
+            return BinaryConvert.ToUInt32(_bytes, _offset);
         }
 
         public IReadOnlyList<KeyValuePair<byte, BinaryValue>> AsKeyValueCollection()
@@ -183,7 +195,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidIpAddress()
         {
-            throw new NotImplementedException();
+            return _length == BinaryConvert.IpAddressLength;
         }
 
         public bool IsValid(Type type)
@@ -203,7 +215,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidUInt32()
         {
-            throw new NotImplementedException();
+            return _length == BinaryConvert.UInt32Length;
         }
 
         public bool IsValidKeyValueCollection()
