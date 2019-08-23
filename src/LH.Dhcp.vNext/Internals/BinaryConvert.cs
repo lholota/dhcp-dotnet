@@ -10,6 +10,7 @@ namespace LH.Dhcp.vNext.Internals
         public const int UInt32Length = 4;
         public const int UInt16Length = 2;
         public const int IpAddressLength = 4;
+        public const int Int16Length = 2;
 
         public static void FromString(byte[] bytes, int offset, string value)
         {
@@ -80,6 +81,15 @@ namespace LH.Dhcp.vNext.Internals
                 (Convert.ToUInt32(bytes[offset + 3]));
         }
 
+        public static short ToInt16(byte[] bytes, int offset)
+        {
+            ValidateInputs(bytes, offset, Int16Length);
+
+            return (short)(
+                Convert.ToInt16(bytes[offset]) << 8 |
+                Convert.ToInt16(bytes[offset + 1]));
+        }
+
         public static ushort ToUInt16(byte[] bytes, int offset)
         {
             ValidateInputs(bytes, offset, UInt16Length);
@@ -108,6 +118,14 @@ namespace LH.Dhcp.vNext.Internals
             buffer[offset + 1] = (byte)((value >> 16) & 0xff);
             buffer[offset + 2] = (byte)((value >> 8) & 0xff);
             buffer[offset + 3] = (byte)(value & 0xff);
+        }
+
+        public static void FromInt16(byte[] buffer, int offset, short value)
+        {
+            ValidateInputs(buffer, offset, Int16Length);
+
+            buffer[offset] = (byte)((value >> 8) & 0xff);
+            buffer[offset + 1] = (byte)(value & 0xff);
         }
 
         public static void FromUInt16(byte[] buffer, int offset, ushort value)

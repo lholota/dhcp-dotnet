@@ -2,7 +2,6 @@
 
 namespace LH.Dhcp.vNext.UnitTests._BinaryValue
 {
-    
     public class IsValidInt32Should
     {
         [Theory]

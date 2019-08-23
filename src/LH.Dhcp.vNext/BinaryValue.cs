@@ -102,6 +102,28 @@ namespace LH.Dhcp.vNext
             return BinaryConvert.ToBoolean(_bytes, _offset);
         }
 
+        public ushort AsUInt16()
+        {
+            if (!IsValidUInt16())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as UInt16. The value has length of {Length} bytes UInt16 value must have a length of {BinaryConvert.UInt16Length}.");
+            }
+
+            return BinaryConvert.ToUInt16(_bytes, _offset);
+        }
+
+        public short AsInt16()
+        {
+            if (!IsValidInt16())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as Int16. The value has length of {Length} bytes, Int16 value must have a length of {BinaryConvert.Int16Length}.");
+            }
+
+            return BinaryConvert.ToInt16(_bytes, _offset);
+        }
+
         public int AsInt32()
         {
             throw new NotImplementedException();
@@ -138,17 +160,6 @@ namespace LH.Dhcp.vNext
             throw new NotImplementedException();
         }
 
-        public ushort AsUInt16()
-        {
-            if (!IsValidUInt16())
-            {
-                throw new InvalidOperationException(
-                    $"Cannot read binary value as UInt16. The value has length of {Length} bytes UInt16 value must have a length of {BinaryConvert.UInt16Length}.");
-            }
-
-            return BinaryConvert.ToUInt16(_bytes, _offset);
-        }
-
         public uint AsUInt32()
         {
             if (!IsValidUInt32())
@@ -177,7 +188,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidByte()
         {
-            throw new NotImplementedException();
+            return Length == 1;
         }
 
         public bool IsValidInt32()
@@ -208,6 +219,11 @@ namespace LH.Dhcp.vNext
         public bool IsValidUInt16List()
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsValidInt16()
+        {
+            return Length == BinaryConvert.Int16Length;
         }
 
         public bool IsValidUInt16()

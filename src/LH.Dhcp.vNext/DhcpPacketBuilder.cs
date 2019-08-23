@@ -214,6 +214,33 @@ namespace LH.Dhcp.vNext
 
         #endregion
 
+        #region Int16
+
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, short value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, short value)
+        {
+            VerifyReservedOptionCode(optionCode);
+
+            const int optionLength = 2 + BinaryConvert.Int16Length;
+
+            EnsureBufferSpace(optionLength);
+
+            _buffer[_nextOptionIndex] = optionCode;
+            _buffer[_nextOptionIndex + 1] = BinaryConvert.Int16Length;
+
+            BinaryConvert.FromInt16(_buffer, _nextOptionIndex + 2, value);
+
+            _nextOptionIndex += optionLength;
+
+            return this;
+        }
+
+        #endregion
+
         #region UInt16
 
         public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, ushort value)
@@ -316,21 +343,64 @@ namespace LH.Dhcp.vNext
 
             VerifyReservedOptionCode(optionCode);
 
-            var valueLength = string.IsNullOrEmpty(value) ? 0 : value.Length;
-            var segments = (int)Math.Ceiling(valueLength / 255m);
+            var segments = (int)Math.Ceiling(value.Length / 255m);
 
-            var totalLength = valueLength + segments * 2;
+            var totalLength = value.Length + segments * 2;
 
             EnsureBufferSpace(totalLength);
 
             for (var i = 0; i < segments; i++)
             {
-                var segmentValueLength = (byte)Math.Min(255, valueLength - i * 255);
+                var segmentValueLength = (byte)Math.Min(255, value.Length - i * 255);
 
                 _buffer[_nextOptionIndex] = optionCode;
                 _buffer[_nextOptionIndex + 1] = segmentValueLength;
 
                 BinaryConvert.FromString(_buffer, _nextOptionIndex + 2, value, i * 255, segmentValueLength);
+
+                _nextOptionIndex += segmentValueLength + 2;
+            }
+
+            return this;
+        }
+
+        #endregion
+
+        #region ByteArray
+
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, byte[] value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, byte[] value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Length == 0)
+            {
+                throw new ArgumentException("The option value cannot be an empty array.", nameof(value));
+            }
+
+            VerifyReservedOptionCode(optionCode);
+
+            var segments = (int)Math.Ceiling(value.Length / 255m);
+
+            var totalLength = value.Length + segments * 2;
+
+            EnsureBufferSpace(totalLength);
+
+            for (var i = 0; i < segments; i++)
+            {
+                var segmentValueLength = (byte)Math.Min(255, value.Length - i * 255);
+
+                _buffer[_nextOptionIndex] = optionCode;
+                _buffer[_nextOptionIndex + 1] = segmentValueLength;
+
+                Array.Copy(_buffer, _nextOptionIndex + 2, value, i * 255, segmentValueLength);
 
                 _nextOptionIndex += segmentValueLength + 2;
             }
