@@ -58,7 +58,7 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacket
         {
             var packet = new DhcpPacket(DhcpTestPackets.Discover.Bytes);
 
-            Assert.Throws<ArgumentException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => packet.GetOption(optionCode));
         }
     }

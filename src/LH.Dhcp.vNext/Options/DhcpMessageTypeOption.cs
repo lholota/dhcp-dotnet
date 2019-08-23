@@ -22,7 +22,7 @@ namespace LH.Dhcp.vNext.Options
             MessageType = messageType;
         }
 
-        [SemanticOptionFactoryConstructor]
+        [SemanticOptionsFactoryConstructor]
         internal DhcpMessageTypeOption(BinaryValue binaryValue)
         {
             MessageType = (DhcpMessageType) binaryValue.AsByte();

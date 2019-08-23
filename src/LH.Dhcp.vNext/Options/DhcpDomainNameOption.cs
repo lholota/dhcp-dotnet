@@ -10,7 +10,7 @@ namespace LH.Dhcp.vNext.Options
             DomainName = domainName;
         }
 
-        [SemanticOptionFactoryConstructor]
+        [SemanticOptionsFactoryConstructor]
         internal DhcpDomainNameOption(BinaryValue value)
         {
             DomainName = value.AsString();

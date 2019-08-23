@@ -3,13 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp", "LH.Dhcp\LH.Dhcp.csproj", "{A8712A1B-2447-4772-95FB-1BFD4C6BB858}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp.UnitTests", "LH.Dhcp.UnitTests\LH.Dhcp.UnitTests.csproj", "{9EB4D6BB-02C4-420C-91F1-0ACA674016FD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp.vNext", "LH.Dhcp.vNext\LH.Dhcp.vNext.csproj", "{B693B7F7-F032-467B-B6C6-943390AD5B47}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{A37019B5-AA6D-42AD-B46E-10B51044D70D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LH.Dhcp.vNext.UnitTests", "LH.Dhcp.vNext.UnitTests\LH.Dhcp.vNext.UnitTests.csproj", "{B61E6FDC-9649-4B3C-935E-4D3454EAA78C}"
 EndProject
@@ -19,14 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A8712A1B-2447-4772-95FB-1BFD4C6BB858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8712A1B-2447-4772-95FB-1BFD4C6BB858}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8712A1B-2447-4772-95FB-1BFD4C6BB858}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8712A1B-2447-4772-95FB-1BFD4C6BB858}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9EB4D6BB-02C4-420C-91F1-0ACA674016FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9EB4D6BB-02C4-420C-91F1-0ACA674016FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9EB4D6BB-02C4-420C-91F1-0ACA674016FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9EB4D6BB-02C4-420C-91F1-0ACA674016FD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B693B7F7-F032-467B-B6C6-943390AD5B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B693B7F7-F032-467B-B6C6-943390AD5B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B693B7F7-F032-467B-B6C6-943390AD5B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,10 +24,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{A8712A1B-2447-4772-95FB-1BFD4C6BB858} = {A37019B5-AA6D-42AD-B46E-10B51044D70D}
-		{9EB4D6BB-02C4-420C-91F1-0ACA674016FD} = {A37019B5-AA6D-42AD-B46E-10B51044D70D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78A92801-B8F2-44DC-AEBB-09E13FF767D4}

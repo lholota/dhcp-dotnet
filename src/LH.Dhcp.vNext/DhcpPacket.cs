@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using LH.Dhcp.vNext.Internals;
 using LH.Dhcp.vNext.Options;
@@ -10,8 +11,6 @@ namespace LH.Dhcp.vNext
     {
         private const int OptionsIndex = 240;
         private const int PacketMinSize = 240;
-        private const uint MagicCookie = 0x63825363;
-        private const ushort BroadcastFlag = 0x8000;
 
         private readonly byte[] _packetBytes;
         private readonly Lazy<ClientHardwareAddress> _clientHardwareAddress;
@@ -42,9 +41,14 @@ namespace LH.Dhcp.vNext
             _overloadMode = DetermineOverloadMode();
         }
 
+        public IReadOnlyList<byte> RawBytes
+        {
+            get => _packetBytes;
+        }
+
         public uint TransactionId
         {
-            get => BinaryConvert.ToUInt32(_packetBytes, 4);
+            get => BinaryConvert.ToUInt32(_packetBytes, DhcpConstants.TransactionIdOffset);
         }
 
         public DhcpOperation Operation
@@ -59,37 +63,38 @@ namespace LH.Dhcp.vNext
 
         public byte Hops
         {
-            get => _packetBytes[3];
+            get => _packetBytes[DhcpConstants.HopsOffset];
         }
 
         public ushort SecondsElapsed
         {
-            get => BinaryConvert.ToUInt16(_packetBytes, 8);
+            get => BinaryConvert.ToUInt16(_packetBytes, DhcpConstants.SecondsElapsedOffset);
         }
 
         public bool IsBroadcast
         {
-            get => BinaryConvert.ToUInt16(_packetBytes, 10) == BroadcastFlag;
+            get => BinaryConvert.ToUInt16(_packetBytes, DhcpConstants.BroadcastOffset)
+                   == DhcpConstants.BroadcastFlag;
         }
 
         public IPAddress ClientIp
         {
-            get => BinaryConvert.ToIpAddress(_packetBytes, 12);
+            get => BinaryConvert.ToIpAddress(_packetBytes, DhcpConstants.ClientIpOffset);
         }
 
         public IPAddress YourIp
         {
-            get => BinaryConvert.ToIpAddress(_packetBytes, 16);
+            get => BinaryConvert.ToIpAddress(_packetBytes, DhcpConstants.YourIpOffset);
         }
 
         public IPAddress ServerIp
         {
-            get => BinaryConvert.ToIpAddress(_packetBytes, 20);
+            get => BinaryConvert.ToIpAddress(_packetBytes, DhcpConstants.ServerIpOffset);
         }
 
         public IPAddress GatewayIp
         {
-            get => BinaryConvert.ToIpAddress(_packetBytes, 24);
+            get => BinaryConvert.ToIpAddress(_packetBytes, DhcpConstants.GatewayIpOffset);
         }
 
         public string ServerName
@@ -154,7 +159,7 @@ namespace LH.Dhcp.vNext
         {
             if (IsReservedOptionCode(optionCode))
             {
-                throw new ArgumentException(nameof(optionCode), $"The option code {optionCode} is reserved and cannot be accessed directly.");
+                throw new ArgumentOutOfRangeException(nameof(optionCode), $"The option code {optionCode} is reserved and cannot be accessed directly.");
             }
 
             return GetOptionInternal(optionCode);
@@ -254,7 +259,7 @@ namespace LH.Dhcp.vNext
             {
                 case DhcpOptionOverloadMode.None:
                 case DhcpOptionOverloadMode.ServerName:
-                    return BinaryConvert.ToString(_packetBytes, 108, 128);
+                    return BinaryConvert.ToString(_packetBytes, DhcpConstants.BootFileOffset, DhcpConstants.BootFileLength);
 
                 case DhcpOptionOverloadMode.Both:
                 case DhcpOptionOverloadMode.FileName:
@@ -271,7 +276,7 @@ namespace LH.Dhcp.vNext
             {
                 case DhcpOptionOverloadMode.None:
                 case DhcpOptionOverloadMode.FileName:
-                    return BinaryConvert.ToString(_packetBytes, 44, 64);
+                    return BinaryConvert.ToString(_packetBytes, DhcpConstants.ServerNameOffset, DhcpConstants.ServerNameLength);
 
                 case DhcpOptionOverloadMode.Both:
                 case DhcpOptionOverloadMode.ServerName:
@@ -284,7 +289,7 @@ namespace LH.Dhcp.vNext
 
         private void ValidateMagicCookie()
         {
-            if (BinaryConvert.ToUInt32(_packetBytes, 236) != MagicCookie)
+            if (BinaryConvert.ToUInt32(_packetBytes, DhcpConstants.MagicCookieOffset) != DhcpConstants.MagicCookie)
             {
                 throw new FormatException(
                     "The packet does not contain the DHCP Magic cookie. It may be a BOOTP packet, but it's not a DHCP packet.");
@@ -293,10 +298,7 @@ namespace LH.Dhcp.vNext
 
         private bool IsReservedOptionCode(byte optionCode)
         {
-            return optionCode == 0 
-                   || optionCode == 66
-                   || optionCode == 67
-                   || optionCode == 255;
+            return DhcpConstants.ReservedOptionCodes.Contains(optionCode);
         }
 
         private BinaryValue GetOptionInternal(byte optionCode)

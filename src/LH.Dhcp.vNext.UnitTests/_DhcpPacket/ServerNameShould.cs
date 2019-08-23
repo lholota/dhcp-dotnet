@@ -3,31 +3,30 @@ using Xunit;
 
 namespace LH.Dhcp.vNext.UnitTests._DhcpPacket
 {
-    
-    public class BootFileNameShould
+    public class ServerNameShould
     {
         [Fact]
         public void ReturnBootpFieldValue_WhenNotOverloaded()
         {
-            var packet = new DhcpPacket(DhcpTestPackets.Offer.Bytes);
+            var packet = new DhcpPacket(DhcpTestPackets.OfferWithServerName.Bytes);
 
-            Assert.Equal(DhcpTestPackets.Offer.BootFileName, packet.BootFileName);
+            Assert.Equal(DhcpTestPackets.OfferWithServerName.ServerName, packet.ServerName);
         }
 
         [Fact]
-        public void ReturnOptionValue_WhenFileNameFieldOverloaded()
+        public void ReturnBootpFieldValue_WhenFileNameOverloaded()
         {
             var packet = new DhcpPacket(DhcpTestPackets.OfferWithOverloadedFileName.Bytes);
 
-            Assert.Equal(DhcpTestPackets.OfferWithOverloadedFileName.BootFileName, packet.BootFileName);
+            Assert.Equal(DhcpTestPackets.OfferWithOverloadedFileName.ServerName, packet.ServerName);
         }
 
         [Fact]
-        public void ReturnBootpFieldValue_WhenServerNameFieldOverloaded()
+        public void ReturnOptionValue_WhenServerNameOverloaded()
         {
             var packet = new DhcpPacket(DhcpTestPackets.OfferWithOverloadedServerName.Bytes);
 
-            Assert.Equal(DhcpTestPackets.OfferWithOverloadedServerName.BootFileName, packet.BootFileName);
+            Assert.Equal(DhcpTestPackets.OfferWithOverloadedServerName.ServerName, packet.ServerName);
         }
 
         [Fact]
@@ -35,7 +34,7 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacket
         {
             var packet = new DhcpPacket(DhcpTestPackets.OfferWithBothFieldsOverloaded.Bytes);
 
-            Assert.Equal(DhcpTestPackets.OfferWithBothFieldsOverloaded.BootFileName, packet.BootFileName);
+            Assert.Equal(DhcpTestPackets.OfferWithBothFieldsOverloaded.ServerName, packet.ServerName);
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacket
         {
             var packet = new DhcpPacket(DhcpTestPackets.OfferWithBothFieldsOverloadedWithoutOptions.Bytes);
 
-            Assert.Null(packet.BootFileName);
+            Assert.Null(packet.ServerName);
         }
     }
 }

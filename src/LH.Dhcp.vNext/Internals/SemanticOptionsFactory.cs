@@ -53,7 +53,7 @@ namespace LH.Dhcp.vNext.Internals
             }
 
             var ctorsWithAttribute = matchingCtors
-                .Where(x => x.GetCustomAttribute<SemanticOptionFactoryConstructorAttribute>() != null)
+                .Where(x => x.GetCustomAttribute<SemanticOptionsFactoryConstructorAttribute>() != null)
                 .ToArray();
 
             if (ctorsWithAttribute.Length != 1)

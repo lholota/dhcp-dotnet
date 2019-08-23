@@ -10,9 +10,45 @@ namespace LH.Dhcp.vNext.Internals
         public const int UInt16Length = 2;
         public const int IpAddressLength = 4;
 
-        public static int FromString(byte[] bytes, int startIndex, string value)
+        public static void FromString(byte[] bytes, int offset, string value)
         {
-            throw new NotImplementedException();
+            if (value == null)
+            {
+                value = string.Empty;
+            }
+
+            FromString(bytes, offset, value, 0, value.Length);
+        }
+
+        //public static void FromString(byte[] bytes, int offset, string value, int fixedLength)
+        //{
+        //    if (value == null)
+        //    {
+        //        value = string.Empty;
+        //    }
+
+        //    ValidateInputs(bytes, offset, value.Length);
+
+        //    var valueBytes = Encoding.ASCII.GetBytes(value);
+
+        //    Array.Copy(valueBytes, 0, bytes, offset, valueBytes.Length);
+
+        //    for (var i = valueBytes.Length; i < fixedLength; i++)
+        //    {
+        //        bytes[offset + i] = 0x00;
+        //    }
+        //}
+
+        public static void FromString(byte[] bytes, int offset, string value, int valueOffset, int valueLength)
+        {
+            if (value == null)
+            {
+                value = string.Empty;
+            }
+
+            ValidateInputs(bytes, offset, valueLength);
+
+            Encoding.ASCII.GetBytes(value, valueOffset, valueLength, bytes, offset);
         }
 
         public static int FromBoolean(byte[] bytes, int startIndex, bool value)
@@ -71,6 +107,33 @@ namespace LH.Dhcp.vNext.Internals
             return new IPAddress(buffer);
         }
 
+        public static void FromUInt32(byte[] buffer, int offset, uint value)
+        {
+            ValidateInputs(buffer, offset, UInt32Length);
+
+            buffer[offset] = (byte)((value >> 24) & 0xff);
+            buffer[offset + 1] = (byte)((value >> 16) & 0xff);
+            buffer[offset + 2] = (byte)((value >> 8) & 0xff);
+            buffer[offset + 3] = (byte)(value & 0xff);
+        }
+
+        public static void FromUInt16(byte[] buffer, int offset, ushort value)
+        {
+            ValidateInputs(buffer, offset, UInt16Length);
+
+            buffer[offset] = (byte)((value >> 8) & 0xff);
+            buffer[offset + 1] = (byte)(value & 0xff);
+        }
+
+        public static void FromIpAddress(byte[] buffer, int offset, IPAddress value)
+        {
+            ValidateInputs(buffer, offset, IpAddressLength);
+
+            var addressBytes = value.GetAddressBytes();
+
+            Array.Copy(addressBytes, 0, buffer, offset, IpAddressLength);
+        }
+
         private static void ValidateInputs(byte[] bytes, int offset, int valueLength)
         {
             if (bytes == null)
@@ -83,7 +146,7 @@ namespace LH.Dhcp.vNext.Internals
                 throw new ArgumentOutOfRangeException(nameof(offset), "The offset must be >= 0 and < byte array length.");
             }
 
-            if (valueLength <= 0)
+            if (valueLength < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(offset), "The length must be > 0.");
             }
