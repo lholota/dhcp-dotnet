@@ -155,20 +155,6 @@ namespace LH.Dhcp.vNext
         }
 
         /*
-         * Type = short, int, uint, ushort, string, byte[], IPAddress, IList<int, short, uint, ..., IPAddress>, IReadOnlyDictionary<byte, object> <-- Validate value types!!!
-         * Option code = byte/enum
-         *
-         * Variable options must support splitting (this includes all lists)
-         * Same option multiple times -> ignore this, but warn
-         *
-         *
-         *  Fixed size options, variable size options, special stuff - e.g. nested collection
-         *
-         * Semantic options
-         *  -> Create and add, this should be valid for any kind of option? Who will write the value into the byte array?
-         */
-
-        /*
          * TODO: Options
          * - Split long options (only applicable to variable length options)
          * - Resizable buffer (1,5 resize?)
@@ -193,6 +179,33 @@ namespace LH.Dhcp.vNext
             _buffer[_nextOptionIndex] = optionCode;
             _buffer[_nextOptionIndex + 1] = 1;
             _buffer[_nextOptionIndex + 2] = value;
+
+            _nextOptionIndex += optionLength;
+
+            return this;
+        }
+
+        #endregion
+
+        #region UShort
+
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, ushort value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, ushort value)
+        {
+            VerifyReservedOptionCode(optionCode);
+
+            const int optionLength = 2 + BinaryConvert.UInt16Length;
+
+            EnsureBufferSpace(optionLength);
+
+            _buffer[_nextOptionIndex] = optionCode;
+            _buffer[_nextOptionIndex + 1] = BinaryConvert.UInt16Length;
+
+            BinaryConvert.FromUInt16(_buffer, _nextOptionIndex + 2, value);
 
             _nextOptionIndex += optionLength;
 

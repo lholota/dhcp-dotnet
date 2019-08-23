@@ -110,11 +110,6 @@ namespace LH.Dhcp.vNext
             throw new NotImplementedException();
         }
 
-        public IReadOnlyList<Tuple<IPAddress, IPAddress>> AsIpAddressPairList()
-        {
-            throw new NotImplementedException();
-        }
-
         public IPAddress AsIpAddress()
         {
             throw new NotImplementedException();
@@ -135,9 +130,15 @@ namespace LH.Dhcp.vNext
             throw new NotImplementedException();
         }
 
-        public ushort AsUnsignedInt16()
+        public ushort AsUInt16()
         {
-            throw new NotImplementedException();
+            if (!IsValidUInt16())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as UInt16. The value has length of {_length} bytes UInt16 value must have a length of {BinaryConvert.UInt16Length}.");
+            }
+
+            return BinaryConvert.ToUInt16(_bytes, _offset);
         }
 
         public uint AsUInt32()
@@ -197,7 +198,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidUInt16()
         {
-            throw new NotImplementedException();
+            return _length == BinaryConvert.UInt16Length;
         }
 
         public bool IsValidUInt32()

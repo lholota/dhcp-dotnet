@@ -7,7 +7,8 @@ namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
 {
     public delegate void AddOptionDelegate<in T>(DhcpPacketBuilder builder, byte optionCode, T value);
 
-    public class WithOptionWithByteValueShould
+    // ReSharper disable once InconsistentNaming
+    public class WithOption_ByteValueShould
     {
         public static IEnumerable<object[]> GetOverloads()
         {

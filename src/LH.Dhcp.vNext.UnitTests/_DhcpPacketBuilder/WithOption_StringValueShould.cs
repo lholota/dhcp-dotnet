@@ -5,7 +5,8 @@ using Xunit;
 
 namespace LH.Dhcp.vNext.UnitTests._DhcpPacketBuilder
 {
-    public class WithOptionWithStringValueShould
+    // ReSharper disable once InconsistentNaming
+    public class WithOption_StringValueShould
     {
         public static IEnumerable<object[]> GetOverloads()
         {

@@ -18,7 +18,7 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
             var valueReader = new BinaryValue(TestBytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
-                () => valueReader.AsUnsignedInt16());
+                () => valueReader.AsUInt16());
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
         {
             var valueReader = new BinaryValue(TestBytes, 0, 2);
 
-            Assert.Equal(17, valueReader.AsUnsignedInt16());
+            Assert.Equal(17, valueReader.AsUInt16());
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
         {
             var valueReader = new BinaryValue(TestBytes, 2, 2);
 
-            Assert.Equal(8755, valueReader.AsUnsignedInt16());
+            Assert.Equal(8755, valueReader.AsUInt16());
         }
     }
 }

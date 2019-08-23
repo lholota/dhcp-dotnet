@@ -6,7 +6,6 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
     public class IsValidUInt16Should
     {
         [Theory]
-        [InlineData(0)]
         [InlineData(1)]
         [InlineData(5)]
         public void ReturnFalse_GivenInvalidLength(byte length)

@@ -20,25 +20,6 @@ namespace LH.Dhcp.vNext.Internals
             FromString(bytes, offset, value, 0, value.Length);
         }
 
-        //public static void FromString(byte[] bytes, int offset, string value, int fixedLength)
-        //{
-        //    if (value == null)
-        //    {
-        //        value = string.Empty;
-        //    }
-
-        //    ValidateInputs(bytes, offset, value.Length);
-
-        //    var valueBytes = Encoding.ASCII.GetBytes(value);
-
-        //    Array.Copy(valueBytes, 0, bytes, offset, valueBytes.Length);
-
-        //    for (var i = valueBytes.Length; i < fixedLength; i++)
-        //    {
-        //        bytes[offset + i] = 0x00;
-        //    }
-        //}
-
         public static void FromString(byte[] bytes, int offset, string value, int valueOffset, int valueLength)
         {
             if (value == null)
