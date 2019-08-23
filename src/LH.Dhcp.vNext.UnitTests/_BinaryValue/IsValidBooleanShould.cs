@@ -6,7 +6,6 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
     public class IsValidBooleanShould
     {
         [Theory]
-        [InlineData(0)]
         [InlineData(2)]
         [InlineData(5)]
         public void ReturnFalse_GivenInvalidLength(byte length)

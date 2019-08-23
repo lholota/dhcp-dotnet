@@ -161,6 +161,33 @@ namespace LH.Dhcp.vNext
          * - Do not allow setting reserved options (in this case also 53 !!!)
          */
 
+        #region Boolean
+
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, bool value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, bool value)
+        {
+            VerifyReservedOptionCode(optionCode);
+
+            const int optionLength = 3;
+
+            EnsureBufferSpace(optionLength);
+
+            _buffer[_nextOptionIndex] = optionCode;
+            _buffer[_nextOptionIndex + 1] = 1;
+
+            BinaryConvert.FromBoolean(_buffer, _nextOptionIndex + 2, value);
+
+            _nextOptionIndex += optionLength;
+
+            return this;
+        }
+
+        #endregion
+
         #region Byte
 
         public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, byte value)

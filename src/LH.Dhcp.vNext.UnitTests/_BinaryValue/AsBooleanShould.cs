@@ -6,7 +6,6 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
     public class AsBooleanShould
     {
         [Theory]
-        [InlineData(0)]
         [InlineData(2)]
         [InlineData(5)]
         public void ThrowInvalidOperationException_GivenInvalidLength(byte length)

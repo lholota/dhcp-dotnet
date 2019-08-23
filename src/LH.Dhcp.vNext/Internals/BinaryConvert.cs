@@ -6,6 +6,7 @@ namespace LH.Dhcp.vNext.Internals
 {
     internal static class BinaryConvert
     {
+        public const int BooleanLength = 1;
         public const int UInt32Length = 4;
         public const int UInt16Length = 2;
         public const int IpAddressLength = 4;
@@ -32,9 +33,18 @@ namespace LH.Dhcp.vNext.Internals
             Encoding.ASCII.GetBytes(value, valueOffset, valueLength, bytes, offset);
         }
 
-        public static int FromBoolean(byte[] bytes, int startIndex, bool value)
+        public static void FromBoolean(byte[] bytes, int offset, bool value)
         {
-            throw new NotImplementedException();
+            ValidateInputs(bytes, offset, BooleanLength);
+
+            if (value)
+            {
+                bytes[offset] = 0x01;
+            }
+            else
+            {
+                bytes[offset] = 0x00;
+            }
         }
 
         public static string ToString(byte[] bytes, int offset, int length)
@@ -52,9 +62,11 @@ namespace LH.Dhcp.vNext.Internals
             return Encoding.ASCII.GetString(bytes, offset, length);
         }
 
-        public static bool ToBoolean(byte[] bytes, int startIndex)
+        public static bool ToBoolean(byte[] bytes, int offset)
         {
-            return bytes[startIndex] == 0x01;
+            ValidateInputs(bytes, offset, BooleanLength);
+
+            return bytes[offset] == 0x01;
         }
 
         public static uint ToUInt32(byte[] bytes, int offset)

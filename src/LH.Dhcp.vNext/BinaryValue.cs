@@ -25,16 +25,16 @@ namespace LH.Dhcp.vNext
                 return values[0];
             }
 
-            var length = values.Sum(x => x._length);
+            var length = values.Sum(x => x.Length);
             var combinedBytes = new byte[length];
 
             var offset = 0;
 
             foreach (var binaryValue in values)
             {
-                Array.Copy(binaryValue._bytes, binaryValue._offset, combinedBytes, offset, binaryValue._length);
+                Array.Copy(binaryValue._bytes, binaryValue._offset, combinedBytes, offset, binaryValue.Length);
 
-                offset += binaryValue._length;
+                offset += binaryValue.Length;
             }
 
             return new BinaryValue(combinedBytes, 0, combinedBytes.Length);
@@ -42,7 +42,6 @@ namespace LH.Dhcp.vNext
 
         private readonly byte[] _bytes;
         private readonly int _offset;
-        private readonly int _length;
 
         public BinaryValue(byte[] bytes, int offset, int length)
         {
@@ -68,19 +67,16 @@ namespace LH.Dhcp.vNext
 
             _bytes = bytes;
             _offset = offset;
-            _length = length;
+            Length = length;
         }
 
-        public int Length
-        {
-            get => _length;
-        }
+        public int Length { get; }
 
         public byte AsByte()
         {
-            if (_length != 1)
+            if (Length != 1)
             {
-                throw new InvalidOperationException($"The value has length {_length}. Single byte must have length of 1.");
+                throw new InvalidOperationException($"The value has length {Length}. Single byte must have length of 1.");
             }
 
             return _bytes[_offset];
@@ -88,16 +84,22 @@ namespace LH.Dhcp.vNext
 
         public byte[] AsBytes()
         {
-            var result = new byte[_length];
+            var result = new byte[Length];
 
-            Array.Copy(_bytes, _offset, result, 0, _length);
+            Array.Copy(_bytes, _offset, result, 0, Length);
 
             return result;
         }
 
         public bool AsBoolean()
         {
-            throw new NotImplementedException();
+            if (!IsValidBoolean())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as Boolean. The value has length of {Length} bytes Boolean value must have a length of {BinaryConvert.BooleanLength}.");
+            }
+
+            return BinaryConvert.ToBoolean(_bytes, _offset);
         }
 
         public int AsInt32()
@@ -115,7 +117,7 @@ namespace LH.Dhcp.vNext
             if (!IsValidIpAddress())
             {
                 throw new InvalidOperationException(
-                    $"Cannot read binary value as an IP Address. The value has length of {_length} bytes IP Address value must have a length of {BinaryConvert.IpAddressLength}.");
+                    $"Cannot read binary value as an IP Address. The value has length of {Length} bytes IP Address value must have a length of {BinaryConvert.IpAddressLength}.");
             }
 
             return BinaryConvert.ToIpAddress(_bytes, _offset);
@@ -123,7 +125,7 @@ namespace LH.Dhcp.vNext
 
         public string AsString()
         {
-            return BinaryConvert.ToString(_bytes, _offset, _length);
+            return BinaryConvert.ToString(_bytes, _offset, Length);
         }
 
         public object As(Type outputType)
@@ -141,7 +143,7 @@ namespace LH.Dhcp.vNext
             if (!IsValidUInt16())
             {
                 throw new InvalidOperationException(
-                    $"Cannot read binary value as UInt16. The value has length of {_length} bytes UInt16 value must have a length of {BinaryConvert.UInt16Length}.");
+                    $"Cannot read binary value as UInt16. The value has length of {Length} bytes UInt16 value must have a length of {BinaryConvert.UInt16Length}.");
             }
 
             return BinaryConvert.ToUInt16(_bytes, _offset);
@@ -152,7 +154,7 @@ namespace LH.Dhcp.vNext
             if (!IsValidUInt32())
             {
                 throw new InvalidOperationException(
-                    $"Cannot read binary value as UInt32. The value has length of {_length} bytes UInt16 value must have a length of {BinaryConvert.UInt32Length}.");
+                    $"Cannot read binary value as UInt32. The value has length of {Length} bytes UInt16 value must have a length of {BinaryConvert.UInt32Length}.");
             }
 
             return BinaryConvert.ToUInt32(_bytes, _offset);
@@ -170,7 +172,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidBoolean()
         {
-            throw new NotImplementedException();
+            return Length == BinaryConvert.BooleanLength;
         }
 
         public bool IsValidByte()
@@ -195,7 +197,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidIpAddress()
         {
-            return _length == BinaryConvert.IpAddressLength;
+            return Length == BinaryConvert.IpAddressLength;
         }
 
         public bool IsValid(Type type)
@@ -210,12 +212,12 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidUInt16()
         {
-            return _length == BinaryConvert.UInt16Length;
+            return Length == BinaryConvert.UInt16Length;
         }
 
         public bool IsValidUInt32()
         {
-            return _length == BinaryConvert.UInt32Length;
+            return Length == BinaryConvert.UInt32Length;
         }
 
         public bool IsValidKeyValueCollection()
