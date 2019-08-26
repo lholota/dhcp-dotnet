@@ -11,7 +11,6 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
         private static readonly byte[] TestBytes = "00112233445566778899aabbccddeeff".AsHexBytes();
 
         [Theory]
-        [InlineData(0)]
         [InlineData(1)]
         [InlineData(3)]
         [InlineData(5)]

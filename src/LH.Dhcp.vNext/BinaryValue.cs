@@ -163,7 +163,13 @@ namespace LH.Dhcp.vNext
 
         public IReadOnlyList<ushort> AsUInt16List()
         {
-            throw new NotImplementedException();
+            if (!IsValidInt16List())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as a list of UInt16. The value has length of {Length} bytes, list of Int16 value must have a length divisible by {BinaryConvert.UInt16Length}.");
+            }
+
+            return AsList(offset => BinaryConvert.ToUInt16(_bytes, offset), BinaryConvert.UInt16Length);
         }
 
         public uint AsUInt32()
@@ -224,7 +230,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidUInt16List()
         {
-            throw new NotImplementedException();
+            return Length % BinaryConvert.UInt16Length == 0;
         }
 
         public bool IsValidInt16()

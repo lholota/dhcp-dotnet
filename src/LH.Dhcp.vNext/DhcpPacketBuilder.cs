@@ -247,18 +247,6 @@ namespace LH.Dhcp.vNext
 
         public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<short> value)
         {
-            VerifyReservedOptionCode(optionCode);
-
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value), "The option value cannot be null.");
-            }
-
-            if (!value.Any())
-            {
-                throw new ArgumentException("The option value cannot be an empty collection.", nameof(value));
-            }
-
             WriteCollectionOption(
                 optionCode, 
                 value, 
@@ -291,6 +279,22 @@ namespace LH.Dhcp.vNext
             BinaryConvert.FromUInt16(_buffer, _nextOptionIndex + 2, value);
 
             _nextOptionIndex += optionLength;
+
+            return this;
+        }
+
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, IReadOnlyList<ushort> value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<ushort> value)
+        {
+            WriteCollectionOption(
+                optionCode,
+                value,
+                BinaryConvert.Int16Length,
+                (item, offset) => BinaryConvert.FromUInt16(_buffer, offset, item));
 
             return this;
         }
@@ -544,20 +548,32 @@ namespace LH.Dhcp.vNext
             }
         }
 
-        private void WriteCollectionOption<T>(byte optionCode, IReadOnlyList<T> items, int itemLength, Action<T, int> writeItemAction)
+        private void WriteCollectionOption<T>(byte optionCode, IReadOnlyList<T> value, int itemLength, Action<T, int> writeItemAction)
         {
+            VerifyReservedOptionCode(optionCode);
+
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value), "The option value cannot be null.");
+            }
+
+            if (!value.Any())
+            {
+                throw new ArgumentException("The option value cannot be an empty collection.", nameof(value));
+            }
+
             var maxItemsInSegmentDec = Math.Floor(255m / itemLength);
-            var segments = (int)Math.Ceiling(items.Count / maxItemsInSegmentDec);
+            var segments = (int)Math.Ceiling(value.Count / maxItemsInSegmentDec);
 
             var maxItemsInSegment = (int)maxItemsInSegmentDec;
 
-            var totalLength = items.Count * itemLength + segments * 2;
+            var totalLength = value.Count * itemLength + segments * 2;
 
             EnsureBufferSpace(totalLength);
 
             for (var i = 0; i < segments; i++)
             {
-                var itemsInSegment = Math.Min(maxItemsInSegment, items.Count - i * maxItemsInSegment);
+                var itemsInSegment = Math.Min(maxItemsInSegment, value.Count - i * maxItemsInSegment);
                 var valueLength = (byte)(itemsInSegment * itemLength);
 
                 _buffer[_nextOptionIndex] = optionCode;
@@ -567,7 +583,7 @@ namespace LH.Dhcp.vNext
                 {
                     var index = _nextOptionIndex + 2 + j * itemLength;
 
-                    writeItemAction(items[maxItemsInSegment * i + j], index);
+                    writeItemAction(value[maxItemsInSegment * i + j], index);
                 }
 
                 _nextOptionIndex += 2 + valueLength;
