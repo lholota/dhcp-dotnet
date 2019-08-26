@@ -148,7 +148,13 @@ namespace LH.Dhcp.vNext
 
         public IReadOnlyList<IPAddress> AsIpAddressList()
         {
-            throw new NotImplementedException();
+            if (!IsValidIpAddressList())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as a list of IP Addresses. The value has length of {Length} bytes, list of IP Addresses value must have a length divisible by {BinaryConvert.IpAddressLength}.");
+            }
+
+            return AsList(offset => BinaryConvert.ToIpAddress(_bytes, offset), BinaryConvert.IpAddressLength);
         }
 
         public IPAddress AsIpAddress()
@@ -221,12 +227,7 @@ namespace LH.Dhcp.vNext
 
         public bool IsValidIpAddressList()
         {
-            throw new NotImplementedException();
-        }
-
-        public bool IsValidIpAddressPairList()
-        {
-            throw new NotImplementedException();
+            return Length % BinaryConvert.IpAddressLength == 0;
         }
 
         public bool IsValidIpAddress()

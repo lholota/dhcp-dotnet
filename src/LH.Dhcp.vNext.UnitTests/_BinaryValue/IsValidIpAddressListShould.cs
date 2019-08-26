@@ -6,7 +6,6 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
     public class IsValidIpAddressListShould
     {
         [Theory]
-        [InlineData(0)]
         [InlineData(1)]
         [InlineData(5)]
         [InlineData(13)]

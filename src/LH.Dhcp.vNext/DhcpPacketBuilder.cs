@@ -412,6 +412,22 @@ namespace LH.Dhcp.vNext
             return this;
         }
 
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, IReadOnlyList<IPAddress> value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<IPAddress> value)
+        {
+            WriteCollectionOption(
+                optionCode,
+                value,
+                BinaryConvert.IpAddressLength,
+                (item, offset) => BinaryConvert.FromIpAddress(_buffer, offset, item));
+
+            return this;
+        }
+
         #endregion
 
         #region String
