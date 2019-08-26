@@ -102,17 +102,6 @@ namespace LH.Dhcp.vNext
             return BinaryConvert.ToBoolean(_bytes, _offset);
         }
 
-        public ushort AsUInt16()
-        {
-            if (!IsValidUInt16())
-            {
-                throw new InvalidOperationException(
-                    $"Cannot read binary value as UInt16. The value has length of {Length} bytes UInt16 value must have a length of {BinaryConvert.UInt16Length}.");
-            }
-
-            return BinaryConvert.ToUInt16(_bytes, _offset);
-        }
-
         public short AsInt16()
         {
             if (!IsValidInt16())
@@ -124,6 +113,39 @@ namespace LH.Dhcp.vNext
             return BinaryConvert.ToInt16(_bytes, _offset);
         }
 
+        public IReadOnlyList<short> AsInt16List()
+        {
+            if (!IsValidInt16List())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as a list of Int16. The value has length of {Length} bytes, list of Int16 value must have a length divisible by {BinaryConvert.Int16Length}.");
+            }
+
+            return AsList(offset => BinaryConvert.ToInt16(_bytes, offset), BinaryConvert.Int16Length);
+        }
+
+        public ushort AsUInt16()
+        {
+            if (!IsValidUInt16())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as UInt16. The value has length of {Length} bytes UInt16 value must have a length of {BinaryConvert.UInt16Length}.");
+            }
+
+            return BinaryConvert.ToUInt16(_bytes, _offset);
+        }
+
+        public IReadOnlyList<ushort> AsUInt16List()
+        {
+            if (!IsValidUInt16List())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as a list of UInt16. The value has length of {Length} bytes, list of UInt16 value must have a length divisible by {BinaryConvert.UInt16Length}.");
+            }
+
+            return AsList(offset => BinaryConvert.ToUInt16(_bytes, offset), BinaryConvert.UInt16Length);
+        }
+
         public int AsInt32()
         {
             if (!IsValidInt32())
@@ -133,6 +155,28 @@ namespace LH.Dhcp.vNext
             }
 
             return BinaryConvert.ToInt32(_bytes, _offset);
+        }
+
+        public IReadOnlyList<int> AsInt32List()
+        {
+            if (!IsValidInt32List())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as a list of Int32. The value has length of {Length} bytes, list of Int32 value must have a length divisible by {BinaryConvert.Int32Length}.");
+            }
+
+            return AsList(offset => BinaryConvert.ToInt32(_bytes, offset), BinaryConvert.Int32Length);
+        }
+
+        public uint AsUInt32()
+        {
+            if (!IsValidUInt32())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as UInt32. The value has length of {Length} bytes UInt16 value must have a length of {BinaryConvert.UInt32Length}.");
+            }
+
+            return BinaryConvert.ToUInt32(_bytes, _offset);
         }
 
         public IReadOnlyList<uint> AsUInt32List()
@@ -176,28 +220,6 @@ namespace LH.Dhcp.vNext
         public object As(Type outputType)
         {
             throw new NotImplementedException();
-        }
-
-        public IReadOnlyList<ushort> AsUInt16List()
-        {
-            if (!IsValidUInt16List())
-            {
-                throw new InvalidOperationException(
-                    $"Cannot read binary value as a list of UInt16. The value has length of {Length} bytes, list of UInt16 value must have a length divisible by {BinaryConvert.UInt16Length}.");
-            }
-
-            return AsList(offset => BinaryConvert.ToUInt16(_bytes, offset), BinaryConvert.UInt16Length);
-        }
-
-        public uint AsUInt32()
-        {
-            if (!IsValidUInt32())
-            {
-                throw new InvalidOperationException(
-                    $"Cannot read binary value as UInt32. The value has length of {Length} bytes UInt16 value must have a length of {BinaryConvert.UInt32Length}.");
-            }
-
-            return BinaryConvert.ToUInt32(_bytes, _offset);
         }
 
         public IReadOnlyList<KeyValuePair<byte, BinaryValue>> AsKeyValueCollection()
@@ -255,17 +277,6 @@ namespace LH.Dhcp.vNext
             return Length == BinaryConvert.Int16Length;
         }
 
-        public IReadOnlyList<int> AsInt32List()
-        {
-            if (!IsValidInt32List())
-            {
-                throw new InvalidOperationException(
-                    $"Cannot read binary value as a list of Int32. The value has length of {Length} bytes, list of Int32 value must have a length divisible by {BinaryConvert.Int32Length}.");
-            }
-
-            return AsList(offset => BinaryConvert.ToInt32(_bytes, offset), BinaryConvert.Int32Length);
-        }
-
         public bool IsValidUInt16()
         {
             return Length == BinaryConvert.UInt16Length;
@@ -276,25 +287,19 @@ namespace LH.Dhcp.vNext
             return Length == BinaryConvert.UInt32Length;
         }
 
-        public bool IsValidKeyValueCollection()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IReadOnlyList<short> AsInt16List()
-        {
-            if (!IsValidInt16List())
-            {
-                throw new InvalidOperationException(
-                    $"Cannot read binary value as a list of Int16. The value has length of {Length} bytes, list of Int16 value must have a length divisible by {BinaryConvert.Int16Length}.");
-            }
-
-            return AsList(offset => BinaryConvert.ToInt16(_bytes, offset), BinaryConvert.Int16Length);
-        }
-
         public bool IsValidInt16List()
         {
             return Length % BinaryConvert.Int16Length == 0;
+        }
+
+        public bool IsValidUInt32List()
+        {
+            return Length % BinaryConvert.UInt32Length == 0;
+        }
+
+        public bool IsValidKeyValueCollection()
+        {
+            throw new NotImplementedException();
         }
 
         private IReadOnlyList<T> AsList<T>(Func<int, T> readValueFunc, int itemLength)
@@ -309,11 +314,6 @@ namespace LH.Dhcp.vNext
             }
 
             return result;
-        }
-
-        public bool IsValidUInt32List()
-        {
-            return Length % BinaryConvert.UInt32Length == 0;
         }
     }
 }
