@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using LH.Dhcp.vNext.Internals;
@@ -239,6 +240,34 @@ namespace LH.Dhcp.vNext
             return this;
         }
 
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, IReadOnlyList<short> value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<short> value)
+        {
+            VerifyReservedOptionCode(optionCode);
+
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value), "The option value cannot be null.");
+            }
+
+            if (!value.Any())
+            {
+                throw new ArgumentException("The option value cannot be an empty collection.", nameof(value));
+            }
+
+            WriteCollectionOption(
+                optionCode, 
+                value, 
+                BinaryConvert.Int16Length,
+                (item, offset) => BinaryConvert.FromInt16(_buffer, offset, item));
+
+            return this;
+        }
+
         #endregion
 
         #region UInt16
@@ -353,7 +382,7 @@ namespace LH.Dhcp.vNext
 
         public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, string value)
         {
-            return WithOption((byte) optionCode, value);
+            return WithOption((byte)optionCode, value);
         }
 
         public DhcpPacketBuilder WithOption(byte optionCode, string value)
@@ -494,7 +523,7 @@ namespace LH.Dhcp.vNext
 
             if (newLength > _buffer.Length)
             {
-                Array.Resize(ref _buffer, (int) newLength);
+                Array.Resize(ref _buffer, (int)newLength);
             }
         }
 
@@ -512,6 +541,36 @@ namespace LH.Dhcp.vNext
             {
                 throw new ArgumentOutOfRangeException(nameof(optionCode),
                     $"The option code {optionCode} is reserved and cannot be accessed directly.");
+            }
+        }
+
+        private void WriteCollectionOption<T>(byte optionCode, IReadOnlyList<T> items, int itemLength, Action<T, int> writeItemAction)
+        {
+            var maxItemsInSegmentDec = Math.Floor(255m / itemLength);
+            var segments = (int)Math.Ceiling(items.Count / maxItemsInSegmentDec);
+
+            var maxItemsInSegment = (int)maxItemsInSegmentDec;
+
+            var totalLength = items.Count * itemLength + segments * 2;
+
+            EnsureBufferSpace(totalLength);
+
+            for (var i = 0; i < segments; i++)
+            {
+                var itemsInSegment = Math.Min(maxItemsInSegment, items.Count - i * maxItemsInSegment);
+                var valueLength = (byte)(itemsInSegment * itemLength);
+
+                _buffer[_nextOptionIndex] = optionCode;
+                _buffer[_nextOptionIndex + 1] = valueLength;
+
+                for (var j = 0; j < itemsInSegment; j++)
+                {
+                    var index = _nextOptionIndex + 2 + j * itemLength;
+
+                    writeItemAction(items[maxItemsInSegment * i + j], index);
+                }
+
+                _nextOptionIndex += 2 + valueLength;
             }
         }
 

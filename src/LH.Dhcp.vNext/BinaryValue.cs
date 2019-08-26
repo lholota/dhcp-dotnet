@@ -246,5 +246,35 @@ namespace LH.Dhcp.vNext
         {
             throw new NotImplementedException();
         }
+
+        public IReadOnlyList<short> AsInt16List()
+        {
+            if (!IsValidInt16List())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as a list of Int16. The value has length of {Length} bytes, list of Int16 value must have a length divisible by {BinaryConvert.Int16Length}.");
+            }
+
+            return AsList(offset => BinaryConvert.ToInt16(_bytes, offset), BinaryConvert.Int16Length);
+        }
+
+        public bool IsValidInt16List()
+        {
+            return Length % BinaryConvert.Int16Length == 0;
+        }
+
+        private IReadOnlyList<T> AsList<T>(Func<int, T> readValueFunc, int itemLength)
+        {
+            var result = new T[Length / itemLength];
+
+            for (var i = 0; i < Length / itemLength; i++)
+            {
+                var value = readValueFunc.Invoke(_offset + i * itemLength);
+
+                result[i] = value;
+            }
+
+            return result;
+        }
     }
 }

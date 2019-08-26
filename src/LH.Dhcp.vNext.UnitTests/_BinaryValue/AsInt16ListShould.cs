@@ -5,13 +5,11 @@ using Xunit;
 
 namespace LH.Dhcp.vNext.UnitTests._BinaryValue
 {
-
-    public class AsUInt16ListShould
+    public class AsInt16ListShould
     {
-        private static readonly byte[] TestBytes = "00112233445566778899aabbccddeeff".AsHexBytes();
+        private static readonly byte[] TestBytes = "a0112233445566778899aabbccddeeff".AsHexBytes();
 
         [Theory]
-        [InlineData(0)]
         [InlineData(1)]
         [InlineData(3)]
         [InlineData(5)]
@@ -22,7 +20,7 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
             var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
-                () => valueReader.AsUInt16List());
+                () => valueReader.AsInt16List());
         }
 
         [Fact]
@@ -30,7 +28,7 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
         {
             var valueReader = new BinaryValue(TestBytes, 0, 2);
 
-            Assert.Equal(17U, valueReader.AsUInt16List().Single());
+            Assert.Equal(-24559, valueReader.AsInt16List().Single());
         }
 
         [Fact]
@@ -38,18 +36,18 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
         {
             var valueReader = new BinaryValue(TestBytes, 0, 8);
 
-            var numberList = valueReader.AsUInt16List();
+            var numberList = valueReader.AsInt16List();
 
-            Assert.Equal(17U, numberList[0]);
-            Assert.Equal(8755U, numberList[1]);
+            Assert.Equal(-24559, numberList[0]);
+            Assert.Equal(8755, numberList[1]);
         }
 
         [Fact]
         public void ReadValueFromGivenOffset()
         {
-            var valueReader = new BinaryValue(TestBytes, 2, 2);
+            var valueReader = new BinaryValue(TestBytes, 10, 2);
 
-            Assert.Equal(8755U, valueReader.AsUInt16List().Single());
+            Assert.Equal(-21829, valueReader.AsInt16List().Single());
         }
     }
 }
