@@ -135,6 +135,17 @@ namespace LH.Dhcp.vNext
             return BinaryConvert.ToInt32(_bytes, _offset);
         }
 
+        public IReadOnlyList<uint> AsUInt32List()
+        {
+            if (!IsValidUInt32List())
+            {
+                throw new InvalidOperationException(
+                    $"Cannot read binary value as a list of UInt32. The value has length of {Length} bytes, list of UInt32 value must have a length divisible by {BinaryConvert.UInt16Length}.");
+            }
+
+            return AsList(offset => BinaryConvert.ToUInt32(_bytes, offset), BinaryConvert.UInt32Length);
+        }
+
         public IReadOnlyList<IPAddress> AsIpAddressList()
         {
             throw new NotImplementedException();
@@ -166,7 +177,7 @@ namespace LH.Dhcp.vNext
             if (!IsValidUInt16List())
             {
                 throw new InvalidOperationException(
-                    $"Cannot read binary value as a list of UInt16. The value has length of {Length} bytes, list of Int16 value must have a length divisible by {BinaryConvert.UInt16Length}.");
+                    $"Cannot read binary value as a list of UInt16. The value has length of {Length} bytes, list of UInt16 value must have a length divisible by {BinaryConvert.UInt16Length}.");
             }
 
             return AsList(offset => BinaryConvert.ToUInt16(_bytes, offset), BinaryConvert.UInt16Length);
@@ -297,6 +308,11 @@ namespace LH.Dhcp.vNext
             }
 
             return result;
+        }
+
+        public bool IsValidUInt32List()
+        {
+            return Length % BinaryConvert.UInt32Length == 0;
         }
     }
 }

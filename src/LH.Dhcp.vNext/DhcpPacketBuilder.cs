@@ -326,6 +326,22 @@ namespace LH.Dhcp.vNext
             return this;
         }
 
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, IReadOnlyList<uint> value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<uint> value)
+        {
+            WriteCollectionOption(
+                optionCode,
+                value,
+                BinaryConvert.UInt32Length,
+                (item, offset) => BinaryConvert.FromUInt32(_buffer, offset, item));
+
+            return this;
+        }
+
         #endregion
 
         #region Int32
