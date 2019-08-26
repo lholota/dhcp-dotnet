@@ -5,7 +5,7 @@ using Xunit;
 
 namespace LH.Dhcp.vNext.UnitTests._BinaryValue
 {
-    public class AsInt16ListShould
+    public class AsInt32ListShould
     {
         private static readonly byte[] TestBytes = "a0112233445566778899aabbccddeeff".AsHexBytes();
 
@@ -20,35 +20,35 @@ namespace LH.Dhcp.vNext.UnitTests._BinaryValue
             var valueReader = new BinaryValue(bytes, 0, length);
 
             Assert.Throws<InvalidOperationException>(
-                () => valueReader.AsInt16List());
+                () => valueReader.AsInt32List());
         }
 
         [Fact]
         public void ReturnSingleNumber_GivenBytesForOneNumber()
         {
-            var valueReader = new BinaryValue(TestBytes, 0, 2);
+            var valueReader = new BinaryValue(TestBytes, 0, 4);
 
-            Assert.Equal(-24559, valueReader.AsInt16List().Single());
+            Assert.Equal(-1609489869, valueReader.AsInt32List().Single());
         }
 
         [Fact]
         public void ReturnTwoNumbers_GivenBytesForTwoNumbers()
         {
-            var valueReader = new BinaryValue(TestBytes, 0, 4);
+            var valueReader = new BinaryValue(TestBytes, 0, 8);
 
-            var numberList = valueReader.AsInt16List();
+            var numberList = valueReader.AsInt32List();
 
             Assert.Equal(2, numberList.Count);
-            Assert.Equal(-24559, numberList[0]);
-            Assert.Equal(8755, numberList[1]);
+            Assert.Equal(-1609489869, numberList[0]);
+            Assert.Equal(1146447479, numberList[1]);
         }
 
         [Fact]
         public void ReadValueFromGivenOffset()
         {
-            var valueReader = new BinaryValue(TestBytes, 10, 2);
+            var valueReader = new BinaryValue(TestBytes, 8, 4);
 
-            Assert.Equal(-21829, valueReader.AsInt16List().Single());
+            Assert.Equal(-2003195205, valueReader.AsInt32List().Single());
         }
     }
 }

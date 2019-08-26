@@ -353,6 +353,22 @@ namespace LH.Dhcp.vNext
             return this;
         }
 
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, IReadOnlyList<int> value)
+        {
+            return WithOption((byte)optionCode, value);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<int> value)
+        {
+            WriteCollectionOption(
+                optionCode,
+                value,
+                BinaryConvert.Int32Length,
+                (item, offset) => BinaryConvert.FromInt32(_buffer, offset, item));
+
+            return this;
+        }
+
         #endregion
 
         #region IpAddress
