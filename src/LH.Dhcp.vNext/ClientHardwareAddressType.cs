@@ -1,7 +1,7 @@
 ﻿// ReSharper disable UnusedMember.Global
 namespace LH.Dhcp.vNext
 {
-    public enum ClientHardwareAddressType
+    public enum ClientHardwareAddressType : byte
     {
         Unknown = 0,
         Ethernet = 1,
@@ -41,7 +41,5 @@ namespace LH.Dhcp.vNext
         PureIP = 35,
         HWEXP1 = 36,
         HFI = 37,
-        HWEXP2 = 256,
-        AEthernet = 257
     }
 }

@@ -11,6 +11,9 @@
         public const int YourIpOffset = 16;
         public const int ServerIpOffset = 20;
         public const int GatewayIpOffset = 24;
+        public const int ClientHardwareAddressTypeOffset = 1;
+        public const int ClientHardwareAddressLengthOffset = 2;
+        public const int ClientHardwareAddressBytesOffset = 28;
 
         public const int BootFileOffset = 108;
         public const int BootFileLength = 128;

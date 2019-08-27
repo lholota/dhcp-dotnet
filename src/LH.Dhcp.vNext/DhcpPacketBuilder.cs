@@ -7,13 +7,45 @@ using LH.Dhcp.vNext.Options;
 
 namespace LH.Dhcp.vNext
 {
-    public class DhcpPacketBuilder
+    public interface IKeyValueCollectionBuilder
     {
-        public static DhcpPacketBuilder CreateFromExisting(DhcpPacket existingPacket)
+        DhcpPacketBuilder WithOption(byte optionCode, short value);
+
+        DhcpPacketBuilder WithOption(byte optionCode, int value);
+
+        DhcpPacketBuilder WithOption(byte optionCode, string value);
+    }
+
+    internal class KeyValueCollectionBuilder
+    {
+        public KeyValueCollectionBuilder(byte[] buffer)
         {
-            throw new NotImplementedException();
+            
+        }
+    }
+
+    internal class DhcpPacketStream
+    {
+        private int _offset;
+
+        private readonly byte[] _buffer;
+
+        public DhcpPacketStream(int initialCapacity, int initialOffset)
+        {
+            _buffer = new byte[initialCapacity];
+
+            _offset = initialOffset;
         }
 
+        public void Allocate(int length)
+        {
+            // TODO: Resize buffer if required
+            _offset += length;
+        }
+    }
+
+    public class DhcpPacketBuilder : IKeyValueCollectionBuilder
+    {
         public static DhcpPacketBuilder Create(DhcpMessageType messageType)
         {
             return new DhcpPacketBuilder(messageType);
@@ -49,7 +81,27 @@ namespace LH.Dhcp.vNext
 
         public DhcpPacketBuilder WithClientHardwareAddress(ClientHardwareAddress clientHardwareAddress)
         {
-            throw new NotImplementedException();
+            if (clientHardwareAddress == null)
+            {
+                throw new ArgumentNullException(nameof(clientHardwareAddress));
+            }
+
+            _buffer[DhcpConstants.ClientHardwareAddressTypeOffset] = (byte)clientHardwareAddress.Type;
+            _buffer[DhcpConstants.ClientHardwareAddressLengthOffset] = (byte)clientHardwareAddress.AddressBytes.Length;
+
+            Array.Copy(
+                clientHardwareAddress.AddressBytes, 
+                0, 
+                _buffer, 
+                DhcpConstants.ClientHardwareAddressBytesOffset,
+                clientHardwareAddress.AddressBytes.Length);
+
+            for (var i = clientHardwareAddress.AddressBytes.Length; i < 16; i++)
+            {
+                _buffer[DhcpConstants.ClientHardwareAddressBytesOffset + i] = 0x00;
+            }
+
+            return this;
         }
 
         public DhcpPacketBuilder WithHops(byte hops)
@@ -155,13 +207,6 @@ namespace LH.Dhcp.vNext
             return this;
         }
 
-        /*
-         * TODO: Options
-         * - Split long options (only applicable to variable length options)
-         * - Resizable buffer (1,5 resize?)
-         * - Do not allow setting reserved options (in this case also 53 !!!)
-         */
-
         #region Boolean
 
         public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, bool value)
@@ -247,7 +292,7 @@ namespace LH.Dhcp.vNext
 
         public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<short> value)
         {
-            WriteCollectionOption(
+            WriteListOption(
                 optionCode, 
                 value, 
                 BinaryConvert.Int16Length,
@@ -290,7 +335,7 @@ namespace LH.Dhcp.vNext
 
         public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<ushort> value)
         {
-            WriteCollectionOption(
+            WriteListOption(
                 optionCode,
                 value,
                 BinaryConvert.Int16Length,
@@ -333,7 +378,7 @@ namespace LH.Dhcp.vNext
 
         public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<uint> value)
         {
-            WriteCollectionOption(
+            WriteListOption(
                 optionCode,
                 value,
                 BinaryConvert.UInt32Length,
@@ -376,7 +421,7 @@ namespace LH.Dhcp.vNext
 
         public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<int> value)
         {
-            WriteCollectionOption(
+            WriteListOption(
                 optionCode,
                 value,
                 BinaryConvert.Int32Length,
@@ -419,7 +464,7 @@ namespace LH.Dhcp.vNext
 
         public DhcpPacketBuilder WithOption(byte optionCode, IReadOnlyList<IPAddress> value)
         {
-            WriteCollectionOption(
+            WriteListOption(
                 optionCode,
                 value,
                 BinaryConvert.IpAddressLength,
@@ -518,6 +563,33 @@ namespace LH.Dhcp.vNext
 
         #endregion
 
+        public DhcpPacketBuilder WithOption(DhcpOptionCode optionCode, Action<IKeyValueCollectionBuilder> setValues)
+        {
+            return WithOption((byte) optionCode, setValues);
+        }
+
+        public DhcpPacketBuilder WithOption(byte optionCode, Action<IKeyValueCollectionBuilder> setValues)
+        {
+            if (IsReservedOptionCode(optionCode))
+            {
+                throw new ArgumentOutOfRangeException(nameof(optionCode),
+                    $"The option code {optionCode} is reserved and cannot be accessed directly.");
+            }
+
+            EnsureBufferSpace(20); // Just to make sure we have enough space to start the option
+
+            var startIndex = _nextOptionIndex;
+
+            _nextOptionIndex += 2;
+
+            setValues.Invoke(this);
+
+            _buffer[startIndex] = optionCode;
+            _buffer[startIndex+ 1] = (byte)(_nextOptionIndex - startIndex);
+
+            return this;
+        }
+
         public DhcpPacketBuilder WithOption(IDhcpOption semanticOption)
         {
             throw new NotImplementedException();
@@ -554,10 +626,6 @@ namespace LH.Dhcp.vNext
                     throw new NotSupportedException($"The message type {msgType} is not supported.");
             }
         }
-
-        // TODO: Validate the packet
-        // TODO: Check for array size overflow (int max?)
-        // TODO: If user specifies the file name and the BootFileName option? - this doesn't make sense. Do not allow the filename option at all, same goes for server name!
 
         private bool IsReservedOptionCode(byte optionCode)
         {
@@ -596,7 +664,7 @@ namespace LH.Dhcp.vNext
             }
         }
 
-        private void WriteCollectionOption<T>(byte optionCode, IReadOnlyList<T> value, int itemLength, Action<T, int> writeItemAction)
+        private void WriteListOption<T>(byte optionCode, IReadOnlyList<T> value, int itemLength, Action<T, int> writeItemAction)
         {
             VerifyReservedOptionCode(optionCode);
 
