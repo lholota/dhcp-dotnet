@@ -11,6 +11,7 @@
         public const int YourIpOffset = 16;
         public const int ServerIpOffset = 20;
         public const int GatewayIpOffset = 24;
+        public const int OptionsOffset = 240;
 
         public const int BootFileOffset = 108;
         public const int BootFileLength = 128;
